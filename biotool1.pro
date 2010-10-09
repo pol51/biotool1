@@ -4,10 +4,12 @@ TEMPLATE = app
 QT += opengl
 
 SOURCES += src/main.cpp\
-        src/mainwindow.cpp
+        src/mainwindow.cpp\
+        src/imageView.cpp
 
-HEADERS  += src/mainwindow.h
+HEADERS  += src/mainwindow.h\
+        src/imageView.h
 
-INCLUDES += src
+INCLUDEPATH += src
 
 FORMS    += ui/mainwindow.ui

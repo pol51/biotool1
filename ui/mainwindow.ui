@@ -14,13 +14,21 @@
    <string>Bio Tool 1</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
-   <widget class="QWidget" name="tab">
+   <widget class="ImageView" name="tab">
     <attribute name="title">
      <string>Image</string>
     </attribute>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>27</height>
+    </rect>
+   </property>
    <widget class="QMenu" name="menuFichier">
     <property name="title">
      <string>&amp;Fichier</string>
@@ -43,6 +51,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QWidget</extends>
+   <header>imageView.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
