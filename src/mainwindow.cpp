@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actLoadImage, SIGNAL(triggered()),
           this, SLOT(doLoadImage()));
 
-  // others
+  // load image
   connect(this, SIGNAL(onLoadWorkImage(QImage)),
           ui->tab, SLOT(doChangeImage(QImage)));
 }
@@ -55,6 +55,5 @@ void MainWindow::doLoadImage()
     return;
   }
 
-  workImage = Image;
-  emit onLoadWorkImage(workImage);
+  emit onLoadWorkImage(Image);
 }

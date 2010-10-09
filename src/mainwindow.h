@@ -2,7 +2,6 @@
 #define __MAINWINDOW_H__
 
 #include <QtGui/QMainWindow>
-#include <QtGui/QImage>
 
 namespace Ui { class MainWindow; }
 
@@ -18,14 +17,13 @@ class MainWindow : public QMainWindow
     void changeEvent(QEvent *e);
 
   signals:
-    void onLoadWorkImage(const QImage &image);
+    void onLoadWorkImage(QImage image);
 
   protected slots:
     void doLoadImage();
 
   private:
     Ui::MainWindow *ui;
-    QImage workImage;
 };
 
 #endif
