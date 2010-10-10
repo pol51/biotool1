@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
 
   protected slots:
     void doLoadImage();
+    void doChangeMode(bool activated);
 
   private:
     Ui::MainWindow *ui;

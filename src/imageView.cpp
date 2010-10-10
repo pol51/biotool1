@@ -5,9 +5,10 @@
 #include <QtGui/QMouseEvent>
 
 ImageView::ImageView(QWidget *parent) :
-  QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent), imageTexId(0), zoom(10), xDecal(0.), yDecal(0.), onMoveDecal(false), ratioWidthPerHeght(1.)
+  QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
+  onMoveDecal(false), currentMode(eModeView), zoom(10), imageTexId(0),
+  xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
 {
-  refreshTimer.setSingleShot(false);
   connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
   refreshTimer.start(20);
 }
@@ -21,7 +22,7 @@ void ImageView::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton)
   {
-    onMoveDecal = event->type() == QEvent::MouseButtonPress;
+    onMoveDecal = (event->type() == QEvent::MouseButtonPress && currentMode == eModeView);
     lastMousePos = event->pos();
   }
 }
@@ -31,8 +32,8 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
   float factor = qMin(width(), height());
   if (onMoveDecal && event->type())
   {
-    xDecal += (event->x() - lastMousePos.x()) / factor * zoom * 2;
-    yDecal += (event->y() - lastMousePos.y()) / factor * zoom * 2;
+    xDecal += (event->x() - lastMousePos.x()) / factor * (zoom<<1);
+    yDecal += (event->y() - lastMousePos.y()) / factor * (zoom<<1);
   }
   lastMousePos = event->pos();
 }

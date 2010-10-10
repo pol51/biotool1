@@ -37,7 +37,7 @@
      <string>&amp;Fichier</string>
     </property>
     <addaction name="actLoadImage"/>
-    <addaction name="actClosemage"/>
+    <addaction name="actCloseImage"/>
     <addaction name="separator"/>
     <addaction name="actExit"/>
    </widget>
@@ -45,6 +45,8 @@
     <property name="title">
      <string>&amp;Edition</string>
     </property>
+    <addaction name="actResetView"/>
+    <addaction name="separator"/>
     <addaction name="actModeView"/>
     <addaction name="actModeEdit"/>
    </widget>
@@ -65,8 +67,9 @@
    <addaction name="actExit"/>
    <addaction name="separator"/>
    <addaction name="actLoadImage"/>
-   <addaction name="actClosemage"/>
+   <addaction name="actCloseImage"/>
    <addaction name="separator"/>
+   <addaction name="actResetView"/>
    <addaction name="actModeView"/>
    <addaction name="actModeEdit"/>
   </widget>
@@ -124,13 +127,25 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actClosemage">
+  <action name="actCloseImage">
    <property name="icon">
     <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/close</normaloff>:/icons/close</iconset>
    </property>
    <property name="text">
     <string>&amp;Fermer Image</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actResetView">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/reset_view</normaloff>:/icons/reset_view</iconset>
+   </property>
+   <property name="text">
+    <string>Vue par defaut</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

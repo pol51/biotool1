@@ -10,12 +10,23 @@ class ImageView : public QGLWidget
   Q_OBJECT
 
   public:
+    enum EMode
+    {
+      eModeView,
+      eModeEdit,
+    };
+
+  public:
     ImageView(QWidget *parent = NULL);
     ~ImageView();
 
+    void changeMode(EMode mode) { currentMode = mode; onMoveDecal = false; }
+
   public slots:
-    void doZoomIn()   { if (zoom > 1) --zoom; }
-    void doZoomOut()  { if (zoom < 9) ++zoom; }
+    void doZoomIn()     { if (zoom > 1) --zoom; }
+    void doZoomOut()    { if (zoom < 11) ++zoom; }
+    void doResetView()  { zoom = 10; xDecal = yDecal = 0.; resizeGL(width(), height()); }
+
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void wheelEvent(QWheelEvent *);
@@ -30,13 +41,14 @@ class ImageView : public QGLWidget
     virtual void resizeGL(int w, int h);
 
   protected:
-    QTimer refreshTimer;
-    GLuint imageTexId;
-    int zoom;
-    GLfloat xDecal, yDecal;
     bool onMoveDecal;
-    QPoint lastMousePos;
+    EMode currentMode;
+    int zoom;
+    GLuint imageTexId;
+    GLfloat xDecal, yDecal;
     GLfloat ratioWidthPerHeght;
+    QTimer refreshTimer;
+    QPoint lastMousePos;
 };
 
 #endif
