@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="exit">exit.png</file>
+        <file alias="open">open.png</file>
+        <file alias="close">close.png</file>
+        <file alias="edit">edit.png</file>
+        <file alias="view">view.png</file>
+    </qresource>
+</RCC>

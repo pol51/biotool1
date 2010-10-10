@@ -22,6 +22,7 @@ class ImageView : public QGLWidget
 
   protected slots:
     void doChangeImage(const QImage &image);
+    void doCloseImage();
 
   protected:
     virtual void initializeGL();

@@ -10,15 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  // menus
-  connect(ui->actExit, SIGNAL(triggered()),
-          this, SLOT(close()));
-  connect(ui->actLoadImage, SIGNAL(triggered()),
-          this, SLOT(doLoadImage()));
-
-  // load image
-  connect(this, SIGNAL(onLoadWorkImage(QImage)),
-          ui->tab, SLOT(doChangeImage(QImage)));
+  connect(ui->actExit, SIGNAL(triggered()), this, SLOT(close()));
+  connect(ui->actLoadImage, SIGNAL(triggered()), this, SLOT(doLoadImage()));
+  connect(this, SIGNAL(onLoadWorkImage(QImage)), ui->imageView, SLOT(doChangeImage(QImage)));
+  connect(ui->actClosemage, SIGNAL(triggered()), ui->imageView, SLOT(doCloseImage()));
 }
 
 MainWindow::~MainWindow()

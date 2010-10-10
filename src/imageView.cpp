@@ -53,6 +53,14 @@ void ImageView::doChangeImage(const QImage &image)
   imageTexId = bindTexture(image);
 }
 
+void ImageView::doCloseImage()
+{
+  if (imageTexId) deleteTexture(imageTexId);
+  ratioWidthPerHeght = 1.;
+
+  imageTexId = 0;
+}
+
 void ImageView::initializeGL()
 {
   QGLWidget::initializeGL();
