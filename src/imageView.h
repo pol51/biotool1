@@ -5,6 +5,8 @@
 
 #include <QtCore/QTimer>
 
+class DataCtrl;
+
 class ImageView : public QGLWidget
 {
   Q_OBJECT
@@ -29,7 +31,8 @@ class ImageView : public QGLWidget
 
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *);
+    virtual void wheelEvent(QWheelEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
   protected slots:
     void doChangeImage(const QImage &image);
@@ -44,6 +47,7 @@ class ImageView : public QGLWidget
     bool onMoveDecal;
     EMode currentMode;
     int zoom;
+    DataCtrl *dataCtrl;
     GLuint imageTexId;
     GLfloat xDecal, yDecal;
     GLfloat ratioWidthPerHeght;
