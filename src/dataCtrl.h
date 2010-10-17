@@ -2,8 +2,8 @@
 #define __DATACTRL_H__
 
 #include <QtCore/QObject>
-#include <QtCore/QPointF>
-#include <QtCore/QVector>
+
+#include "polygon.h"
 
 class DataCtrl : public QObject
 {
@@ -15,8 +15,6 @@ class DataCtrl : public QObject
 
     void addPoint(const QPointF &point);
 
-    const QVector<QPointF> &getPoints() const { return points; }
-
     void draw();
 
   public slots:
@@ -25,8 +23,8 @@ class DataCtrl : public QObject
     void removeLastForm();
 
   protected:
-    QVector<QPointF> points;
-    QVector<QVector<QPointF> > forms;
+    Polygon points;
+    QVector<Polygon> forms;
 };
 
 #endif
