@@ -17,11 +17,16 @@ class DataCtrl : public QObject
 
     const QVector<QPointF> &getPoints() const { return points; }
 
+    void draw();
+
   public slots:
     void removeLastPoint();
+    void finalizeForm();
+    void removeLastForm();
 
   protected:
     QVector<QPointF> points;
+    QVector<QVector<QPointF> > forms;
 };
 
 #endif

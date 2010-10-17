@@ -38,10 +38,8 @@ void ImageView::mousePressEvent(QMouseEvent *event)
         x *= ((float)width() / (float)height());
       else
         y *= ((float)height() / (float)width());
-      QPointF Point(
-          (event->x() / factor * (zoom<<1) - xDecal) /10. -x,
-          (event->y() / factor * (zoom<<1) - yDecal) /10. -y
-          );
+      QPointF Point((event->x() / factor * (zoom<<1) - xDecal) /10. - x,
+                    (event->y() / factor * (zoom<<1) - yDecal) /10. - y);
 
       dataCtrl->addPoint(Point);
     }
@@ -69,8 +67,20 @@ void ImageView::wheelEvent(QWheelEvent *event)
 
 void ImageView::keyPressEvent(QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Backspace)
-    dataCtrl->removeLastPoint();
+  switch (event->key())
+  {
+    case Qt::Key_Backspace:
+      if (event->modifiers() & Qt::ControlModifier)
+        dataCtrl->removeLastForm();
+      else
+        dataCtrl->removeLastPoint();
+      break;
+    case Qt::Key_Space:
+      dataCtrl->finalizeForm();
+      break;
+    default:
+      break;
+  }
 }
 
 void ImageView::doChangeImage(const QImage &image)
@@ -121,19 +131,7 @@ void ImageView::paintGL()
 
   glDisable(GL_TEXTURE_2D);
 
-  const QVector<QPointF> &pointsList = dataCtrl->getPoints();
-  glPointSize(5.);
-  glLineWidth(3.);
-  glColor3f(1.,1., 0.);
-
-  //glBegin(GL_LINE_LOOP);
-  for (int i = pointsList.count(); --i >= 0; )
-  {
-    glBegin(GL_POINTS);
-      glVertex3f(pointsList[i].x(), pointsList[i].y(), 0.);
-    glEnd();
-  }
-  //glEnd();
+  dataCtrl->draw();
 
   glPopMatrix();
 }
