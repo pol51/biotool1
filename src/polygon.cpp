@@ -69,6 +69,8 @@ void Polygon::draw() const
 {
   const int Count = count();
 
+  if (!Count) return;
+
   switch (type)
   {
     case eEdition:
@@ -81,7 +83,6 @@ void Polygon::draw() const
       }
       break;
     case eFinalized:
-      glColor3f(.1, 1., .1);
       if (Count > 1)
       {
         glBegin(GL_LINE_LOOP);

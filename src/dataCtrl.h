@@ -3,7 +3,7 @@
 
 #include <QtCore/QObject>
 
-#include "polygon.h"
+#include "cell.h"
 
 class DataCtrl : public QObject
 {
@@ -24,7 +24,8 @@ class DataCtrl : public QObject
 
   protected:
     Polygon points;
-    QVector<Polygon> forms;
+    Cell cell;
+    QVector<Cell> cells;
 };
 
 #endif

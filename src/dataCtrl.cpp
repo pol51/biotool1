@@ -21,8 +21,10 @@ void DataCtrl::draw()
   glLineWidth(3.);
   glPointSize(5.);
 
-  for (int i = forms.count(); --i >= 0; )
-    forms.at(i).draw();
+  for (int i = cells.count(); --i >= 0; )
+    cells.at(i).draw();
+
+  cell.draw();
 
   points.draw();
 }
@@ -36,11 +38,19 @@ void DataCtrl::finalizeForm()
 {
   if (!points.count()) return;
   points.computeData();
-  forms.push_back(points);
+  if (cell.addOneForm(points))
+  {
+    cells.push_back(cell);
+    cell.clear();
+  }
   points.clear();
 }
 
 void DataCtrl::removeLastForm()
 {
-  if (forms.count()) forms.pop_back();
+  if (cell.clearOneForm() && !cells.isEmpty())
+  {
+    cell = cells.last();
+    cells.pop_back();
+  }
 }
