@@ -6,5 +6,7 @@
         <file alias="edit">edit.png</file>
         <file alias="view">view.png</file>
         <file alias="reset_view">reset_view.png</file>
+        <file alias="new">new.png</file>
+        <file alias="save">save.png</file>
     </qresource>
 </RCC>

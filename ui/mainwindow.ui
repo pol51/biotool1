@@ -36,6 +36,11 @@
     <property name="title">
      <string>&amp;Fichier</string>
     </property>
+    <addaction name="actNew"/>
+    <addaction name="actOpen"/>
+    <addaction name="actSave"/>
+    <addaction name="actSaveAs"/>
+    <addaction name="separator"/>
     <addaction name="actLoadImage"/>
     <addaction name="actCloseImage"/>
     <addaction name="separator"/>
@@ -49,6 +54,7 @@
     <addaction name="separator"/>
     <addaction name="actModeView"/>
     <addaction name="actModeEdit"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
@@ -75,7 +81,7 @@
   </widget>
   <action name="actLoadImage">
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
    </property>
    <property name="text">
@@ -87,7 +93,7 @@
   </action>
   <action name="actExit">
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/exit</normaloff>:/icons/exit</iconset>
    </property>
    <property name="text">
@@ -102,7 +108,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/view</normaloff>:/icons/view</iconset>
    </property>
    <property name="text">
@@ -117,7 +123,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
    </property>
    <property name="text">
@@ -129,7 +135,7 @@
   </action>
   <action name="actCloseImage">
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/close</normaloff>:/icons/close</iconset>
    </property>
    <property name="text">
@@ -141,11 +147,71 @@
   </action>
   <action name="actResetView">
    <property name="icon">
-    <iconset>
+    <iconset resource="../res/icons.qrc">
      <normaloff>:/icons/reset_view</normaloff>:/icons/reset_view</iconset>
    </property>
    <property name="text">
     <string>Vue par defaut</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actOpen">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Ouvrir</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actSave">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Enregistrer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actNew">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/new</normaloff>:/icons/new</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Nouveau</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actSaveAs">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
+   </property>
+   <property name="text">
+    <string>Enregistrer &amp;sous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -160,6 +226,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../res/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
