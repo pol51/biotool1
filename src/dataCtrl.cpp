@@ -48,7 +48,17 @@ void DataCtrl::finalizeForm()
 
 void DataCtrl::removeLastForm()
 {
-  if (cell.clearOneForm() && !cells.isEmpty())
+  if (cell.isEmpty())
+  {
+    if (!cells.isEmpty())
+    {
+      cell = cells.last();
+      cells.pop_back();
+      cell.clearOneForm();
+    }
+    return;
+  }
+  if (cell.clearOneForm() && points.isEmpty() && !cells.isEmpty())
   {
     cell = cells.last();
     cells.pop_back();
