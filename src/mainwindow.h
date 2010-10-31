@@ -15,6 +15,7 @@ class MainWindow : public QMainWindow
 
   protected:
     void changeEvent(QEvent *e);
+    bool askForUnsavedChanges(const QString &title);
 
   signals:
     void onLoadWorkImage(QImage image);
@@ -22,9 +23,14 @@ class MainWindow : public QMainWindow
   protected slots:
     void doLoadImage();
     void doChangeMode(bool activated);
+    void doNew();
+    void doSave();
+    void doSaveAs();
+    void doOpen();
 
   private:
     Ui::MainWindow *ui;
+    QString fileName;
 };
 
 #endif

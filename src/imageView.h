@@ -24,6 +24,9 @@ class ImageView : public QGLWidget
 
     void changeMode(EMode mode) { currentMode = mode; onMoveDecal = false; }
 
+    DataCtrl& data() { return *dataCtrl; }
+    const DataCtrl& data() const { return *dataCtrl; }
+
   public slots:
     void doZoomIn()     { if (zoom > 1) --zoom; }
     void doZoomOut()    { if (zoom < 11) ++zoom; }

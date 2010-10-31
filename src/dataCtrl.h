@@ -15,14 +15,22 @@ class DataCtrl : public QObject
 
     void addPoint(const QPointF &point);
 
-    void draw();
+    void draw() const;
+
+    bool isSaved() const { return saved; }
 
   public slots:
     void removeLastPoint();
     void finalizeForm();
     void removeLastForm();
 
+    void clear();
+
+    void load(const QString &filename);
+    void save(const QString &filename);
+
   protected:
+    bool saved;
     Polygon points;
     Cell cell;
     QVector<Cell> cells;

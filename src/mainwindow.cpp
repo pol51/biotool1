@@ -1,5 +1,7 @@
-  #include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "dataCtrl.h"
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
@@ -17,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actModeEdit, SIGNAL(triggered(bool)), this, SLOT(doChangeMode(bool)));
   connect(ui->actModeView, SIGNAL(triggered(bool)), this, SLOT(doChangeMode(bool)));
   connect(ui->actResetView, SIGNAL(triggered()), ui->imageView, SLOT(doResetView()));
+  connect(ui->actNew, SIGNAL(triggered()), this, SLOT(doNew()));
+  connect(ui->actSave, SIGNAL(triggered()), this, SLOT(doSave()));
+  connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
+  connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
@@ -39,6 +45,16 @@ void MainWindow::changeEvent(QEvent *e)
     default:
       break;
   }
+}
+
+bool MainWindow::askForUnsavedChanges(const QString &title)
+{
+  return (ui->imageView->data().isSaved() ||
+          QMessageBox::question(this,
+                                title,
+                                tr("Le travail en cours comporte des modification non sauvegardées.\n"
+                                   "Etes-vous sûr de vouloir continuer?"),
+                                QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes);
 }
 
 void MainWindow::doLoadImage()
@@ -88,3 +104,42 @@ void MainWindow::doChangeMode(bool activated)
   }
 }
 
+void MainWindow::doNew()
+{
+  if (askForUnsavedChanges(tr("Nouveau document")))
+  {
+    ui->imageView->data().clear();
+    fileName.clear();
+  }
+}
+
+void MainWindow::doSave()
+{
+  if (fileName.isEmpty())
+    doSaveAs();
+  else
+    ui->imageView->data().save(fileName);
+}
+
+void MainWindow::doSaveAs()
+{
+  const QString filename(QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), tr("."), tr("Documents (*.xml);;Tous (*)")));
+  if (!filename.isEmpty())
+  {
+    fileName = filename;
+    doSave();
+  }
+}
+
+void MainWindow::doOpen()
+{
+  if (askForUnsavedChanges(tr("Ouvrir un document")))
+  {
+    const QString filename(QFileDialog::getOpenFileName(this, tr("Ouvrir un document"), tr("."), tr("Documents (*.xml);;Tous (*)")));
+    if (!filename.isEmpty())
+    {
+      fileName = filename;
+      ui->imageView->data().load(fileName);
+    }
+  }
+}

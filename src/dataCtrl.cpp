@@ -3,7 +3,7 @@
 #include <QtOpenGL/QGLContext>
 
 DataCtrl::DataCtrl(QObject *parent):
-  QObject(parent)
+  QObject(parent), saved(true)
 {
 }
 
@@ -14,9 +14,10 @@ DataCtrl::~DataCtrl()
 void DataCtrl::addPoint(const QPointF &point)
 {
   points.append(point);
+  saved = false;
 }
 
-void DataCtrl::draw()
+void DataCtrl::draw() const
 {
   glLineWidth(3.);
   glPointSize(5.);
@@ -31,7 +32,11 @@ void DataCtrl::draw()
 
 void DataCtrl::removeLastPoint()
 {
-  if (points.count()) points.pop_back();
+  if (points.count())
+  {
+    points.pop_back();
+    saved = false;
+  }
 }
 
 void DataCtrl::finalizeForm()
@@ -44,6 +49,7 @@ void DataCtrl::finalizeForm()
     cell.clear();
   }
   points.clear();
+  saved = false;
 }
 
 void DataCtrl::removeLastForm()
@@ -55,6 +61,7 @@ void DataCtrl::removeLastForm()
       cell = cells.last();
       cells.pop_back();
       cell.clearOneForm();
+      saved = false;
     }
     return;
   }
@@ -63,4 +70,25 @@ void DataCtrl::removeLastForm()
     cell = cells.last();
     cells.pop_back();
   }
+  saved = false;
+}
+
+void DataCtrl::clear()
+{
+  points.clear();
+  cell.clear();
+  cells.clear();
+  saved = true;
+}
+
+void DataCtrl::load(const QString &filename)
+{
+  Q_UNUSED(filename);
+  saved = true;
+}
+
+void DataCtrl::save(const QString &filename)
+{
+  Q_UNUSED(filename);
+  saved = true;
 }

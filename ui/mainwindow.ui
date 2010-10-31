@@ -70,7 +70,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actExit"/>
+   <addaction name="actNew"/>
+   <addaction name="actOpen"/>
+   <addaction name="actSave"/>
    <addaction name="separator"/>
    <addaction name="actLoadImage"/>
    <addaction name="actCloseImage"/>
