@@ -120,3 +120,17 @@ void Polygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) 
     PointNode.setAttribute("y", Point.y());
   }
 }
+
+void Polygon::load(QDomElement &node)
+{
+  QDomElement PointElement = node.firstChildElement("point");
+  while (!PointElement.isNull())
+  {
+    bool OkX = false, OkY = false;
+    double X = PointElement.attribute("x").toDouble(&OkX);
+    double Y = PointElement.attribute("y").toDouble(&OkY);
+    if (OkX && OkY) append(QPointF(X, Y));
+
+    PointElement = PointElement.nextSiblingElement("point");
+  }
+}

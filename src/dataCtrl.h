@@ -26,8 +26,11 @@ class DataCtrl : public QObject
 
     void clear();
 
-    void load(const QString &filename);
     void save(const QString &filename);
+    void load(const QString &filename);
+
+  signals:
+    void countChanged(int);
 
   protected:
     bool saved;

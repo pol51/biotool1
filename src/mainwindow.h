@@ -5,6 +5,8 @@
 
 namespace Ui { class MainWindow; }
 
+class QLabel;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -27,9 +29,11 @@ class MainWindow : public QMainWindow
     void doSave();
     void doSaveAs();
     void doOpen();
+    void doCellCountChanged(int count);
 
   private:
     Ui::MainWindow *ui;
+    QLabel *cellsLabel;
     QString fileName;
 };
 

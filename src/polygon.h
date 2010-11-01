@@ -29,6 +29,7 @@ class Polygon : public QPolygonF
     void draw() const;
 
     void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
+    void load(QDomElement &node);
 
   protected:
     QPointF centroid;

@@ -5,6 +5,7 @@
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
+#include <QtGui/QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -23,10 +24,18 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actSave, SIGNAL(triggered()), this, SLOT(doSave()));
   connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
+  connect(&ui->imageView->data(), SIGNAL(countChanged(int)), this, SLOT(doCellCountChanged(int)));
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
   ui->actModeView->blockSignals(false);
+
+  cellsLabel = new QLabel(" [000000] ");
+  cellsLabel->setAlignment(Qt::AlignLeft);
+  cellsLabel->setMinimumSize(cellsLabel->sizeHint());
+  doCellCountChanged(0);
+
+  statusBar()->addWidget(cellsLabel);
 }
 
 MainWindow::~MainWindow()
@@ -142,4 +151,9 @@ void MainWindow::doOpen()
       ui->imageView->data().load(fileName);
     }
   }
+}
+
+void MainWindow::doCellCountChanged(int count)
+{
+  cellsLabel->setText(QString(" [%1] ").arg(count));
 }

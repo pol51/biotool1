@@ -1,9 +1,7 @@
 #include "dataCtrl.h"
 
 #include <QtOpenGL/QGLContext>
-
 #include <QtXml/QDomDocument>
-
 #include <QtCore/QFile>
 
 DataCtrl::DataCtrl(QObject *parent):
@@ -51,6 +49,7 @@ void DataCtrl::finalizeForm()
   {
     cells.push_back(cell);
     cell.clear();
+    emit countChanged(cells.count());
   }
   points.clear();
   saved = false;
@@ -65,6 +64,7 @@ void DataCtrl::removeLastForm()
       cell = cells.last();
       cells.pop_back();
       cell.clearOneForm();
+      emit countChanged(cells.count());
       saved = false;
     }
     return;
@@ -73,6 +73,7 @@ void DataCtrl::removeLastForm()
   {
     cell = cells.last();
     cells.pop_back();
+    emit countChanged(cells.count());
   }
   saved = false;
 }
@@ -82,12 +83,7 @@ void DataCtrl::clear()
   points.clear();
   cell.clear();
   cells.clear();
-  saved = true;
-}
-
-void DataCtrl::load(const QString &filename)
-{
-  Q_UNUSED(filename);
+  emit countChanged(0);
   saved = true;
 }
 
@@ -111,5 +107,42 @@ void DataCtrl::save(const QString &filename)
     File.close();
   }
 
+  saved = true;
+}
+
+void DataCtrl::load(const QString &filename)
+{
+  QDomDocument Doc("document");
+  QFile File(filename);
+  if (!File.open(QIODevice::ReadOnly))
+    return;
+
+  if (!Doc.setContent(&File))
+  {
+    File.close();
+    return;
+  }
+  File.close();
+
+  QDomElement DocElem = Doc.documentElement();
+
+  QDomElement Element = DocElem.firstChildElement();
+  while (!Element.isNull())
+  {
+    if (Element.tagName() == "cells")
+    {
+      QDomElement CellElement = Element.firstChildElement("cell");
+      while (!CellElement.isNull())
+      {
+        Cell LoadedCell;
+        if (LoadedCell.load(CellElement))
+          cells.push_back(LoadedCell);
+        CellElement = CellElement.nextSiblingElement("cell");
+      }
+    }
+    Element = Element.nextSiblingElement();
+  }
+
+  emit countChanged(cells.count());
   saved = true;
 }

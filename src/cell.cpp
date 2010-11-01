@@ -64,3 +64,31 @@ void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
   insideForm.save(doc, CellNode, 0);
   outsideForm.save(doc, CellNode, 1);
 }
+
+bool Cell::load(QDomElement &node)
+{
+  // load data
+  QDomElement FormElement = node.firstChildElement("polygon");
+  while (!FormElement.isNull())
+  {
+    bool Ok = false;
+    int Level = FormElement.attribute("level", "-1").toInt(&Ok, 10);
+    if (Ok && Level >= 0)
+    {
+      if (Level == 0) insideForm.load(FormElement);
+      if (Level == 1) outsideForm.load(FormElement);
+    }
+
+    FormElement = FormElement.nextSiblingElement("polygon");
+  }
+
+  // (re-)compute other data if loaded correctly
+  if (isFull())
+  {
+    insideForm.computeData();
+    outsideForm.computeData();
+    return true;
+  }
+
+  return false;
+}

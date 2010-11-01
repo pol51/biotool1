@@ -21,6 +21,7 @@ class Cell
     bool addOneForm(const Polygon &form); // return true if full (all form sets)
     void draw() const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
+    bool load(QDomElement &node);
 
   protected:
     Polygon insideForm;
