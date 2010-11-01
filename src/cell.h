@@ -5,6 +5,9 @@
 
 #include "polygon.h"
 
+class QDomElement;
+class QDomDocument;
+
 class Cell
 {
   public:
@@ -17,6 +20,7 @@ class Cell
     bool clearOneForm(); // return true is empty (all forms removeds)
     bool addOneForm(const Polygon &form); // return true if full (all form sets)
     void draw() const;
+    void save(QDomDocument &doc, QDomElement &parentNode) const;
 
   protected:
     Polygon insideForm;

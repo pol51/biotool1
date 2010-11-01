@@ -2,6 +2,8 @@
 
 #include <QtOpenGL/QGLContext>
 
+#include <QtXml/QDomDocument>
+
 QColor Cell::insideColor (QColor(0xff, 0x1f, 0x1f));
 QColor Cell::outsideColor(QColor(0x1f, 0xff, 0x1f));
 
@@ -52,4 +54,13 @@ void Cell::draw() const
   // draw inside form
   glColor3f(insideColor.redF(), insideColor.greenF(), insideColor.blueF());
   insideForm.draw();
+}
+
+void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
+{
+  QDomElement CellNode = doc.createElement("cell");
+  parentNode.appendChild(CellNode);
+
+  insideForm.save(doc, CellNode, 0);
+  outsideForm.save(doc, CellNode, 1);
 }

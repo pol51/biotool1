@@ -3,6 +3,9 @@
 
 #include <QtGui/QPolygonF>
 
+class QDomElement;
+class QDomDocument;
+
 class Polygon : public QPolygonF
 {
   public:
@@ -24,6 +27,8 @@ class Polygon : public QPolygonF
     const qreal &getArea() const { return area; }
 
     void draw() const;
+
+    void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
 
   protected:
     QPointF centroid;

@@ -1,6 +1,6 @@
 TARGET = biotool1
 TEMPLATE = app
-QT += opengl
+QT += opengl xml
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/imageView.cpp \

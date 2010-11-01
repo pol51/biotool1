@@ -2,6 +2,8 @@
 
 #include <QtOpenGL/QGLContext>
 
+#include <QtXml/QDomDocument>
+
 void Polygon::computeData()
 {
   const int Count = count();
@@ -102,5 +104,19 @@ void Polygon::draw() const
       break;
     default:
       break;
+  }
+}
+
+void Polygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const
+{
+  QDomElement PolyNode = doc.createElement("polygon");
+  parentNode.appendChild(PolyNode);
+  PolyNode.setAttribute("level", level);
+  foreach(QPointF Point, *this)
+  {
+    QDomElement PointNode = doc.createElement("point");
+    PolyNode.appendChild(PointNode);
+    PointNode.setAttribute("x", Point.x());
+    PointNode.setAttribute("y", Point.y());
   }
 }

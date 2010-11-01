@@ -2,6 +2,10 @@
 
 #include <QtOpenGL/QGLContext>
 
+#include <QtXml/QDomDocument>
+
+#include <QtCore/QFile>
+
 DataCtrl::DataCtrl(QObject *parent):
   QObject(parent), saved(true)
 {
@@ -89,6 +93,23 @@ void DataCtrl::load(const QString &filename)
 
 void DataCtrl::save(const QString &filename)
 {
-  Q_UNUSED(filename);
+  QDomDocument Doc("document");
+  QDomElement Root = Doc.createElement("document");
+  Doc.appendChild(Root);
+  QDomElement Cells = Doc.createElement("cells");
+  Root.appendChild(Cells);
+
+  foreach(Cell _cell, cells) _cell.save(Doc, Cells);
+
+  QString FileName(filename);
+  if (!FileName.endsWith(".xml"))
+    FileName.append(".xml");
+  QFile File(FileName);
+  if (File.open(QFile::WriteOnly))
+  {
+    File.write(Doc.toString(2).toUtf8());
+    File.close();
+  }
+
   saved = true;
 }
