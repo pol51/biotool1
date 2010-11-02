@@ -25,17 +25,24 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
   connect(&ui->imageView->data(), SIGNAL(countChanged(int)), this, SLOT(doCellCountChanged(int)));
+  connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
   ui->actModeView->blockSignals(false);
 
-  cellsLabel = new QLabel(" [000000] ");
+  cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
   cellsLabel->setMinimumSize(cellsLabel->sizeHint());
   doCellCountChanged(0);
 
+  angleLabel = new QLabel(" [-000 deg] ");
+  angleLabel->setAlignment(Qt::AlignLeft);
+  angleLabel->setMinimumSize(angleLabel->sizeHint());
+  doAngleChanged(0);
+
   statusBar()->addWidget(cellsLabel);
+  statusBar()->addWidget(angleLabel);
 }
 
 MainWindow::~MainWindow()
@@ -155,5 +162,10 @@ void MainWindow::doOpen()
 
 void MainWindow::doCellCountChanged(int count)
 {
-  cellsLabel->setText(QString(" [%1] ").arg(count));
+  cellsLabel->setText(QString(" [%1 cell%2] ").arg(count).arg(count?"s":""));
+}
+
+void MainWindow::doAngleChanged(int angle)
+{
+  angleLabel->setText(QString(" [%1 deg] ").arg(angle));
 }

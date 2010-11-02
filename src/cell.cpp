@@ -42,7 +42,15 @@ bool Cell::addOneForm(const Polygon &form)
     return false;
   }
   insideForm = form;
+  computeVector();
   return true;
+}
+
+void Cell::computeVector()
+{
+  QLineF xAbsis(QPointF(0., 0.), QPointF(1., 0.));
+  QLineF line(outsideForm.getCentroid(), insideForm.getCentroid());
+  angle = line.angle(xAbsis);
 }
 
 void Cell::draw() const
@@ -87,6 +95,7 @@ bool Cell::load(QDomElement &node)
   {
     insideForm.computeData();
     outsideForm.computeData();
+    computeVector();
     return true;
   }
 

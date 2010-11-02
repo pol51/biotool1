@@ -7,6 +7,7 @@
 DataCtrl::DataCtrl(QObject *parent):
   QObject(parent), saved(true)
 {
+  connect(this, SIGNAL(countChanged(int)), this, SLOT(onCountChanged()));
 }
 
 DataCtrl::~DataCtrl()
@@ -146,3 +147,13 @@ void DataCtrl::load(const QString &filename)
   emit countChanged(cells.count());
   saved = true;
 }
+
+void DataCtrl::onCountChanged()
+{
+  if (!cells.count()) return;
+  qreal angle = 0;
+  foreach(Cell _cell, cells) angle += _cell.getAngle();
+  angle /= cells.count();
+  emit angleChanged(angle);
+}
+

@@ -30,10 +30,12 @@ class MainWindow : public QMainWindow
     void doSaveAs();
     void doOpen();
     void doCellCountChanged(int count);
+    void doAngleChanged(int angle);
 
   private:
     Ui::MainWindow *ui;
     QLabel *cellsLabel;
+    QLabel *angleLabel;
     QString fileName;
 };
 

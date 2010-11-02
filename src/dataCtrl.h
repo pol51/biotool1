@@ -29,8 +29,12 @@ class DataCtrl : public QObject
     void save(const QString &filename);
     void load(const QString &filename);
 
+  protected slots:
+    void onCountChanged();
+
   signals:
     void countChanged(int);
+    void angleChanged(int);
 
   protected:
     bool saved;
