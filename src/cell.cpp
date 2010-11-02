@@ -48,9 +48,9 @@ bool Cell::addOneForm(const Polygon &form)
 
 void Cell::computeVector()
 {
-  QLineF xAbsis(QPointF(0., 0.), QPointF(1., 0.));
   QLineF line(outsideForm.getCentroid(), insideForm.getCentroid());
-  angle = line.angle(xAbsis);
+  angle = line.angle();
+  if (angle > 180) angle -= 360;
 }
 
 void Cell::draw() const
