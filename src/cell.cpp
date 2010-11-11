@@ -54,8 +54,35 @@ bool Cell::addOneForm(const Polygon &form)
 
 void Cell::computeVector()
 {
+  if (outsideForm.count() <= 1 ) return;
+
+  // compute angle
   QLineF line(outsideForm.getCentroid(), insideForm.getCentroid());
   angle = line.angle();
+
+  // compute lengths
+  qreal centroidsLength(line.length());
+  qreal centroidToOutsideLength(0.);
+
+  line.setLength(10000);
+  QPointF intersection;
+  QLineF line2;
+  QLineF lineToOutside;
+  lineToOutside.setP1(outsideForm.getCentroid());
+  outsideForm.push_back(outsideForm.first());
+  for (int i = outsideForm.count(); --i > 0; )
+  {
+    line2.setPoints(outsideForm[i], outsideForm[i-1]);
+    if (line.intersect(line2, &intersection) == QLineF::BoundedIntersection)
+    {
+      lineToOutside.setP2(intersection);
+      if (lineToOutside.length() > centroidToOutsideLength)
+        centroidToOutsideLength = lineToOutside.length();
+    }
+  }
+  outsideForm.pop_back();
+
+  strength = centroidsLength / centroidToOutsideLength;
 }
 
 void Cell::draw(const qreal &averageAngle) const
@@ -69,12 +96,13 @@ void Cell::draw(const qreal &averageAngle) const
   insideForm.draw();
 
   // draw vector
-  if (isFull())
+  if (isFull() && outsideForm.count() > 1)
   {
     glPushMatrix();
     glColor3f(vectorColor.redF(), vectorColor.greenF(), vectorColor.blueF());
     glTranslatef(outsideForm.getCentroid().x(), outsideForm.getCentroid().y(), 0.);
     glRotatef(angle, 0., 0., -1.);
+    //glScalef(strength * 2.5, strength * 2.5, 1.);
     glScalef(arrowScale, arrowScale, 1.);
     drawArrow();
 

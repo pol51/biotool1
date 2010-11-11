@@ -11,7 +11,7 @@ class QDomDocument;
 class Cell
 {
   public:
-    Cell() : angle(0.) {}
+    Cell() : angle(0.), strength(0.) {}
     ~Cell() {}
 
     void clear();
@@ -43,6 +43,7 @@ class Cell
     static qreal arrowScale;
 
     qreal angle;
+    qreal strength;
 };
 
 #endif
