@@ -4,8 +4,14 @@
 
 #include <QtXml/QDomDocument>
 
-QColor Cell::insideColor (QColor(0xff, 0x1f, 0x1f));
-QColor Cell::outsideColor(QColor(0x1f, 0xff, 0x1f));
+QColor Cell::insideColor        (QColor(0xff, 0x1f, 0x1f));
+QColor Cell::outsideColor       (QColor(0x1f, 0xff, 0x1f));
+QColor Cell::vectorColor        (QColor(0x1f, 0x1f, 0xff));
+QColor Cell::averageVectorColor (QColor(0x7f, 0x7f, 0xff));
+qreal Cell::arrowLength(.1);
+qreal Cell::arrowHeadLength(.025);
+qreal Cell::arrowHeadHalfWidth(.0075);
+qreal Cell::arrowScale(0.75);
 
 void Cell::clear()
 {
@@ -50,10 +56,9 @@ void Cell::computeVector()
 {
   QLineF line(outsideForm.getCentroid(), insideForm.getCentroid());
   angle = line.angle();
-  if (angle > 180) angle -= 360;
 }
 
-void Cell::draw() const
+void Cell::draw(const qreal &averageAngle) const
 {
   // draw outside form
   glColor3f(outsideColor.redF(), outsideColor.greenF(), outsideColor.blueF());
@@ -62,6 +67,26 @@ void Cell::draw() const
   // draw inside form
   glColor3f(insideColor.redF(), insideColor.greenF(), insideColor.blueF());
   insideForm.draw();
+
+  // draw vector
+  if (isFull())
+  {
+    glPushMatrix();
+    glColor3f(vectorColor.redF(), vectorColor.greenF(), vectorColor.blueF());
+    glTranslatef(outsideForm.getCentroid().x(), outsideForm.getCentroid().y(), 0.);
+    glRotatef(angle, 0., 0., -1.);
+    glScalef(arrowScale, arrowScale, 1.);
+    drawArrow();
+
+    if (averageAngle <= 360.)
+    {
+      glColor3f(averageVectorColor.redF(), averageVectorColor.greenF(), averageVectorColor.blueF());
+      glRotatef(averageAngle - angle, 0., 0., -1.);
+      drawArrow();
+    }
+
+    glPopMatrix();
+  }
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
@@ -100,4 +125,18 @@ bool Cell::load(QDomElement &node)
   }
 
   return false;
+}
+
+void Cell::drawArrow()
+{
+  qreal arrowHeadBase(arrowLength - arrowHeadLength);
+
+  glBegin(GL_LINES);
+    glVertex3f(arrowLength, 0., 0.);
+    glVertex3f(0., 0., 0.);
+    glVertex3f(arrowLength, 0., 0.);
+    glVertex3f(arrowHeadBase, arrowHeadHalfWidth, 0.);
+    glVertex3f(arrowLength, 0., 0.);
+    glVertex3f(arrowHeadBase, -arrowHeadHalfWidth, 0.);
+  glEnd();
 }

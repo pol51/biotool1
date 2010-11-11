@@ -11,7 +11,7 @@ class QDomDocument;
 class Cell
 {
   public:
-  Cell() : angle(0.) {}
+    Cell() : angle(0.) {}
     ~Cell() {}
 
     void clear();
@@ -20,11 +20,13 @@ class Cell
     bool clearOneForm(); // return true is empty (all forms removeds)
     bool addOneForm(const Polygon &form); // return true if full (all form sets)
     void computeVector();
-    void draw() const;
+    void draw(const qreal &averageAngle = 200.) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 
     const qreal &getAngle() const { return angle; }
+
+    static void drawArrow();
 
   protected:
     Polygon insideForm;
@@ -32,6 +34,13 @@ class Cell
 
     static QColor insideColor;
     static QColor outsideColor;
+    static QColor vectorColor;
+    static QColor averageVectorColor;
+
+    static qreal arrowLength;
+    static qreal arrowHeadLength;
+    static qreal arrowHeadHalfWidth;
+    static qreal arrowScale;
 
     qreal angle;
 };

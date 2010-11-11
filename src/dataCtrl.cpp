@@ -4,8 +4,10 @@
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
 
+#include <cmath>
+
 DataCtrl::DataCtrl(QObject *parent):
-  QObject(parent), saved(true)
+  QObject(parent), saved(true), averageAngle(0.)
 {
   connect(this, SIGNAL(countChanged(int)), this, SLOT(onCountChanged()));
 }
@@ -26,7 +28,7 @@ void DataCtrl::draw() const
   glPointSize(5.);
 
   for (int i = cells.count(); --i >= 0; )
-    cells.at(i).draw();
+    cells.at(i).draw(averageAngle);
 
   cell.draw();
 
@@ -150,10 +152,16 @@ void DataCtrl::load(const QString &filename)
 
 void DataCtrl::onCountChanged()
 {
+  averageAngle = 0;
   if (!cells.count()) return;
-  qreal angle = 0;
-  foreach(Cell _cell, cells) angle += _cell.getAngle();
-  angle /= cells.count();
-  emit angleChanged(angle);
+  qreal sinsum(0.), cossum(0.);
+  foreach(Cell _cell, cells)
+  {
+    const qreal angle = _cell.getAngle() * M_PI / 180.;
+    sinsum += sin(angle);
+    cossum += cos(angle);
+  }
+  averageAngle = atan2(sinsum, cossum) * 180. / M_PI;
+  emit angleChanged(averageAngle);
 }
 

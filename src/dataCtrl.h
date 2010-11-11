@@ -41,6 +41,7 @@ class DataCtrl : public QObject
     Polygon points;
     Cell cell;
     QVector<Cell> cells;
+    qreal averageAngle;
 };
 
 #endif
