@@ -1,12 +1,12 @@
-#ifndef __POLYGON_H__
-#define __POLYGON_H__
+#ifndef __CELLPOLYGON_H__
+#define __CELLPOLYGON_H__
 
 #include <QtGui/QPolygonF>
 
 class QDomElement;
 class QDomDocument;
 
-class Polygon : public QPolygonF
+class CellPolygon : public QPolygonF
 {
   public:
     enum EType
@@ -16,9 +16,9 @@ class Polygon : public QPolygonF
     };
 
   public:
-    Polygon() : QPolygonF(), area(0.), type(eEdition) {}
-    Polygon(const Polygon &other) : QPolygonF() { *this = other; }
-    virtual ~Polygon() {}
+    CellPolygon() : QPolygonF(), area(0.), type(eEdition) {}
+    CellPolygon(const CellPolygon &other) : QPolygonF() { *this = other; }
+    virtual ~CellPolygon() {}
 
     void computeData();
     virtual void clear();

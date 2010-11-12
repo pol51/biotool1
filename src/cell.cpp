@@ -40,7 +40,7 @@ bool Cell::clearOneForm()
   return true;
 }
 
-bool Cell::addOneForm(const Polygon &form)
+bool Cell::addOneForm(const CellPolygon &form)
 {
   if (outsideForm.isEmpty())
   {

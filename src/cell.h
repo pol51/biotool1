@@ -3,7 +3,7 @@
 
 #include <QtGui/QColor>
 
-#include "polygon.h"
+#include "cellPolygon.h"
 
 class QDomElement;
 class QDomDocument;
@@ -18,9 +18,9 @@ class Cell
     bool isEmpty() const ;
     bool isFull() const;
     bool clearOneForm(); // return true is empty (all forms removeds)
-    bool addOneForm(const Polygon &form); // return true if full (all form sets)
+    bool addOneForm(const CellPolygon &form); // return true if full (all form sets)
     void computeVector();
-    void draw(const qreal &averageAngle = 200.) const;
+    void draw(const qreal &averageAngle = 400.) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 
@@ -29,8 +29,8 @@ class Cell
     static void drawArrow();
 
   protected:
-    Polygon insideForm;
-    Polygon outsideForm;
+    CellPolygon insideForm;
+    CellPolygon outsideForm;
 
     static QColor insideColor;
     static QColor outsideColor;

@@ -38,7 +38,7 @@ class DataCtrl : public QObject
 
   protected:
     bool saved;
-    Polygon points;
+    CellPolygon points;
     Cell cell;
     QVector<Cell> cells;
     qreal averageAngle;
