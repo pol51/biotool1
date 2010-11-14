@@ -113,6 +113,22 @@ void DataCtrl::save(const QString &filename)
   saved = true;
 }
 
+void DataCtrl::exportCsv(const QString &filename)
+{
+  QByteArray CSV;
+  foreach(Cell _cell, cells) CSV.append(QString("%1;%2\n").arg(_cell.getStrength()).arg(_cell.getAngle()));
+
+  QString FileName(filename);
+  if (!FileName.endsWith(".csv"))
+    FileName.append(".csv");
+  QFile File(FileName);
+  if (File.open(QFile::WriteOnly))
+  {
+    File.write(CSV);
+    File.close();
+  }
+}
+
 void DataCtrl::load(const QString &filename)
 {
   QDomDocument Doc("document");

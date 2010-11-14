@@ -25,6 +25,7 @@ class Cell
     bool load(QDomElement &node);
 
     const qreal &getAngle() const { return angle; }
+    const qreal &getStrength() const { return strength; }
 
     static void drawArrow();
 

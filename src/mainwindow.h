@@ -31,6 +31,8 @@ class MainWindow : public QMainWindow
     void doOpen();
     void doCellCountChanged(int count);
     void doAngleChanged(int angle);
+    void doExport();
+    void doSettings();
 
   private:
     Ui::MainWindow *ui;

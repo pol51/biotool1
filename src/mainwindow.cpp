@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
   connect(&ui->imageView->data(), SIGNAL(countChanged(int)), this, SLOT(doCellCountChanged(int)));
   connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
+  connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
+  connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
+
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
@@ -168,4 +171,16 @@ void MainWindow::doCellCountChanged(int count)
 void MainWindow::doAngleChanged(int angle)
 {
   angleLabel->setText(QString(" [%1 deg] ").arg(angle));
+}
+
+void MainWindow::doExport()
+{
+  const QString filename(QFileDialog::getSaveFileName(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)")));
+  if (!filename.isEmpty())
+    ui->imageView->data().exportCsv(filename);
+}
+
+void MainWindow::doSettings()
+{
+
 }
