@@ -8,5 +8,7 @@
         <file alias="reset_view">reset_view.png</file>
         <file alias="new">new.png</file>
         <file alias="save">save.png</file>
+        <file alias="export">export.png</file>
+        <file alias="settings">settings.png</file>
     </qresource>
 </RCC>

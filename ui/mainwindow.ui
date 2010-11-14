@@ -40,6 +40,7 @@
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
+    <addaction name="actExport"/>
     <addaction name="separator"/>
     <addaction name="actLoadImage"/>
     <addaction name="actCloseImage"/>
@@ -55,6 +56,7 @@
     <addaction name="actModeView"/>
     <addaction name="actModeEdit"/>
     <addaction name="separator"/>
+    <addaction name="actSettings"/>
    </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
@@ -73,6 +75,7 @@
    <addaction name="actNew"/>
    <addaction name="actOpen"/>
    <addaction name="actSave"/>
+   <addaction name="actExport"/>
    <addaction name="separator"/>
    <addaction name="actLoadImage"/>
    <addaction name="actCloseImage"/>
@@ -80,6 +83,8 @@
    <addaction name="actResetView"/>
    <addaction name="actModeView"/>
    <addaction name="actModeEdit"/>
+   <addaction name="separator"/>
+   <addaction name="actSettings"/>
   </widget>
   <action name="actLoadImage">
    <property name="icon">
@@ -214,6 +219,33 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actExport">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
+   </property>
+   <property name="text">
+    <string>E&amp;xporter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actSettings">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
+   </property>
+   <property name="text">
+    <string>Se&amp;ttings</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
