@@ -8,6 +8,8 @@
 class QDomElement;
 class QDomDocument;
 
+class Settings;
+
 class Cell
 {
   public:
@@ -30,6 +32,8 @@ class Cell
     static void drawArrow();
 
   protected:
+    friend class Settings;
+
     CellPolygon insideForm;
     CellPolygon outsideForm;
 

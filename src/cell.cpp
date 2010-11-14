@@ -4,15 +4,6 @@
 
 #include <QtXml/QDomDocument>
 
-QColor Cell::insideColor        (QColor(0xff, 0x1f, 0x1f));
-QColor Cell::outsideColor       (QColor(0x1f, 0xff, 0x1f));
-QColor Cell::vectorColor        (QColor(0x1f, 0x1f, 0xff));
-QColor Cell::averageVectorColor (QColor(0x7f, 0x7f, 0xff));
-qreal Cell::arrowLength(.1);
-qreal Cell::arrowHeadLength(.025);
-qreal Cell::arrowHeadHalfWidth(.0075);
-qreal Cell::arrowScale(0.75);
-
 void Cell::clear()
 {
   insideForm.clear();

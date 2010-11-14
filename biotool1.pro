@@ -6,12 +6,14 @@ SOURCES += src/main.cpp \
     src/imageView.cpp \
     src/dataCtrl.cpp \
     src/cellPolygon.cpp \
-    src/cell.cpp
+    src/cell.cpp \
+    src/settings.cpp
 HEADERS += src/mainwindow.h \
     src/imageView.h \
     src/dataCtrl.h \
     src/cellPolygon.h \
-    src/cell.h
+    src/cell.h \
+    src/settings.h
 INCLUDEPATH += src
 FORMS += ui/mainwindow.ui
 RESOURCES += res/icons.qrc

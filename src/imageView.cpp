@@ -4,6 +4,7 @@
 
 #include <QtGui/QMouseEvent>
 
+#include "settings.h"
 #include "dataCtrl.h"
 
 ImageView::ImageView(QWidget *parent) :
@@ -11,6 +12,9 @@ ImageView::ImageView(QWidget *parent) :
   onMoveDecal(false), currentMode(eModeView), zoom(10), dataCtrl(new DataCtrl(this)),
   imageTexId(0), xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
 {
+  Settings::Load();
+  Settings::Save();
+
   connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
   refreshTimer.start(20);
   grabKeyboard();
