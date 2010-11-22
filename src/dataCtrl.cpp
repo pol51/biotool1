@@ -116,7 +116,13 @@ void DataCtrl::save(const QString &filename)
 void DataCtrl::exportCsv(const QString &filename)
 {
   QByteArray CSV;
-  foreach(Cell _cell, cells) CSV.append(QString("%1;%2\n").arg(_cell.getStrength()).arg(_cell.getAngle()));
+
+  foreach(Cell _cell, cells)
+  {
+    qreal angle = _cell.getAngle() - averageAngle;
+    if (angle > 180.) angle -= 360.;
+    CSV.append(QString("%1;%2\n").arg(_cell.getStrength()).arg(angle));
+  }
 
   QString FileName(filename);
   if (!FileName.endsWith(".csv"))
