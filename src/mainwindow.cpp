@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
   angleLabel = new QLabel(" [-000 deg] ");
   angleLabel->setAlignment(Qt::AlignLeft);
   angleLabel->setMinimumSize(angleLabel->sizeHint());
+  angleLabel->setVisible(false);
   doAngleChanged(0);
 
   statusBar()->addWidget(cellsLabel);
