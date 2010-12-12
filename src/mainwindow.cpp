@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "dataCtrl.h"
+#include "settingsView.h"
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
@@ -24,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actSave, SIGNAL(triggered()), this, SLOT(doSave()));
   connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
-  connect(&ui->imageView->data(), SIGNAL(countChanged(int)), this, SLOT(doCellCountChanged(int)));
+  connect(&ui->imageView->data(), SIGNAL(countChanged(int, int)), this, SLOT(doCellCountChanged(int, int)));
   connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
   connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
   cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
   cellsLabel->setMinimumSize(cellsLabel->sizeHint());
-  doCellCountChanged(0);
+  doCellCountChanged(0, 0);
 
   angleLabel = new QLabel(" [-000 deg] ");
   angleLabel->setAlignment(Qt::AlignLeft);
@@ -164,9 +165,10 @@ void MainWindow::doOpen()
   }
 }
 
-void MainWindow::doCellCountChanged(int count)
+void MainWindow::doCellCountChanged(int ignored, int count)
 {
-  cellsLabel->setText(QString(" [%1 cell%2] ").arg(count).arg(count?"s":""));
+  cellsLabel->setText(QString(" [%1/%2 cell%3] ").
+                      arg(count - ignored).arg(count).arg(count?"s":""));
 }
 
 void MainWindow::doAngleChanged(int angle)
@@ -183,5 +185,7 @@ void MainWindow::doExport()
 
 void MainWindow::doSettings()
 {
-
+  SettingsView Settings(this);
+  connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
+  Settings.exec();
 }

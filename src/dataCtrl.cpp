@@ -9,7 +9,6 @@
 DataCtrl::DataCtrl(QObject *parent):
   QObject(parent), saved(true), averageAngle(0.)
 {
-  connect(this, SIGNAL(countChanged(int)), this, SLOT(onCountChanged()));
 }
 
 DataCtrl::~DataCtrl()
@@ -28,7 +27,7 @@ void DataCtrl::draw() const
   glPointSize(5.);
 
   for (int i = cells.count(); --i >= 0; )
-    cells.at(i).draw(averageAngle);
+    cells.at(i).draw(averageAngle, minimalStrength);
 
   cell.draw();
 
@@ -52,7 +51,7 @@ void DataCtrl::finalizeForm()
   {
     cells.push_back(cell);
     cell.clear();
-    emit countChanged(cells.count());
+    refresh();
   }
   points.clear();
   saved = false;
@@ -67,7 +66,7 @@ void DataCtrl::removeLastForm()
       cell = cells.last();
       cells.pop_back();
       cell.clearOneForm();
-      emit countChanged(cells.count());
+      refresh();
       saved = false;
     }
     return;
@@ -76,7 +75,7 @@ void DataCtrl::removeLastForm()
   {
     cell = cells.last();
     cells.pop_back();
-    emit countChanged(cells.count());
+    refresh();
   }
   saved = false;
 }
@@ -86,7 +85,7 @@ void DataCtrl::clear()
   points.clear();
   cell.clear();
   cells.clear();
-  emit countChanged(0);
+  refresh();
   saved = true;
 }
 
@@ -119,9 +118,10 @@ void DataCtrl::exportCsv(const QString &filename)
 
   foreach(Cell _cell, cells)
   {
-    qreal angle = _cell.getAngle() - averageAngle;
+    qreal angle     = _cell.getAngle() - averageAngle;
+    qreal strength  = _cell.getStrength();
     if (angle > 180.) angle -= 360.;
-    CSV.append(QString("%1;%2\n").arg(_cell.getStrength()).arg(angle));
+    CSV.append(QString("%1;%2\n").arg(strength > minimalStrength?QString::number(strength):"").arg(angle));
   }
 
   QString FileName(filename);
@@ -133,6 +133,12 @@ void DataCtrl::exportCsv(const QString &filename)
     File.write(CSV);
     File.close();
   }
+}
+
+void DataCtrl::setMinimalStrength(const qreal &minimalStrength)
+{
+  this->minimalStrength = minimalStrength;
+  emit refresh();
 }
 
 void DataCtrl::load(const QString &filename)
@@ -168,22 +174,37 @@ void DataCtrl::load(const QString &filename)
     Element = Element.nextSiblingElement();
   }
 
-  emit countChanged(cells.count());
+  refresh();
   saved = true;
 }
 
-void DataCtrl::onCountChanged()
+void DataCtrl::refresh()
 {
   averageAngle = 0;
-  if (!cells.count()) return;
-  qreal sinsum(0.), cossum(0.);
-  foreach(Cell _cell, cells)
+  const int cellsCount = cells.count();
+  if (!cellsCount)
   {
-    const qreal angle = _cell.getAngle() * M_PI / 180.;
-    sinsum += sin(angle);
-    cossum += cos(angle);
+    emit angleChanged(0.);
+    emit countChanged(0, 0);
+    return;
   }
+
+  qreal sinsum(0.), cossum(0.);
+
+  int ignored = 0;
+
+  foreach(Cell _cell, cells)
+    if (_cell.getStrength() > minimalStrength)
+    {
+      const qreal angle = _cell.getAngle() * M_PI / 180.;
+      sinsum += sin(angle);
+      cossum += cos(angle);
+    }
+    else
+      ++ignored;
+
   averageAngle = atan2(sinsum, cossum) * 180. / M_PI;
   emit angleChanged(averageAngle);
+  emit countChanged(ignored, cellsCount);
 }
 

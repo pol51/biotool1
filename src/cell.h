@@ -22,7 +22,7 @@ class Cell
     bool clearOneForm(); // return true is empty (all forms removeds)
     bool addOneForm(const CellPolygon &form); // return true if full (all form sets)
     void computeVector();
-    void draw(const qreal &averageAngle = 400.) const;
+    void draw(const qreal &averageAngle = 400., const qreal &minimalStrength = 0.) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 

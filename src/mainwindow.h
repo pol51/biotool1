@@ -7,6 +7,8 @@ namespace Ui { class MainWindow; }
 
 class QLabel;
 
+class SettingsView;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -29,7 +31,7 @@ class MainWindow : public QMainWindow
     void doSave();
     void doSaveAs();
     void doOpen();
-    void doCellCountChanged(int count);
+    void doCellCountChanged(int ignored, int total);
     void doAngleChanged(int angle);
     void doExport();
     void doSettings();

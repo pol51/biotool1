@@ -30,19 +30,25 @@ class DataCtrl : public QObject
     void load(const QString &filename);
     void exportCsv(const QString &filename);
 
+    void setMinimalStrength(const qreal &minimalStrength);
+
   protected slots:
-    void onCountChanged();
+    void refresh();
 
   signals:
-    void countChanged(int);
+    void countChanged(int, int);
     void angleChanged(int);
 
   protected:
+    friend class Settings;
+
     bool saved;
     CellPolygon points;
     Cell cell;
     QVector<Cell> cells;
     qreal averageAngle;
+
+    static qreal minimalStrength;
 };
 
 #endif

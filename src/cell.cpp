@@ -76,7 +76,7 @@ void Cell::computeVector()
   strength = centroidsLength / centroidToOutsideLength;
 }
 
-void Cell::draw(const qreal &averageAngle) const
+void Cell::draw(const qreal &averageAngle, const qreal &minimalStrength) const
 {
   // draw outside form
   glColor3f(outsideColor.redF(), outsideColor.greenF(), outsideColor.blueF());
@@ -87,7 +87,7 @@ void Cell::draw(const qreal &averageAngle) const
   insideForm.draw();
 
   // draw vector
-  if (isFull() && outsideForm.count() > 1)
+  if (isFull() && outsideForm.count() > 1 && strength > minimalStrength)
   {
     glPushMatrix();
     glColor3f(vectorColor.redF(), vectorColor.greenF(), vectorColor.blueF());

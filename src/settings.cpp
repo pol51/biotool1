@@ -1,6 +1,7 @@
 #include "settings.h"
 
 #include "cell.h"
+#include "dataCtrl.h"
 
 #include <QtCore/QSettings>
 
@@ -13,9 +14,12 @@ qreal Cell::arrowHeadLength     (.025);
 qreal Cell::arrowHeadHalfWidth  (.0075);
 qreal Cell::arrowScale          (0.75);
 
+qreal DataCtrl::minimalStrength (0.0);
+
 void Settings::Load()
 {
   QSettings settings;
+
   Cell::insideColor         = settings.value("insideColor",         Cell::insideColor).value<QColor>();
   Cell::outsideColor        = settings.value("outsideColor",        Cell::outsideColor).value<QColor>();
   Cell::vectorColor         = settings.value("vectorColor",         Cell::vectorColor).value<QColor>();
@@ -24,17 +28,22 @@ void Settings::Load()
   Cell::arrowHeadLength     = settings.value("arrowHeadLength",     Cell::arrowHeadLength).value<qreal>();
   Cell::arrowHeadHalfWidth  = settings.value("arrowHeadHalfWidth",  Cell::arrowHeadHalfWidth).value<qreal>();
   Cell::arrowScale          = settings.value("arrowScale",          Cell::arrowScale).value<qreal>();
+
+  DataCtrl::minimalStrength = settings.value("minimalStrength",     DataCtrl::minimalStrength).value<qreal>();
 }
 
 void Settings::Save()
 {
   QSettings settings;
-  settings.setValue("insideColor",         Cell::insideColor);
-  settings.setValue("outsideColor",        Cell::outsideColor);
-  settings.setValue("vectorColor",         Cell::vectorColor);
-  settings.setValue("averageVectorColor",  Cell::averageVectorColor);
-  settings.setValue("arrowLength",         Cell::arrowLength);
-  settings.setValue("arrowHeadLength",     Cell::arrowHeadLength);
-  settings.setValue("arrowHeadHalfWidth",  Cell::arrowHeadHalfWidth);
-  settings.setValue("arrowScale",          Cell::arrowScale);
+
+  settings.setValue("insideColor",          Cell::insideColor);
+  settings.setValue("outsideColor",         Cell::outsideColor);
+  settings.setValue("vectorColor",          Cell::vectorColor);
+  settings.setValue("averageVectorColor",   Cell::averageVectorColor);
+  settings.setValue("arrowLength",          Cell::arrowLength);
+  settings.setValue("arrowHeadLength",      Cell::arrowHeadLength);
+  settings.setValue("arrowHeadHalfWidth",   Cell::arrowHeadHalfWidth);
+  settings.setValue("arrowScale",           Cell::arrowScale);
+
+  settings.setValue("minimalStrength",      DataCtrl::minimalStrength);
 }
