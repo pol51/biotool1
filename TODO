@@ -1,0 +1,8 @@
+- proposer le nom de la photo  d'origine pour enregistrement
+- bug de l'effacement de la dernière forme
+- option d'affichage du vecteur moyen : dans chaque cellule, une fois dans la photo, pas du tout
+- export en jpeg ou tiff de la trace
+- afficher d'une couleur les cellules ou les points sont confondus
+- afficher dans différentes couleurs les cellules ou la déviation de l'angle est compris dans un certaine tranche
+- réglage contraste /intensité
+- réglage couleurs
