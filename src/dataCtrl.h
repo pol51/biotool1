@@ -10,8 +10,16 @@ class DataCtrl : public QObject
   Q_OBJECT
 
   public:
+    enum EMode
+    {
+      eModeView,
+      eModeEdit,
+      eModeDefineCentroid,
+    };
+
+  public:
     DataCtrl(QObject *parent = NULL);
-    virtual ~DataCtrl();
+    virtual ~DataCtrl() {}
 
     void addPoint(const QPointF &point);
 
@@ -30,7 +38,8 @@ class DataCtrl : public QObject
     void load(const QString &filename);
     void exportCsv(const QString &filename);
 
-    void setMinimalStrength(const qreal &minimalStrength);
+    void setCurrentMode(const EMode mode) { cntMode = mode; }
+    EMode currentMode() const { return cntMode; }
 
   protected slots:
     void refresh();
@@ -43,12 +52,14 @@ class DataCtrl : public QObject
     friend class Settings;
 
     bool saved;
+    EMode cntMode;
     CellPolygon points;
     Cell cell;
     QVector<Cell> cells;
+    QVector<CellPolygon> centroidsRef;
+    static QColor centroidsRefColor;
     qreal averageAngle;
-
-    static qreal minimalStrength;
+    qreal averageCenroidRadius;
 };
 
 #endif

@@ -5,24 +5,17 @@
 
 #include <QtCore/QTimer>
 
-class DataCtrl;
+#include "dataCtrl.h"
 
 class ImageView : public QGLWidget
 {
   Q_OBJECT
 
   public:
-    enum EMode
-    {
-      eModeView,
-      eModeEdit,
-    };
-
-  public:
     ImageView(QWidget *parent = NULL);
     ~ImageView();
 
-    void changeMode(EMode mode) { currentMode = mode; onMoveDecal = false; }
+    void changeMode(DataCtrl::EMode mode) { dataCtrl->setCurrentMode(mode); onMoveDecal = false; }
 
     DataCtrl& data() { return *dataCtrl; }
     const DataCtrl& data() const { return *dataCtrl; }
@@ -48,7 +41,6 @@ class ImageView : public QGLWidget
 
   protected:
     bool onMoveDecal;
-    EMode currentMode;
     int zoom;
     DataCtrl *dataCtrl;
     GLuint imageTexId;

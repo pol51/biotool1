@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actCloseImage, SIGNAL(triggered()), ui->imageView, SLOT(doCloseImage()));
   connect(ui->actModeEdit, SIGNAL(triggered(bool)), this, SLOT(doChangeMode(bool)));
   connect(ui->actModeView, SIGNAL(triggered(bool)), this, SLOT(doChangeMode(bool)));
+  connect(ui->actModeDefineCentroid, SIGNAL(triggered(bool)), this, SLOT(doChangeMode(bool)));
   connect(ui->actResetView, SIGNAL(triggered()), ui->imageView, SLOT(doResetView()));
   connect(ui->actNew, SIGNAL(triggered()), this, SLOT(doNew()));
   connect(ui->actSave, SIGNAL(triggered()), this, SLOT(doSave()));
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
   ui->actModeView->blockSignals(false);
+  lastModeAction = ui->actModeView;
 
   cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
@@ -102,20 +104,19 @@ void MainWindow::doChangeMode(bool activated)
   QAction *action = (QAction*)sender();
   if (activated)
   {
+    if (lastModeAction)
+    {
+      lastModeAction->blockSignals(true);
+      lastModeAction->trigger();
+      lastModeAction->blockSignals(false);
+    }
     if (action == ui->actModeView)
-    {
-      ui->actModeEdit->blockSignals(true);
-      ui->actModeEdit->trigger();
-      ui->actModeEdit->blockSignals(false);
-      ui->imageView->changeMode(ImageView::eModeView);
-    }
+      ui->imageView->changeMode(DataCtrl::eModeView);
     if (action == ui->actModeEdit)
-    {
-      ui->actModeView->blockSignals(true);
-      ui->actModeView->trigger();
-      ui->actModeView->blockSignals(false);
-      ui->imageView->changeMode(ImageView::eModeEdit);
-    }
+      ui->imageView->changeMode(DataCtrl::eModeEdit);
+    if (action == ui->actModeDefineCentroid)
+      ui->imageView->changeMode(DataCtrl::eModeDefineCentroid);
+    lastModeAction = action;
   }
   else
   {
@@ -185,7 +186,10 @@ void MainWindow::doExport()
 
 void MainWindow::doSettings()
 {
+  return;
+
+  #warning TODO setting panel
   SettingsView Settings(this);
-  connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
+  //connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
   Settings.exec();
 }

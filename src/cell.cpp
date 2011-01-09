@@ -52,7 +52,7 @@ void Cell::computeVector()
   angle = line.angle();
 
   // compute lengths
-  qreal centroidsLength(line.length());
+  interval = line.length();
   qreal centroidToOutsideLength(0.);
 
   line.setLength(10000);
@@ -73,10 +73,10 @@ void Cell::computeVector()
   }
   outsideForm.pop_back();
 
-  strength = centroidsLength / centroidToOutsideLength;
+  strength = interval / centroidToOutsideLength;
 }
 
-void Cell::draw(const qreal &averageAngle, const qreal &minimalStrength) const
+void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
   // draw outside form
   glColor3f(outsideColor.redF(), outsideColor.greenF(), outsideColor.blueF());
@@ -87,7 +87,7 @@ void Cell::draw(const qreal &averageAngle, const qreal &minimalStrength) const
   insideForm.draw();
 
   // draw vector
-  if (isFull() && outsideForm.count() > 1 && strength > minimalStrength)
+  if (isFull() && outsideForm.count() > 1 && interval > averageCenroidRadius)
   {
     glPushMatrix();
     glColor3f(vectorColor.redF(), vectorColor.greenF(), vectorColor.blueF());

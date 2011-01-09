@@ -4,6 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
+#include <cmath>
+
 void CellPolygon::computeData()
 {
   const int Count = count();
@@ -13,24 +15,26 @@ void CellPolygon::computeData()
     case 0: return;
     case 1:
       centroid = at(0);
-      area = 0.;
+      area = 0.f;
+      radius = 0.f;
       break;
     case 2:
-      centroid.setX((at(0).x() + at(1).x()) * .5);
-      centroid.setY((at(0).y() + at(1).y()) * .5);
-      area = 0.;
+      centroid.setX((at(0).x() + at(1).x()) * .5f);
+      centroid.setY((at(0).y() + at(1).y()) * .5f);
+      area = 0.f;
+      radius = QLineF(at(0), at(1)).length() * .5f;
       break;
     default:
       {
-        centroid.setX(0.);
-        centroid.setY(0.);
-        area = 0.;
+        centroid.setX(0.f);
+        centroid.setY(0.f);
+        area = 0.f;
 
-        qreal x0 = 0.0; // Current vertex X
-        qreal y0 = 0.0; // Current vertex Y
-        qreal x1 = 0.0; // Next vertex X
-        qreal y1 = 0.0; // Next vertex Y
-        qreal a = 0.0;  // Partial signed area
+        qreal x0 = 0.f; // Current vertex X
+        qreal y0 = 0.f; // Current vertex Y
+        qreal x1 = 0.f; // Next vertex X
+        qreal y1 = 0.f; // Next vertex Y
+        qreal a =  0.f;  // Partial signed area
 
         push_back(at(0));
 
@@ -49,7 +53,10 @@ void CellPolygon::computeData()
 
         pop_back();
 
-        area *= .5;
+        area *= .5f; // real area
+
+        radius = sqrt(area / M_PI);
+
         centroid.setX(centroid.x() / (6 * area));
         centroid.setY(centroid.y() / (6 * area));
       }
@@ -61,9 +68,10 @@ void CellPolygon::computeData()
 void CellPolygon::clear()
 {
   QPolygonF::clear();
-  centroid.setX(0.);
-  centroid.setY(0.);
-  area = 0.;
+  centroid.setX(0.f);
+  centroid.setY(0.f);
+  area = 0.f;
+  radius = 0.f;
   type = eEdition;
 }
 
@@ -76,11 +84,11 @@ void CellPolygon::draw() const
   switch (type)
   {
     case eEdition:
-      glColor3f(.75, .75, .75);
+      glColor3f(.75f, .75f, .75f);
       for (int i = Count; --i >= 0; )
       {
         glBegin(GL_POINTS);
-          glVertex3f(at(i).x(), at(i).y(), 0.);
+          glVertex3f(at(i).x(), at(i).y(), 0.f);
         glEnd();
       }
       break;
@@ -89,16 +97,16 @@ void CellPolygon::draw() const
       {
         glBegin(GL_LINE_LOOP);
           for (int i = Count; --i >= 0; )
-            glVertex3f(at(i).x(), at(i).y(), 0.);
+            glVertex3f(at(i).x(), at(i).y(), 0.f);
         glEnd();
         glBegin(GL_POINTS);
-          glVertex3f(centroid.x(), centroid.y(), 0.);
+          glVertex3f(centroid.x(), centroid.y(), 0.f);
         glEnd();
       }
       else
       {
         glBegin(GL_POINTS);
-          glVertex3f(at(0).x(), at(0).y(), 0.);
+          glVertex3f(at(0).x(), at(0).y(), 0.f);
         glEnd();
       }
       break;

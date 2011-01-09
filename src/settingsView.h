@@ -13,13 +13,13 @@ class SettingsView : public QDialog
     SettingsView(QWidget *parent = NULL);
 
   protected slots:
-    void onMinimalStrengthSliderChanged(int value);
+    //void onMinimalStrengthSliderChanged(int value);
 
   signals:
-    void minimalStrength(qreal);
+    //void minimalStrength(qreal);
 
   protected:
-    QSlider *minimalStrengthSlider;
+    //QSlider *minimalStrengthSlider;
 };
 
 #endif

@@ -41,6 +41,7 @@ class MainWindow : public QMainWindow
     QLabel *cellsLabel;
     QLabel *angleLabel;
     QString fileName;
+    QAction *lastModeAction;
 };
 
 #endif

@@ -16,7 +16,7 @@ class CellPolygon : public QPolygonF
     };
 
   public:
-    CellPolygon() : QPolygonF(), area(0.), type(eEdition) {}
+    CellPolygon() : QPolygonF(), area(0.f), radius(0.f), type(eEdition) {}
     CellPolygon(const CellPolygon &other) : QPolygonF() { *this = other; }
     virtual ~CellPolygon() {}
 
@@ -25,6 +25,7 @@ class CellPolygon : public QPolygonF
 
     const QPointF &getCentroid() const { return centroid; }
     const qreal &getArea() const { return area; }
+    const qreal &getRadius() const { return radius; }
 
     void draw() const;
 
@@ -34,6 +35,7 @@ class CellPolygon : public QPolygonF
   protected:
     QPointF centroid;
     qreal area;
+    qreal radius;
     EType type;
 };
 

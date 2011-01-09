@@ -5,11 +5,10 @@
 #include <QtGui/QMouseEvent>
 
 #include "settings.h"
-#include "dataCtrl.h"
 
 ImageView::ImageView(QWidget *parent) :
   QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
-  onMoveDecal(false), currentMode(eModeView), zoom(10), dataCtrl(new DataCtrl(this)),
+  onMoveDecal(false), zoom(10), dataCtrl(new DataCtrl(this)),
   imageTexId(0), xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
 {
   Settings::Load();
@@ -30,10 +29,11 @@ void ImageView::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton)
   {
-    onMoveDecal = (event->type() == QEvent::MouseButtonPress && currentMode == eModeView);
+    const DataCtrl::EMode CurrentMode = dataCtrl->currentMode();
+    onMoveDecal = (event->type() == QEvent::MouseButtonPress && CurrentMode == DataCtrl::eModeView);
     lastMousePos = event->pos();
 
-    if (currentMode == eModeEdit)
+    if ((1<<CurrentMode) & ((1<<DataCtrl::eModeEdit) | (1<<DataCtrl::eModeDefineCentroid)))
     {
       const float factor = qMin(width(), height());
       float x(zoom / 10.);
