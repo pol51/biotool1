@@ -92,12 +92,8 @@ void DataCtrl::removeLastForm()
         }
         return;
       }
-      if (cell.clearOneForm() && /*points.isEmpty() &&*/ !cells.isEmpty())
-      {
-        cell = cells.last();
-        cells.pop_back();
+      if (cell.clearOneForm() && !cells.isEmpty())
         refresh();
-      }
       break;
     case eModeDefineCentroid:
       if (!centroidsRef.isEmpty())
