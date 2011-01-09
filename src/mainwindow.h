@@ -36,11 +36,15 @@ class MainWindow : public QMainWindow
     void doExport();
     void doSettings();
 
+  protected:
+    QString getDefaultFilename();
+
   private:
     Ui::MainWindow *ui;
     QLabel *cellsLabel;
     QLabel *angleLabel;
     QString fileName;
+    QString imageName;
     QAction *lastModeAction;
 };
 

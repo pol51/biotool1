@@ -82,6 +82,8 @@ bool MainWindow::askForUnsavedChanges(const QString &title)
 
 void MainWindow::doLoadImage()
 {
+  imageName = QString();
+
   QString filename(QFileDialog::getOpenFileName(this, tr("Choisir une image"), tr("."), tr("Images (*.png *.jpg *.jpeg *.tif *.tiff);;Tous (*)")));
   if (filename.isEmpty()) return;
   if (!QFileInfo(filename).isReadable())
@@ -95,6 +97,8 @@ void MainWindow::doLoadImage()
     QMessageBox::warning(this, tr("Erreur"), tr("Format d'image incorrect."));
     return;
   }
+
+  imageName = QFileInfo(filename).baseName();
 
   emit onLoadWorkImage(Image);
 }
@@ -145,11 +149,18 @@ void MainWindow::doSave()
 
 void MainWindow::doSaveAs()
 {
-  const QString filename(QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), tr("."), tr("Documents (*.xml);;Tous (*)")));
-  if (!filename.isEmpty())
+  QFileDialog FileDialog(this, tr("Enregistrer sous"), tr("."), tr("Documents (*.xml);;Tous (*)"));
+  FileDialog.setAcceptMode(QFileDialog::AcceptSave);
+  FileDialog.setFileMode(QFileDialog::AnyFile);
+  FileDialog.selectFile(getDefaultFilename().append(".xml"));
+  if (FileDialog.exec() == QDialog::Accepted)
   {
-    fileName = filename;
-    doSave();
+    const QString filename(FileDialog.selectedFiles().at(0));
+    if (!filename.isEmpty())
+    {
+      fileName = filename;
+      doSave();
+    }
   }
 }
 
@@ -179,9 +190,16 @@ void MainWindow::doAngleChanged(int angle)
 
 void MainWindow::doExport()
 {
-  const QString filename(QFileDialog::getSaveFileName(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)")));
-  if (!filename.isEmpty())
-    ui->imageView->data().exportCsv(filename);
+  QFileDialog FileDialog(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)"));
+  FileDialog.setAcceptMode(QFileDialog::AcceptSave);
+  FileDialog.setFileMode(QFileDialog::AnyFile);
+  FileDialog.selectFile(getDefaultFilename().append(".csv"));
+  if (FileDialog.exec() == QDialog::Accepted)
+  {
+    const QString filename(FileDialog.selectedFiles().at(0));
+    if (!filename.isEmpty())
+      ui->imageView->data().exportCsv(filename);
+  }
 }
 
 void MainWindow::doSettings()
@@ -192,4 +210,11 @@ void MainWindow::doSettings()
   SettingsView Settings(this);
   //connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
   Settings.exec();
+}
+
+QString MainWindow::getDefaultFilename()
+{
+  if (fileName.isEmpty())
+    return imageName;
+  return QFileInfo(fileName).baseName();
 }
