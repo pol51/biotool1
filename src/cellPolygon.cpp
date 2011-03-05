@@ -55,10 +55,11 @@ void CellPolygon::computeData()
 
         area *= .5f; // real area
 
-        radius = sqrt(area / M_PI);
-
         centroid.setX(centroid.x() / (6 * area));
         centroid.setY(centroid.y() / (6 * area));
+
+        area = qAbs(area);
+        radius = sqrt(area / M_PI);
       }
       break;
   }
