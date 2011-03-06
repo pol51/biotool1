@@ -154,7 +154,7 @@ void DataCtrl::exportCsv(const QString &filename)
     qreal strength  = _cell.getStrength();
     qreal interval  = _cell.getInterval();
     if (angle > 180.) angle -= 360.;
-    CSV.append(QString("%1;%2\n").arg(QString::number(strength).arg(interval > averageCenroidRadius?QString::number(angle):""));
+    CSV.append(QString("%1;%2\n").arg(QString::number(strength).arg(interval > averageCenroidRadius?QString::number(angle):"")));
   }
 
   QString FileName(filename);
