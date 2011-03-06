@@ -82,6 +82,8 @@ bool MainWindow::askForUnsavedChanges(const QString &title)
 
 void MainWindow::doLoadImage()
 {
+  ui->imageView->releaseKeyboard();
+
   imageName = QString();
 
   QString filename(QFileDialog::getOpenFileName(this, tr("Choisir une image"), tr("."), tr("Images (*.png *.jpg *.jpeg *.tif *.tiff);;Tous (*)")));
@@ -89,18 +91,21 @@ void MainWindow::doLoadImage()
   if (!QFileInfo(filename).isReadable())
   {
     QMessageBox::warning(this, tr("Erreur"), tr("Impossible de lire le fichier."));
+    ui->imageView->grabKeyboard();
     return;
   }
   QImage Image(filename);
   if (Image.isNull())
   {
     QMessageBox::warning(this, tr("Erreur"), tr("Format d'image incorrect."));
+    ui->imageView->grabKeyboard();
     return;
   }
 
   imageName = QFileInfo(filename).baseName();
 
   emit onLoadWorkImage(Image);
+  ui->imageView->grabKeyboard();
 }
 
 void MainWindow::doChangeMode(bool activated)
@@ -149,6 +154,8 @@ void MainWindow::doSave()
 
 void MainWindow::doSaveAs()
 {
+  ui->imageView->releaseKeyboard();
+
   QFileDialog FileDialog(this, tr("Enregistrer sous"), tr("."), tr("Documents (*.xml);;Tous (*)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
@@ -162,10 +169,14 @@ void MainWindow::doSaveAs()
       doSave();
     }
   }
+
+  ui->imageView->grabKeyboard();
 }
 
 void MainWindow::doOpen()
 {
+  ui->imageView->releaseKeyboard();
+
   if (askForUnsavedChanges(tr("Ouvrir un document")))
   {
     const QString filename(QFileDialog::getOpenFileName(this, tr("Ouvrir un document"), tr("."), tr("Documents (*.xml);;Tous (*)")));
@@ -175,6 +186,8 @@ void MainWindow::doOpen()
       ui->imageView->data().load(fileName);
     }
   }
+
+  ui->imageView->grabKeyboard();
 }
 
 void MainWindow::doCellCountChanged(int ignored, int count)
@@ -190,6 +203,8 @@ void MainWindow::doAngleChanged(int angle)
 
 void MainWindow::doExport()
 {
+  ui->imageView->releaseKeyboard();
+
   QFileDialog FileDialog(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
@@ -200,6 +215,8 @@ void MainWindow::doExport()
     if (!filename.isEmpty())
       ui->imageView->data().exportCsv(filename);
   }
+
+  ui->imageView->grabKeyboard();
 }
 
 void MainWindow::doSettings()
