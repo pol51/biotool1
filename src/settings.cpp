@@ -5,14 +5,15 @@
 
 #include <QtCore/QSettings>
 
+bool   Cell::averageArrow           (true);
 QColor Cell::insideColor            (QColor(0xff, 0x1f, 0x1f));
 QColor Cell::outsideColor           (QColor(0x1f, 0xff, 0x1f));
 QColor Cell::vectorColor            (QColor(0x1f, 0x1f, 0xff));
 QColor Cell::averageVectorColor     (QColor(0x7f, 0x7f, 0xff));
-qreal Cell::arrowLength             (.1);
-qreal Cell::arrowHeadLength         (.025);
-qreal Cell::arrowHeadHalfWidth      (.0075);
-qreal Cell::arrowScale              (0.75);
+qreal  Cell::arrowLength            (.1);
+qreal  Cell::arrowHeadLength        (.025);
+qreal  Cell::arrowHeadHalfWidth     (.0075);
+qreal  Cell::arrowScale             (0.75);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
 
@@ -20,6 +21,7 @@ void Settings::Load()
 {
   QSettings settings;
 
+  Cell::averageArrow          = settings.value("averageArrow",        Cell::averageArrow).value<bool>();
   Cell::insideColor           = settings.value("insideColor",         Cell::insideColor).value<QColor>();
   Cell::outsideColor          = settings.value("outsideColor",        Cell::outsideColor).value<QColor>();
   Cell::vectorColor           = settings.value("vectorColor",         Cell::vectorColor).value<QColor>();
@@ -36,6 +38,7 @@ void Settings::Save()
 {
   QSettings settings;
 
+  settings.setValue("averageArrow",         Cell::averageArrow);
   settings.setValue("insideColor",          Cell::insideColor);
   settings.setValue("outsideColor",         Cell::outsideColor);
   settings.setValue("vectorColor",          Cell::vectorColor);

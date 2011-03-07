@@ -97,7 +97,7 @@ void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) co
     glScalef(arrowScale, arrowScale, 1.);
     drawArrow();
 
-    if (averageAngle <= 360.)
+    if (averageArrow && averageAngle <= 360.)
     {
       glColor3f(averageVectorColor.redF(), averageVectorColor.greenF(), averageVectorColor.blueF());
       glRotatef(averageAngle - angle, 0., 0., -1.);

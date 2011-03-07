@@ -4,6 +4,7 @@
 #include <QtGui/QDialog>
 
 class QSlider;
+class QCheckBox;
 
 class SettingsView : public QDialog
 {
@@ -14,11 +15,13 @@ class SettingsView : public QDialog
 
   protected slots:
     //void onMinimalStrengthSliderChanged(int value);
+    void onAverageArrow(bool display);
 
   signals:
     //void minimalStrength(qreal);
 
   protected:
+    QCheckBox *averageArrow;
     //QSlider *minimalStrengthSlider;
 };
 

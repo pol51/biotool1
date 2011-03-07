@@ -9,6 +9,7 @@ class QDomElement;
 class QDomDocument;
 
 class Settings;
+class SettingsView;
 
 class Cell
 {
@@ -34,9 +35,12 @@ class Cell
 
   protected:
     friend class Settings;
+    friend class SettingsView;
 
     CellPolygon insideForm;
     CellPolygon outsideForm;
+
+    static bool averageArrow;
 
     static QColor insideColor;
     static QColor outsideColor;

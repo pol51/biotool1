@@ -221,9 +221,6 @@ void MainWindow::doExport()
 
 void MainWindow::doSettings()
 {
-  return;
-
-  #warning TODO setting panel
   SettingsView Settings(this);
   //connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
   Settings.exec();
