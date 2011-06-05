@@ -35,6 +35,7 @@ class MainWindow : public QMainWindow
     void doAngleChanged(int angle);
     void doExport();
     void doSettings();
+    void doAbout();
 
   protected:
     QString getDefaultFilename();

@@ -59,8 +59,15 @@
     <addaction name="separator"/>
     <addaction name="actSettings"/>
    </widget>
+   <widget class="QMenu" name="menu_Aide">
+    <property name="title">
+     <string>&amp;Aide</string>
+    </property>
+    <addaction name="actAbout"/>
+   </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
+   <addaction name="menu_Aide"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
@@ -264,6 +271,11 @@
    </property>
    <property name="text">
     <string>Mode Define &amp;Centroid</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>A &amp;Propos</string>
    </property>
   </action>
  </widget>

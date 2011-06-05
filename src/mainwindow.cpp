@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
   connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
+  connect(ui->actAbout, SIGNAL(triggered()), this, SLOT(doAbout()));
 
 
   ui->actModeView->blockSignals(true);
@@ -224,6 +225,18 @@ void MainWindow::doSettings()
   SettingsView Settings(this);
   //connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
   Settings.exec();
+}
+
+void MainWindow::doAbout()
+{
+  #ifndef BT1_GIT_VERSION
+  #  define BT1_GIT_VERSION ?
+  #endif
+  #define _XSTR(var)  _STR(var)
+  #define _STR(var)   #var
+  #define GIT_VERSION _XSTR(BT1_GIT_VERSION)
+
+  QMessageBox::information(this, tr("A Propos"), tr("Biotool1\nversion 1-%1").arg(GIT_VERSION));
 }
 
 QString MainWindow::getDefaultFilename()

@@ -1,6 +1,11 @@
 TARGET = biotool1
 TEMPLATE = app
+
 QT += opengl xml
+
+GIT_VERSION = $$system(git rev-parse --short HEAD)
+DEFINES += BT1_GIT_VERSION=$$GIT_VERSION
+
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/imageView.cpp \
@@ -16,6 +21,9 @@ HEADERS += src/mainwindow.h \
     src/cell.h \
     src/settings.h \
     src/settingsView.h
+
 INCLUDEPATH += src
+
 FORMS += ui/mainwindow.ui
+
 RESOURCES += res/icons.qrc
