@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->actModeView->blockSignals(false);
   lastModeAction = ui->actModeView;
 
+  ui->objectsView->setModel(&ui->imageView->data());
+
   cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
   cellsLabel->setMinimumSize(cellsLabel->sizeHint());

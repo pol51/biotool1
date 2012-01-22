@@ -1,11 +1,11 @@
 #ifndef __DATACTRL_H__
 #define __DATACTRL_H__
 
-#include <QtCore/QObject>
+#include <QStandardItemModel>
 
 #include "cell.h"
 
-class DataCtrl : public QObject
+class DataCtrl : public QStandardItemModel
 {
   Q_OBJECT
 
@@ -27,6 +27,8 @@ class DataCtrl : public QObject
 
     bool isSaved() const { return saved; }
 
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
   public slots:
     void removeLastPoint();
     void finalizeForm();
@@ -47,6 +49,7 @@ class DataCtrl : public QObject
   signals:
     void countChanged(int, int);
     void angleChanged(int);
+    void rowsInserted(const QModelIndex &parent, int first, int last);
 
   protected:
     friend class Settings;
@@ -60,6 +63,8 @@ class DataCtrl : public QObject
     static QColor centroidsRefColor;
     qreal averageAngle;
     qreal averageCenroidRadius;
+
+    QStandardItem *rootItem;
 };
 
 #endif

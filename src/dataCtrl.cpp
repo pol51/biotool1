@@ -4,11 +4,14 @@
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
 
+#include <QtCore/QDebug>
+
 #include <cmath>
 
 DataCtrl::DataCtrl(QObject *parent):
-  QObject(parent), saved(true), cntMode(eModeView),
-  averageAngle(0.), averageCenroidRadius(0.)
+  QStandardItemModel(parent), saved(true), cntMode(eModeView),
+  averageAngle(0.), averageCenroidRadius(0.),
+  rootItem(invisibleRootItem())
 {
 }
 
@@ -40,6 +43,19 @@ void DataCtrl::draw() const
   points.draw();
 }
 
+QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  Q_UNUSED(orientation);
+
+  if (role != Qt::DisplayRole)
+    return QVariant();
+
+  if (section == 0)
+    return QString("Cells");
+
+  return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 void DataCtrl::removeLastPoint()
 {
   if (points.count())
@@ -61,6 +77,11 @@ void DataCtrl::finalizeForm()
       {
         cells.push_back(cell);
         cell.clear();
+        qDebug() << "new cell" << cells.count();
+
+        QStandardItemModel::clear();
+        for (int i = 0; ++i <= cells.count();)
+          appendRow(new QStandardItem(QString("Cell %0").arg(i)));
         refresh();
       }
       break;
@@ -109,6 +130,7 @@ void DataCtrl::removeLastForm()
 
 void DataCtrl::clear()
 {
+  QStandardItemModel::clear();
   points.clear();
   cell.clear();
   cells.clear();
