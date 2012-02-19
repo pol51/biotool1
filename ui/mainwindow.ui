@@ -38,6 +38,7 @@
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
     <addaction name="actExport"/>
+    <addaction name="actExportOption"/>
     <addaction name="separator"/>
     <addaction name="actLoadImage"/>
     <addaction name="actCloseImage"/>
@@ -291,6 +292,18 @@
   <action name="actAbout">
    <property name="text">
     <string>A &amp;Propos</string>
+   </property>
+  </action>
+  <action name="actExportOption">
+   <property name="icon">
+    <iconset resource="../res/icons.qrc">
+     <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
+   </property>
+   <property name="text">
+    <string>Exporter ...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
  </widget>

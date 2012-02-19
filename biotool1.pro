@@ -6,6 +6,8 @@ QT += opengl xml
 GIT_VERSION = $$system(git rev-parse --short HEAD)
 DEFINES += BT1_GIT_VERSION=$$GIT_VERSION
 
+QMAKE_CXXFLAGS += -std=gnu++0x
+
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/imageView.cpp \
@@ -24,6 +26,7 @@ HEADERS += src/mainwindow.h \
 
 INCLUDEPATH += src
 
-FORMS += ui/mainwindow.ui
+FORMS += ui/mainwindow.ui \
+    ui/csvExportOptions.ui
 
 RESOURCES += res/icons.qrc
