@@ -1,7 +1,7 @@
 #ifndef __DATACTRL_H__
 #define __DATACTRL_H__
 
-#include <QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 
 #include "cell.h"
 
@@ -15,6 +15,41 @@ class DataCtrl : public QStandardItemModel
       eModeView,
       eModeEdit,
       eModeDefineCentroid,
+    };
+
+  public:
+    class CSVDataType
+    {
+      public:
+        CSVDataType(const QString &name, const QString &suffix, QString (*function)(const DataCtrl *, const Cell&)):
+          name(name),
+          suffix(suffix),
+          function(function) {}
+        CSVDataType(const CSVDataType &other) :
+          name(other.name),
+          suffix(other.suffix),
+          function(other.function) {}
+
+      protected:
+        friend class QVector<CSVDataType>;
+        CSVDataType() {}
+        const CSVDataType &operator=(const CSVDataType &other)
+        {
+          name=other.name;
+          suffix=other.suffix;
+          function=other.function;
+          return *this;
+        }
+
+      public:
+        QString value(const DataCtrl *me, const Cell &cell) const { return (*function)(me, cell); }
+
+      public:
+        QString name;
+        QString suffix;
+
+      protected:
+        QString (*function)(const DataCtrl *, const Cell&);
     };
 
   public:
@@ -60,6 +95,8 @@ class DataCtrl : public QStandardItemModel
     Cell cell;
     QVector<Cell> cells;
     QVector<CellPolygon> centroidsRef;
+    static QVector<CSVDataType> csvDataTypes;
+    QVector<CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
     qreal averageAngle;
     qreal averageCenroidRadius;

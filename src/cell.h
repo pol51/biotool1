@@ -14,7 +14,7 @@ class SettingsView;
 class Cell
 {
   public:
-    Cell() : angle(0.f), strength(0.f), interval(0.f) {}
+    Cell() : angle(0.f), strength(0.f), interval(0.f), areaRatio(0.f) {}
     ~Cell() {}
 
     void clear();
@@ -22,6 +22,7 @@ class Cell
     bool isFull() const;
     bool clearOneForm(); // return true is empty (all forms removeds)
     bool addOneForm(const CellPolygon &form); // return true if full (all form sets)
+    void computeAreaRatio();
     void computeVector();
     void draw(const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
@@ -30,6 +31,7 @@ class Cell
     const qreal &getAngle() const { return angle; }
     const qreal &getStrength() const { return strength; }
     const qreal &getInterval() const { return interval; }
+    const qreal &getAreaRatio() const { return areaRatio; }
 
     static void drawArrow();
 
@@ -55,6 +57,7 @@ class Cell
     qreal angle;
     qreal strength;
     qreal interval;
+    qreal areaRatio;
 };
 
 #endif

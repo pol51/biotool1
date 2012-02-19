@@ -8,11 +8,42 @@
 
 #include <cmath>
 
+QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
+
 DataCtrl::DataCtrl(QObject *parent):
   QStandardItemModel(parent), saved(true), cntMode(eModeView),
   averageAngle(0.), averageCenroidRadius(0.),
   rootItem(invisibleRootItem())
 {
+
+  // csv data type callbacks
+  static auto csvStrength = [](const DataCtrl *, const Cell &cell)
+  {
+    return QString::number(cell.getStrength());
+  };
+
+  static auto csvAngle = [](const DataCtrl *me, const Cell &cell)
+  {
+    qreal interval  = cell.getInterval();
+    qreal angle     = cell.getAngle() - me->averageAngle;
+    if (angle > 180.) angle -= 360.;
+
+    return interval > me->averageCenroidRadius?QString::number(angle):"";
+  };
+
+  static auto csvAreaPrecentile = [](const DataCtrl *, const Cell &cell)
+  {
+    return QString::number(cell.getAreaRatio() * 100.);
+  };
+
+  // init csv data types
+  csvDataTypes.append(CSVDataType(tr("Strength"),         "st", csvStrength));        // strength
+  csvDataTypes.append(CSVDataType(tr("Angle"),            "an", csvAngle));           // angle
+  csvDataTypes.append(CSVDataType(tr("Area percentile"),  "ap", csvAreaPrecentile));  // area percentile
+
+  csvSelection.append(&csvDataTypes[0]);
+  csvSelection.append(&csvDataTypes[1]);
+  csvSelection.append(&csvDataTypes[2]);
 }
 
 void DataCtrl::addPoint(const QPointF &point)
@@ -170,13 +201,13 @@ void DataCtrl::exportCsv(const QString &filename)
 {
   QByteArray CSV;
 
+  QStringList Values;
   foreach(Cell _cell, cells)
   {
-    qreal angle     = _cell.getAngle() - averageAngle;
-    qreal strength  = _cell.getStrength();
-    qreal interval  = _cell.getInterval();
-    if (angle > 180.) angle -= 360.;
-    CSV.append(QString("%1;%2\n").arg(QString::number(strength)).arg(interval > averageCenroidRadius?QString::number(angle):""));
+    Values.clear();
+    foreach(CSVDataType *_csvDataType, csvSelection)
+      Values.append(_csvDataType->value(this, _cell));
+    CSV.append(QString("%1\n").arg(Values.join(";")));
   }
 
   QString FileName(filename);
@@ -279,4 +310,3 @@ void DataCtrl::refresh()
   emit angleChanged(averageAngle);
   emit countChanged(ignored, cellsCount);
 }
-

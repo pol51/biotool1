@@ -39,8 +39,16 @@ bool Cell::addOneForm(const CellPolygon &form)
     return false;
   }
   insideForm = form;
+  computeAreaRatio();
   computeVector();
   return true;
+}
+
+void Cell::computeAreaRatio()
+{
+  if (outsideForm.count() <= 1 ) return;
+
+  areaRatio = insideForm.getArea() / outsideForm.getArea();
 }
 
 void Cell::computeVector()
@@ -140,6 +148,7 @@ bool Cell::load(QDomElement &node)
     insideForm.computeData();
     outsideForm.computeData();
     computeVector();
+    computeAreaRatio();
     return true;
   }
 
