@@ -221,6 +221,14 @@ void DataCtrl::exportCsv(const QString &filename)
   }
 }
 
+QString DataCtrl::getCsvSuffix() const
+{
+  QStringList Suffixes;
+  foreach(CSVDataType *_csvDataType, csvSelection)
+    Suffixes << _csvDataType->suffix;
+  return "-" + Suffixes.join("_");
+}
+
 void DataCtrl::load(const QString &filename)
 {
   QDomDocument Doc("document");

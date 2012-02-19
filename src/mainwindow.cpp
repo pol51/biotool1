@@ -211,7 +211,7 @@ void MainWindow::doExport()
   QFileDialog FileDialog(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
-  FileDialog.selectFile(getDefaultFilename().append(".csv"));
+  FileDialog.selectFile(getDefaultFilename().append(ui->imageView->data().getCsvSuffix()).append(".csv"));
   if (FileDialog.exec() == QDialog::Accepted)
   {
     const QString filename(FileDialog.selectedFiles().at(0));

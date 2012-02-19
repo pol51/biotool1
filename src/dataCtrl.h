@@ -74,6 +74,7 @@ class DataCtrl : public QStandardItemModel
     void save(const QString &filename);
     void load(const QString &filename);
     void exportCsv(const QString &filename);
+    QString getCsvSuffix() const;
 
     void setCurrentMode(const EMode mode) { cntMode = mode; }
     EMode currentMode() const { return cntMode; }
