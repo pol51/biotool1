@@ -23,9 +23,9 @@ class CellPolygon : public QPolygonF
     void computeData();
     virtual void clear();
 
-    const QPointF &getCentroid() const { return centroid; }
-    const qreal &getArea() const { return area; }
-    const qreal &getRadius() const { return radius; }
+    const QPointF &getCentroid()  const { return centroid; }
+    const qreal   &getArea()      const { return area; }
+    const qreal   &getRadius()    const { return radius; }
 
     void draw() const;
 

@@ -4,9 +4,9 @@
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
 
-#include <QtCore/QDebug>
-
 #include <cmath>
+
+#include "settings.h"
 
 QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
@@ -41,9 +41,16 @@ DataCtrl::DataCtrl(QObject *parent):
   csvDataTypes.append(CSVDataType(tr("Angle"),            "an", csvAngle));           // angle
   csvDataTypes.append(CSVDataType(tr("Area percentile"),  "ap", csvAreaPrecentile));  // area percentile
 
-  csvSelection.append(&csvDataTypes[0]);
-  csvSelection.append(&csvDataTypes[1]);
-  csvSelection.append(&csvDataTypes[2]);
+  Settings::Load();
+
+  // default selection
+  if (csvSelection.isEmpty())
+  {
+    csvSelection.append(&csvDataTypes[0]);
+    csvSelection.append(&csvDataTypes[1]);
+  }
+
+  Settings::Save();
 }
 
 void DataCtrl::addPoint(const QPointF &point)
@@ -87,6 +94,32 @@ QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+void DataCtrl::getDataTypesNames(QStringList &names)
+{
+  names.clear();
+  foreach(const CSVDataType &_csvDataType, csvDataTypes)
+    names.append(_csvDataType.name);
+}
+
+void DataCtrl::getSelectedDataTypesNames(QStringList &names)
+{
+  names.clear();
+  foreach(const CSVDataType *_csvDataType, csvSelection)
+    names.append(_csvDataType->name);
+}
+
+void DataCtrl::setSelectedDataTypesNames(const QStringList &names)
+{
+  csvSelection.clear();
+  foreach(const QString &Name, names)
+    foreach(const CSVDataType &_csvDataType, csvDataTypes)
+      if (_csvDataType.name == Name)
+      {
+        csvSelection.append(&_csvDataType);
+        break;
+      }
+}
+
 void DataCtrl::removeLastPoint()
 {
   if (points.count())
@@ -108,7 +141,6 @@ void DataCtrl::finalizeForm()
       {
         cells.push_back(cell);
         cell.clear();
-        qDebug() << "new cell" << cells.count();
 
         QStandardItemModel::clear();
         for (int i = 0; ++i <= cells.count();)
@@ -205,7 +237,7 @@ void DataCtrl::exportCsv(const QString &filename)
   foreach(Cell _cell, cells)
   {
     Values.clear();
-    foreach(CSVDataType *_csvDataType, csvSelection)
+    foreach(const CSVDataType *_csvDataType, csvSelection)
       Values.append(_csvDataType->value(this, _cell));
     CSV.append(QString("%1\n").arg(Values.join(";")));
   }
@@ -224,7 +256,7 @@ void DataCtrl::exportCsv(const QString &filename)
 QString DataCtrl::getCsvSuffix() const
 {
   QStringList Suffixes;
-  foreach(CSVDataType *_csvDataType, csvSelection)
+  foreach(const CSVDataType *_csvDataType, csvSelection)
     Suffixes << _csvDataType->suffix;
   return "-" + Suffixes.join("_");
 }

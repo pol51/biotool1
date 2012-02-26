@@ -64,6 +64,10 @@ class DataCtrl : public QStandardItemModel
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
+    static void getDataTypesNames(QStringList &names);
+    static void getSelectedDataTypesNames(QStringList &names);
+    static void setSelectedDataTypesNames(const QStringList &names);
+
   public slots:
     void removeLastPoint();
     void finalizeForm();
@@ -97,7 +101,7 @@ class DataCtrl : public QStandardItemModel
     QVector<Cell> cells;
     QVector<CellPolygon> centroidsRef;
     static QVector<CSVDataType> csvDataTypes;
-    QVector<CSVDataType*> csvSelection;
+    static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
     qreal averageAngle;
     qreal averageCenroidRadius;

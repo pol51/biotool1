@@ -3,6 +3,7 @@
 
 #include "dataCtrl.h"
 #include "settingsView.h"
+#include "csvExportOptions.h"
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&ui->imageView->data(), SIGNAL(countChanged(int, int)), this, SLOT(doCellCountChanged(int, int)));
   connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
   connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
+  connect(ui->actExportOption, SIGNAL(triggered()), this, SLOT(doAdvancedExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
   connect(ui->actAbout, SIGNAL(triggered()), this, SLOT(doAbout()));
 
@@ -218,6 +220,17 @@ void MainWindow::doExport()
     if (!filename.isEmpty())
       ui->imageView->data().exportCsv(filename);
   }
+
+  ui->imageView->grabKeyboard();
+}
+
+void MainWindow::doAdvancedExport()
+{
+  ui->imageView->releaseKeyboard();
+
+  CsvExportOptions CsvExportDialog(this);
+  if (CsvExportDialog.exec() == QDialog::Accepted)
+    doExport();
 
   ui->imageView->grabKeyboard();
 }

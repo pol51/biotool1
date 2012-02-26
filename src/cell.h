@@ -28,9 +28,9 @@ class Cell
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 
-    const qreal &getAngle() const { return angle; }
-    const qreal &getStrength() const { return strength; }
-    const qreal &getInterval() const { return interval; }
+    const qreal &getAngle()     const { return angle; }
+    const qreal &getStrength()  const { return strength; }
+    const qreal &getInterval()  const { return interval; }
     const qreal &getAreaRatio() const { return areaRatio; }
 
     static void drawArrow();

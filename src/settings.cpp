@@ -16,6 +16,7 @@ qreal  Cell::arrowHeadHalfWidth     (.0075);
 qreal  Cell::arrowScale             (0.75);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
+QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
 
 void Settings::Load()
 {
@@ -32,6 +33,7 @@ void Settings::Load()
   Cell::arrowScale            = settings.value("arrowScale",          Cell::arrowScale).value<qreal>();
 
   DataCtrl::centroidsRefColor = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
+  DataCtrl::setSelectedDataTypesNames(settings.value("csvSelectedDataType", QStringList()).value<QStringList>());
 }
 
 void Settings::Save()
@@ -49,4 +51,8 @@ void Settings::Save()
   settings.setValue("arrowScale",           Cell::arrowScale);
 
   settings.setValue("centroidsRefColor",    DataCtrl::centroidsRefColor);
+
+  QStringList SelectedDataNames;
+  DataCtrl::getSelectedDataTypesNames(SelectedDataNames);
+  settings.setValue("csvSelectedDataType",  SelectedDataNames);
 }

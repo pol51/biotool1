@@ -15,14 +15,16 @@ SOURCES += src/main.cpp \
     src/cellPolygon.cpp \
     src/cell.cpp \
     src/settings.cpp \
-    src/settingsView.cpp
+    src/settingsView.cpp \
+    src/csvExportOptions.cpp
 HEADERS += src/mainwindow.h \
     src/imageView.h \
     src/dataCtrl.h \
     src/cellPolygon.h \
     src/cell.h \
     src/settings.h \
-    src/settingsView.h
+    src/settingsView.h \
+    src/csvExportOptions.h
 
 INCLUDEPATH += src
 

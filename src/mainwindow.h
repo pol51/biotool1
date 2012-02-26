@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
     void doCellCountChanged(int ignored, int total);
     void doAngleChanged(int angle);
     void doExport();
+    void doAdvancedExport();
     void doSettings();
     void doAbout();
 
