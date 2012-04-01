@@ -41,6 +41,16 @@ void ImageView::mousePressEvent(QMouseEvent *event)
       dataCtrl->addPoint(Point);
     }
   }
+
+  QGLWidget::mousePressEvent(event);
+}
+
+void ImageView::mouseReleaseEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton)
+    onMoveDecal = false;
+
+  QGLWidget::mousePressEvent(event);
 }
 
 void ImageView::mouseMoveEvent(QMouseEvent *event)
@@ -52,6 +62,9 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
     yDecal += (event->y() - lastMousePos.y()) / factor * (zoom<<1);
   }
   lastMousePos = event->pos();
+
+  if (!onMoveDecal && !(event->buttons() & Qt::LeftButton))
+    QGLWidget::mouseMoveEvent(event);
 }
 
 void ImageView::wheelEvent(QWheelEvent *event)
@@ -60,6 +73,8 @@ void ImageView::wheelEvent(QWheelEvent *event)
   if (zoom > 11)  zoom = 11;
   if (zoom < 1)   zoom = 1;
   resizeGL(width(), height());
+
+  QGLWidget::wheelEvent(event);
 }
 
 void ImageView::keyPressEvent(QKeyEvent *event)
@@ -78,6 +93,8 @@ void ImageView::keyPressEvent(QKeyEvent *event)
     default:
       break;
   }
+
+  QGLWidget::keyPressEvent(event);
 }
 
 void ImageView::doChangeImage(const QImage &image)
