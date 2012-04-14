@@ -4,6 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
+const Cell* Cell::selected = NULL;
+
 void Cell::clear()
 {
   insideForm.clear();
@@ -86,12 +88,15 @@ void Cell::computeVector()
 
 void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
+  QColor & inColor(selected==this ?  insideSelectedColor :  insideColor);
+  QColor &outColor(selected==this ? outsideSelectedColor : outsideColor);
+
   // draw outside form
-  glColor3f(outsideColor.redF(), outsideColor.greenF(), outsideColor.blueF());
+  glColor3f(outColor.redF(), outColor.greenF(), outColor.blueF());
   outsideForm.draw();
 
   // draw inside form
-  glColor3f(insideColor.redF(), insideColor.greenF(), insideColor.blueF());
+  glColor3f(inColor.redF(), inColor.greenF(), inColor.blueF());
   insideForm.draw();
 
   // draw vector

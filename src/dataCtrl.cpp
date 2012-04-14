@@ -15,7 +15,6 @@ DataCtrl::DataCtrl(QObject *parent):
   QAbstractItemModel(parent), saved(true), cntMode(eModeView),
   averageAngle(0.), averageCenroidRadius(0.)
 {
-
   // csv data type callbacks
 
   function<QString (const Cell&)> csvStrength = [](const Cell &cell) -> QString
@@ -69,13 +68,13 @@ void DataCtrl::draw() const
   {
     case eModeEdit:
     case eModeView:
-      foreach (Cell CellItem, cells)
+      foreach (const Cell &CellItem, cells)
         CellItem.draw(averageAngle, averageCenroidRadius);
       cell.draw();
       break;
     case eModeDefineCentroid:
       glColor3f(centroidsRefColor.redF(), centroidsRefColor.greenF(), centroidsRefColor.blueF());
-      foreach (CellPolygon CellItem, centroidsRef)
+      foreach (const CellPolygon &CellItem, centroidsRef)
         CellItem.draw();
   }
 
@@ -97,43 +96,43 @@ QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role
 
 QModelIndex DataCtrl::index(int row, int column, const QModelIndex &parent) const
 {
-  qDebug().nospace() << QString("%1(%2, %3,").arg(__FUNCTION__).arg(row).arg(column) << parent << ")";
+  //qDebug().nospace() << QString("%1(%2, %3,").arg(__FUNCTION__).arg(row).arg(column) << parent << ")";
 
   if (cells.size() > row)
   {
     QModelIndex MI(createIndex(row, column, (void*)&cells[row]));
-    qDebug() << MI;
+    //qDebug() << MI;
     return MI;
   }
   else
   {
     QModelIndex MI;
-    qDebug() << MI;
+    //qDebug() << MI;
     return MI;
   }
 }
 
 QModelIndex DataCtrl::parent(const QModelIndex &child) const
 {
-  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << child << ")";
+  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << child << ")";
   return QModelIndex();
 }
 
 int DataCtrl::rowCount(const QModelIndex &parent) const
 {
-  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
+  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
   if (parent.isValid())
   {
-    qDebug() << 0;
+    //qDebug() << 0;
     return 0;
   }
-  qDebug() << cells.count();
+  //qDebug() << cells.count();
   return cells.count();
 }
 
 int DataCtrl::columnCount(const QModelIndex &parent) const
 {
-  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
+  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
   Q_UNUSED(parent);
   return cells.count()?1:0;
 }
@@ -242,6 +241,12 @@ void DataCtrl::removeLastForm()
   }
 
   saved = false;
+}
+
+void DataCtrl::setSelection(const QModelIndex &selected)
+{
+  qDebug() << __PRETTY_FUNCTION__;
+  ((Cell*)selected.internalPointer())->setSelected();
 }
 
 void DataCtrl::clear()

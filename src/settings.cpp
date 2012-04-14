@@ -8,6 +8,8 @@
 bool   Cell::averageArrow           (true);
 QColor Cell::insideColor            (QColor(0xff, 0x1f, 0x1f));
 QColor Cell::outsideColor           (QColor(0x1f, 0xff, 0x1f));
+QColor Cell::insideSelectedColor    (QColor(0x7f, 0x00, 0xff));
+QColor Cell::outsideSelectedColor   (QColor(0x00, 0x7f, 0xff));
 QColor Cell::vectorColor            (QColor(0x1f, 0x1f, 0xff));
 QColor Cell::averageVectorColor     (QColor(0x7f, 0x7f, 0xff));
 qreal  Cell::arrowLength            (.1);

@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actExportOption, SIGNAL(triggered()), this, SLOT(doAdvancedExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
   connect(ui->actAbout, SIGNAL(triggered()), this, SLOT(doAbout()));
-
+  connect(ui->objectsView, SIGNAL(clicked(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
+  connect(ui->objectsView, SIGNAL(activated(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();

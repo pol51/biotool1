@@ -35,6 +35,8 @@ class Cell
 
     static void drawArrow();
 
+    void setSelected() { selected = this; }
+
   protected:
     friend class Settings;
     friend class SettingsView;
@@ -44,8 +46,12 @@ class Cell
 
     static bool averageArrow;
 
+    static const Cell* selected;
+
     static QColor insideColor;
     static QColor outsideColor;
+    static QColor insideSelectedColor;
+    static QColor outsideSelectedColor;
     static QColor vectorColor;
     static QColor averageVectorColor;
 
