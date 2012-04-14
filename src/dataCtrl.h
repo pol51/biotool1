@@ -1,11 +1,15 @@
 #ifndef __DATACTRL_H__
 #define __DATACTRL_H__
 
-#include <QtGui/QStandardItemModel>
+#include <QtCore/QAbstractItemModel>
+
+#include <tr1/functional>
 
 #include "cell.h"
 
-class DataCtrl : public QStandardItemModel
+using namespace std::tr1;
+
+class DataCtrl : public QAbstractItemModel
 {
   Q_OBJECT
 
@@ -21,14 +25,14 @@ class DataCtrl : public QStandardItemModel
     class CSVDataType
     {
       public:
-        CSVDataType(const QString &name, const QString &suffix, QString (*function)(const DataCtrl *, const Cell&)):
+        CSVDataType(const QString &name, const QString &suffix, function<QString (const Cell&)> fun):
           name(name),
           suffix(suffix),
-          function(function) {}
+          fun(fun) {}
         CSVDataType(const CSVDataType &other) :
           name(other.name),
           suffix(other.suffix),
-          function(other.function) {}
+          fun(other.fun) {}
 
       protected:
         friend class QVector<CSVDataType>;
@@ -37,19 +41,19 @@ class DataCtrl : public QStandardItemModel
         {
           name=other.name;
           suffix=other.suffix;
-          function=other.function;
+          fun=other.fun;
           return *this;
         }
 
       public:
-        QString value(const DataCtrl *me, const Cell &cell) const { return (*function)(me, cell); }
+        inline QString value(const Cell &cell) const { return fun(cell); }
 
       public:
         QString name;
         QString suffix;
 
       protected:
-        QString (*function)(const DataCtrl *, const Cell&);
+        function<QString (const Cell&)> fun;
     };
 
   public:
@@ -63,6 +67,11 @@ class DataCtrl : public QStandardItemModel
     bool isSaved() const { return saved; }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     static void getDataTypesNames(QStringList &names);
     static void getSelectedDataTypesNames(QStringList &names);
@@ -105,8 +114,6 @@ class DataCtrl : public QStandardItemModel
     static QColor centroidsRefColor;
     qreal averageAngle;
     qreal averageCenroidRadius;
-
-    QStandardItem *rootItem;
 };
 
 #endif

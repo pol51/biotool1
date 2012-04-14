@@ -9,7 +9,6 @@ ImageView::ImageView(QWidget *parent) :
 {
   connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
   refreshTimer.start(20);
-  grabKeyboard();
 }
 
 ImageView::~ImageView()
@@ -41,6 +40,8 @@ void ImageView::mousePressEvent(QMouseEvent *event)
       dataCtrl->addPoint(Point);
     }
   }
+
+  setFocus();
 
   QGLWidget::mousePressEvent(event);
 }

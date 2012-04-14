@@ -3,6 +3,7 @@
 #include <QtOpenGL/QGLContext>
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
+#include <QtCore/QDebug>
 
 #include <cmath>
 
@@ -11,27 +12,27 @@
 QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
 DataCtrl::DataCtrl(QObject *parent):
-  QStandardItemModel(parent), saved(true), cntMode(eModeView),
-  averageAngle(0.), averageCenroidRadius(0.),
-  rootItem(invisibleRootItem())
+  QAbstractItemModel(parent), saved(true), cntMode(eModeView),
+  averageAngle(0.), averageCenroidRadius(0.)
 {
 
   // csv data type callbacks
-  static auto csvStrength = [](const DataCtrl *, const Cell &cell)
+
+  function<QString (const Cell&)> csvStrength = [](const Cell &cell) -> QString
   {
     return QString::number(cell.getStrength());
   };
 
-  static auto csvAngle = [](const DataCtrl *me, const Cell &cell)
+  function<QString (const Cell&)> csvAngle = [this](const Cell &cell) -> QString
   {
     qreal interval  = cell.getInterval();
-    qreal angle     = cell.getAngle() - me->averageAngle;
+    qreal angle     = cell.getAngle() - averageAngle;
     if (angle > 180.) angle -= 360.;
 
-    return interval > me->averageCenroidRadius?QString::number(angle):"";
+    return interval > averageCenroidRadius?QString::number(angle):"";
   };
 
-  static auto csvAreaPrecentile = [](const DataCtrl *, const Cell &cell)
+  function<QString (const Cell&)> csvAreaPrecentile = [](const Cell &cell) -> QString
   {
     return QString::number(cell.getAreaRatio() * 100.);
   };
@@ -94,6 +95,56 @@ QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+QModelIndex DataCtrl::index(int row, int column, const QModelIndex &parent) const
+{
+  qDebug().nospace() << QString("%1(%2, %3,").arg(__FUNCTION__).arg(row).arg(column) << parent << ")";
+
+  if (cells.size() > row)
+  {
+    QModelIndex MI(createIndex(row, column, (void*)&cells[row]));
+    qDebug() << MI;
+    return MI;
+  }
+  else
+  {
+    QModelIndex MI;
+    qDebug() << MI;
+    return MI;
+  }
+}
+
+QModelIndex DataCtrl::parent(const QModelIndex &child) const
+{
+  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << child << ")";
+  return QModelIndex();
+}
+
+int DataCtrl::rowCount(const QModelIndex &parent) const
+{
+  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
+  if (parent.isValid())
+  {
+    qDebug() << 0;
+    return 0;
+  }
+  qDebug() << cells.count();
+  return cells.count();
+}
+
+int DataCtrl::columnCount(const QModelIndex &parent) const
+{
+  qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
+  Q_UNUSED(parent);
+  return cells.count()?1:0;
+}
+
+QVariant DataCtrl::data(const QModelIndex &index, int role) const
+{
+  if (role != Qt::DisplayRole)
+    return QVariant();
+  return QString("Cell %1").arg(index.row() + 1);
+}
+
 void DataCtrl::getDataTypesNames(QStringList &names)
 {
   names.clear();
@@ -139,13 +190,13 @@ void DataCtrl::finalizeForm()
     case eModeView:
       if (cell.addOneForm(points))
       {
+        beginInsertRows(QModelIndex(), cells.count()-1, cells.count()-1);
         cells.push_back(cell);
         cell.clear();
-
-        QStandardItemModel::clear();
-        for (int i = 0; ++i <= cells.count();)
-          appendRow(new QStandardItem(QString("Cell %0").arg(i)));
         refresh();
+        qDebug() << QString("add cell %1").arg(cells.count());
+        endInsertRows();
+        endResetModel();
       }
       break;
     case eModeDefineCentroid:
@@ -168,11 +219,13 @@ void DataCtrl::removeLastForm()
       {
         if (!cells.isEmpty())
         {
+          beginRemoveRows(QModelIndex(), cells.count()-1, cells.count()-1);
           cell = cells.last();
           cells.pop_back();
           cell.clearOneForm();
           refresh();
           saved = false;
+          endRemoveRows();
         }
         return;
       }
@@ -193,7 +246,6 @@ void DataCtrl::removeLastForm()
 
 void DataCtrl::clear()
 {
-  QStandardItemModel::clear();
   points.clear();
   cell.clear();
   cells.clear();
@@ -238,7 +290,7 @@ void DataCtrl::exportCsv(const QString &filename)
   {
     Values.clear();
     foreach(const CSVDataType *_csvDataType, csvSelection)
-      Values.append(_csvDataType->value(this, _cell));
+      Values.append(_csvDataType->value(_cell));
     CSV.append(QString("%1\n").arg(Values.join(";")));
   }
 
