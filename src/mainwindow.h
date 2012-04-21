@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
     void doAdvancedExport();
     void doSettings();
     void doAbout();
+    void displayCellMenu(const QPoint& pos);
 
   protected:
     QString getDefaultFilename();

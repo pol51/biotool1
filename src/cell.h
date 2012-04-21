@@ -15,7 +15,7 @@ class Cell
 {
   public:
     Cell() : angle(0.f), strength(0.f), interval(0.f), areaRatio(0.f) {}
-    ~Cell() {}
+    ~Cell() { if (this == _selected) _selected = NULL; }
 
     void clear();
     bool isEmpty() const ;
@@ -35,7 +35,8 @@ class Cell
 
     static void drawArrow();
 
-    void setSelected() { selected = this; }
+    void setSelected() { _selected = this; }
+    static const Cell* selected() { return _selected; }
 
   protected:
     friend class Settings;
@@ -46,7 +47,7 @@ class Cell
 
     static bool averageArrow;
 
-    static const Cell* selected;
+    static const Cell* _selected;
 
     static QColor insideColor;
     static QColor outsideColor;

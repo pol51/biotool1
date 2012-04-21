@@ -33,8 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actExportOption, SIGNAL(triggered()), this, SLOT(doAdvancedExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
   connect(ui->actAbout, SIGNAL(triggered()), this, SLOT(doAbout()));
+  connect(ui->objectsView, SIGNAL(entered(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
+  connect(ui->objectsView, SIGNAL(pressed(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
   connect(ui->objectsView, SIGNAL(clicked(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
   connect(ui->objectsView, SIGNAL(activated(QModelIndex)), &ui->imageView->data(), SLOT(setSelection(QModelIndex)));
+  connect(ui->objectsView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(displayCellMenu(QPoint)));
 
   ui->actModeView->blockSignals(true);
   ui->actModeView->trigger();
@@ -42,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
   lastModeAction = ui->actModeView;
 
   ui->objectsView->setModel(&ui->imageView->data());
+  ui->objectsView->setContextMenuPolicy(Qt::CustomContextMenu);
 
   cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
@@ -253,6 +257,16 @@ void MainWindow::doAbout()
   #define GIT_VERSION _XSTR(BT1_GIT_VERSION)
 
   QMessageBox::information(this, tr("A Propos"), tr("Biotool1\nversion 1-%1").arg(GIT_VERSION));
+}
+
+void MainWindow::displayCellMenu(const QPoint &pos)
+{
+  if (Cell::selected())
+  {
+    QMenu Menu(ui->objectsView);
+    Menu.addAction(tr("Supprimer"), &ui->imageView->data(), SLOT(removeSelectedForm()));
+    Menu.exec(ui->objectsView->mapToGlobal(pos));
+  }
 }
 
 QString MainWindow::getDefaultFilename()

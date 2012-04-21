@@ -3,7 +3,6 @@
 #include <QtOpenGL/QGLContext>
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
-#include <QtCore/QDebug>
 
 #include <cmath>
 
@@ -96,6 +95,7 @@ QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role
 
 QModelIndex DataCtrl::index(int row, int column, const QModelIndex &parent) const
 {
+  Q_UNUSED(parent);
   //qDebug().nospace() << QString("%1(%2, %3,").arg(__FUNCTION__).arg(row).arg(column) << parent << ")";
 
   if (cells.size() > row)
@@ -114,6 +114,7 @@ QModelIndex DataCtrl::index(int row, int column, const QModelIndex &parent) cons
 
 QModelIndex DataCtrl::parent(const QModelIndex &child) const
 {
+  Q_UNUSED(child);
   //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << child << ")";
   return QModelIndex();
 }
@@ -193,7 +194,6 @@ void DataCtrl::finalizeForm()
         cells.push_back(cell);
         cell.clear();
         refresh();
-        qDebug() << QString("add cell %1").arg(cells.count());
         endInsertRows();
         endResetModel();
       }
@@ -243,9 +243,21 @@ void DataCtrl::removeLastForm()
   saved = false;
 }
 
+void DataCtrl::removeSelectedForm()
+{
+  const Cell *Selected = Cell::selected();
+  if (Selected)
+    for (int i = cells.count(); --i >= 0; )
+      if (&cells.at(i) == Cell::selected())
+      {
+        cells.remove(i);
+        refresh();
+        break;
+      }
+}
+
 void DataCtrl::setSelection(const QModelIndex &selected)
 {
-  qDebug() << __PRETTY_FUNCTION__;
   ((Cell*)selected.internalPointer())->setSelected();
 }
 
