@@ -66,6 +66,11 @@ void DataCtrl::draw() const
   switch (cntMode)
   {
     case eModeEdit:
+      if (Cell::edited())
+      {
+        Cell::edited()->draw(averageAngle, averageCenroidRadius);
+        break;
+      }
     case eModeView:
       foreach (const Cell &CellItem, cells)
         CellItem.draw(averageAngle, averageCenroidRadius);
@@ -96,44 +101,28 @@ QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role
 QModelIndex DataCtrl::index(int row, int column, const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
-  //qDebug().nospace() << QString("%1(%2, %3,").arg(__FUNCTION__).arg(row).arg(column) << parent << ")";
 
   if (cells.size() > row)
-  {
-    QModelIndex MI(createIndex(row, column, (void*)&cells[row]));
-    //qDebug() << MI;
-    return MI;
-  }
-  else
-  {
-    QModelIndex MI;
-    //qDebug() << MI;
-    return MI;
-  }
+    return createIndex(row, column, (void*)&cells[row]);
+
+  return QModelIndex();
 }
 
 QModelIndex DataCtrl::parent(const QModelIndex &child) const
 {
   Q_UNUSED(child);
-  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << child << ")";
   return QModelIndex();
 }
 
 int DataCtrl::rowCount(const QModelIndex &parent) const
 {
-  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
   if (parent.isValid())
-  {
-    //qDebug() << 0;
     return 0;
-  }
-  //qDebug() << cells.count();
   return cells.count();
 }
 
 int DataCtrl::columnCount(const QModelIndex &parent) const
 {
-  //qDebug().nospace() << QString("%1(").arg(__FUNCTION__) << parent << ")";
   Q_UNUSED(parent);
   return cells.count()?1:0;
 }
