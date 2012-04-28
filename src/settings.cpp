@@ -1,6 +1,7 @@
 #include "settings.h"
 
 #include "cell.h"
+#include "cellItem.h"
 #include "dataCtrl.h"
 
 #include <QtCore/QSettings>
@@ -12,10 +13,10 @@ QColor Cell::insideSelectedColor    (QColor(0x7f, 0x00, 0xff));
 QColor Cell::outsideSelectedColor   (QColor(0x00, 0x7f, 0xff));
 QColor Cell::vectorColor            (QColor(0x1f, 0x1f, 0xff));
 QColor Cell::averageVectorColor     (QColor(0x7f, 0x7f, 0xff));
-qreal  Cell::arrowLength            (.1);
-qreal  Cell::arrowHeadLength        (.025);
-qreal  Cell::arrowHeadHalfWidth     (.0075);
-qreal  Cell::arrowScale             (0.75);
+qreal  CellItem::arrowLength        (.1);
+qreal  CellItem::arrowHeadLength    (.025);
+qreal  CellItem::arrowHeadHalfWidth (.0075);
+qreal  CellItem::arrowScale         (0.75);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
 QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
@@ -24,15 +25,15 @@ void Settings::Load()
 {
   QSettings settings;
 
-  Cell::averageArrow          = settings.value("averageArrow",        Cell::averageArrow).value<bool>();
-  Cell::insideColor           = settings.value("insideColor",         Cell::insideColor).value<QColor>();
-  Cell::outsideColor          = settings.value("outsideColor",        Cell::outsideColor).value<QColor>();
-  Cell::vectorColor           = settings.value("vectorColor",         Cell::vectorColor).value<QColor>();
-  Cell::averageVectorColor    = settings.value("averageVectorColor",  Cell::averageVectorColor).value<QColor>();
-  Cell::arrowLength           = settings.value("arrowLength",         Cell::arrowLength).value<qreal>();
-  Cell::arrowHeadLength       = settings.value("arrowHeadLength",     Cell::arrowHeadLength).value<qreal>();
-  Cell::arrowHeadHalfWidth    = settings.value("arrowHeadHalfWidth",  Cell::arrowHeadHalfWidth).value<qreal>();
-  Cell::arrowScale            = settings.value("arrowScale",          Cell::arrowScale).value<qreal>();
+  Cell::averageArrow            = settings.value("averageArrow",        Cell::averageArrow).value<bool>();
+  Cell::insideColor             = settings.value("insideColor",         Cell::insideColor).value<QColor>();
+  Cell::outsideColor            = settings.value("outsideColor",        Cell::outsideColor).value<QColor>();
+  Cell::vectorColor             = settings.value("vectorColor",         Cell::vectorColor).value<QColor>();
+  Cell::averageVectorColor      = settings.value("averageVectorColor",  Cell::averageVectorColor).value<QColor>();
+  CellItem::arrowLength         = settings.value("arrowLength",         CellItem::arrowLength).value<qreal>();
+  CellItem::arrowHeadLength     = settings.value("arrowHeadLength",     CellItem::arrowHeadLength).value<qreal>();
+  CellItem::arrowHeadHalfWidth  = settings.value("arrowHeadHalfWidth",  CellItem::arrowHeadHalfWidth).value<qreal>();
+  CellItem::arrowScale          = settings.value("arrowScale",          CellItem::arrowScale).value<qreal>();
 
   DataCtrl::centroidsRefColor = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
   DataCtrl::setSelectedDataTypesNames(settings.value("csvSelectedDataType", QStringList()).value<QStringList>());
@@ -47,10 +48,10 @@ void Settings::Save()
   settings.setValue("outsideColor",         Cell::outsideColor);
   settings.setValue("vectorColor",          Cell::vectorColor);
   settings.setValue("averageVectorColor",   Cell::averageVectorColor);
-  settings.setValue("arrowLength",          Cell::arrowLength);
-  settings.setValue("arrowHeadLength",      Cell::arrowHeadLength);
-  settings.setValue("arrowHeadHalfWidth",   Cell::arrowHeadHalfWidth);
-  settings.setValue("arrowScale",           Cell::arrowScale);
+  settings.setValue("arrowLength",          CellItem::arrowLength);
+  settings.setValue("arrowHeadLength",      CellItem::arrowHeadLength);
+  settings.setValue("arrowHeadHalfWidth",   CellItem::arrowHeadHalfWidth);
+  settings.setValue("arrowScale",           CellItem::arrowScale);
 
   settings.setValue("centroidsRefColor",    DataCtrl::centroidsRefColor);
 

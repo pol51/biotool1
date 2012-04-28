@@ -12,19 +12,23 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/imageView.cpp \
     src/dataCtrl.cpp \
-    src/cellPolygon.cpp \
     src/cell.cpp \
     src/settings.cpp \
     src/settingsView.cpp \
-    src/csvExportOptions.cpp
+    src/csvExportOptions.cpp \
+    src/vCil.cpp \
+    src/polygon.cpp \
+    src/cellItem.cpp
 HEADERS += src/mainwindow.h \
     src/imageView.h \
     src/dataCtrl.h \
-    src/cellPolygon.h \
     src/cell.h \
     src/settings.h \
     src/settingsView.h \
-    src/csvExportOptions.h
+    src/csvExportOptions.h \
+    src/vCil.h \
+    src/polygon.h \
+    src/cellItem.h
 
 INCLUDEPATH += src
 

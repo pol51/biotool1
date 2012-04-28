@@ -1,4 +1,4 @@
-#include "cellPolygon.h"
+#include "polygon.h"
 
 #include <QtOpenGL/QGLContext>
 
@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-void CellPolygon::computeData()
+void Polygon::computeData()
 {
   const int Count = count();
 
@@ -66,7 +66,7 @@ void CellPolygon::computeData()
   type = eFinalized;
 }
 
-void CellPolygon::clear()
+void Polygon::clear()
 {
   QPolygonF::clear();
   centroid.setX(0.f);
@@ -76,7 +76,7 @@ void CellPolygon::clear()
   type = eEdition;
 }
 
-void CellPolygon::draw() const
+void Polygon::draw() const
 {
   const int Count = count();
 
@@ -116,7 +116,7 @@ void CellPolygon::draw() const
   }
 }
 
-void CellPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const
+void Polygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const
 {
   QDomElement PolyNode = doc.createElement("polygon");
   parentNode.appendChild(PolyNode);
@@ -130,7 +130,7 @@ void CellPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int lev
   }
 }
 
-void CellPolygon::load(QDomElement &node)
+void Polygon::load(QDomElement &node)
 {
   QDomElement PointElement = node.firstChildElement("point");
   while (!PointElement.isNull())

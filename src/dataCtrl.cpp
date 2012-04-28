@@ -78,7 +78,7 @@ void DataCtrl::draw() const
       break;
     case eModeDefineCentroid:
       glColor3f(centroidsRefColor.redF(), centroidsRefColor.greenF(), centroidsRefColor.blueF());
-      foreach (const CellPolygon &CellItem, centroidsRef)
+      foreach (const Polygon &CellItem, centroidsRef)
         CellItem.draw();
   }
 
@@ -282,7 +282,7 @@ void DataCtrl::save(const QString &filename)
 
   QDomElement CentroidsRed = Doc.createElement("centroid_references");
   Root.appendChild(CentroidsRed);
-  foreach(CellPolygon _cellPoly, centroidsRef) _cellPoly.save(Doc, CentroidsRed, 0);
+  foreach(Polygon _cellPoly, centroidsRef) _cellPoly.save(Doc, CentroidsRed, 0);
 
   QString FileName(filename);
   if (!FileName.endsWith(".xml"))
@@ -366,7 +366,7 @@ void DataCtrl::load(const QString &filename)
       QDomElement CellPolyElement = Element.firstChildElement("polygon");
       while (!CellPolyElement.isNull())
       {
-        CellPolygon LoadedCellPoly;
+        Polygon LoadedCellPoly;
         LoadedCellPoly.load(CellPolyElement);
         LoadedCellPoly.computeData();
         centroidsRef.push_back(LoadedCellPoly);
@@ -399,7 +399,7 @@ void DataCtrl::refresh()
   const int centroidsRefCount = centroidsRef.count();
   if (centroidsRefCount)
   {
-    foreach (CellPolygon _poly, centroidsRef)
+    foreach (Polygon _poly, centroidsRef)
       averageCenroidRadius += _poly.getRadius();
     averageCenroidRadius /= centroidsRefCount;
   }

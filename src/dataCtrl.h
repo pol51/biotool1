@@ -110,10 +110,10 @@ class DataCtrl : public QAbstractItemModel
 
     bool saved;
     EMode cntMode;
-    CellPolygon points;
+    Polygon points;
     Cell cell;
     QVector<Cell> cells;
-    QVector<CellPolygon> centroidsRef;
+    QVector<Polygon> centroidsRef;
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
