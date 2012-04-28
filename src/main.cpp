@@ -1,15 +1,20 @@
 #include <QtGui/QApplication>
+#include <QtCore/QTextCodec>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
-  a.setOrganizationName("PLab");
-  a.setOrganizationDomain("labedan.fr");
-  a.setApplicationName("BioTool1");
+  QApplication App(argc, argv);
+  App.setOrganizationName("PLab");
+  App.setOrganizationDomain("labedan.fr");
+  App.setApplicationName("BioTool1");
 
-  MainWindow w;
-  w.show();
-  return a.exec();
+  QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+  QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+
+  MainWindow Win;
+  Win.show();
+  return App.exec();
 }

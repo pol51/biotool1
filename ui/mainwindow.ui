@@ -184,7 +184,7 @@
      <normaloff>:/icons/reset_view</normaloff>:/icons/reset_view</iconset>
    </property>
    <property name="text">
-    <string>Vue par &amp;defaut</string>
+    <string>Vue par &amp;défaut</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -271,7 +271,7 @@
      <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
    </property>
    <property name="text">
-    <string>Se&amp;ttings</string>
+    <string>Réglages</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -286,7 +286,7 @@
      <normaloff>:/icons/mesure</normaloff>:/icons/mesure</iconset>
    </property>
    <property name="text">
-    <string>Mode Define &amp;Centroid</string>
+    <string>Mode Definition &amp;Centroïde</string>
    </property>
   </action>
   <action name="actAbout">
