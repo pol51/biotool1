@@ -15,7 +15,7 @@ class Cell
 {
   public:
     Cell() : angle(0.f), strength(0.f), interval(0.f), areaRatio(0.f) {}
-    ~Cell() { if (this == _selected) _selected = NULL; }
+    ~Cell() { if (this == _selected) _selected = NULL; if (this == _edited) _edited = NULL; }
 
     void clear();
     bool isEmpty() const ;
@@ -36,7 +36,10 @@ class Cell
     static void drawArrow();
 
     void setSelected() { _selected = this; }
-    static const Cell* selected() { return _selected; }
+    static Cell* selected() { return _selected; }
+    void setEdited() { _edited = this; }
+    static Cell* edited() { return _edited; }
+    static void stopEdition() { _edited = NULL; }
 
   protected:
     friend class Settings;
@@ -47,7 +50,8 @@ class Cell
 
     static bool averageArrow;
 
-    static const Cell* _selected;
+    static Cell* _selected;
+    static Cell* _edited;
 
     static QColor insideColor;
     static QColor outsideColor;

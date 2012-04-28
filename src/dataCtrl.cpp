@@ -256,6 +256,16 @@ void DataCtrl::removeSelectedForm()
       }
 }
 
+void DataCtrl::startEditSelectedForm()
+{
+  if (Cell::selected()) Cell::selected()->setEdited();
+}
+
+void DataCtrl::stopEditSelectedForm()
+{
+  Cell::stopEdition();
+}
+
 void DataCtrl::setSelection(const QModelIndex &selected)
 {
   ((Cell*)selected.internalPointer())->setSelected();

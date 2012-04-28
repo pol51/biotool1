@@ -82,6 +82,8 @@ class DataCtrl : public QAbstractItemModel
     void finalizeForm();
     void removeLastForm();
     void removeSelectedForm();
+    void startEditSelectedForm();
+    void stopEditSelectedForm();
 
     void setSelection(const QModelIndex &selected);
 

@@ -265,6 +265,10 @@ void MainWindow::displayCellMenu(const QPoint &pos)
   {
     QMenu Menu(ui->objectsView);
     Menu.addAction(tr("Supprimer"), &ui->imageView->data(), SLOT(removeSelectedForm()));
+    if (!Cell::edited() || Cell::edited() != Cell::selected())
+      Menu.addAction(tr("Commencer édition"),    &ui->imageView->data(), SLOT(startEditSelectedForm()));
+    else
+      Menu.addAction(tr("Arrêter édition"),    &ui->imageView->data(), SLOT(stopEditSelectedForm()));
     Menu.exec(ui->objectsView->mapToGlobal(pos));
   }
 }

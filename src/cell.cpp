@@ -4,7 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
-const Cell* Cell::_selected = NULL;
+Cell* Cell::_selected = NULL;
+Cell* Cell::_edited = NULL;
 
 void Cell::clear()
 {
