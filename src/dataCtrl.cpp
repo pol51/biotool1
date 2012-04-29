@@ -179,12 +179,20 @@ void DataCtrl::finalizeForm()
     case eModeView:
       if (cell.addOneForm(points))
       {
-        beginInsertRows(QModelIndex(), cells.count()-1, cells.count()-1);
-        cells.push_back(cell);
-        cell.clear();
-        refresh();
-        endInsertRows();
-        endResetModel();
+        if (!Cell::edited())
+        {
+          beginInsertRows(QModelIndex(), cells.count()-1, cells.count()-1);
+          cells.push_back(cell);
+          cell.clear();
+          refresh();
+          endInsertRows();
+          endResetModel();
+        }
+        else
+        {
+          Cell::edited()->addVCil(cell);
+          cell.clear();
+        }
       }
       break;
     case eModeDefineCentroid:

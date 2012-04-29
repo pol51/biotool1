@@ -9,19 +9,22 @@ Cell* Cell::_edited = NULL;
 
 void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
-  QColor & inColor(_selected==this ?  insideSelectedColor :  insideColor);
-  QColor &outColor(_selected==this ? outsideSelectedColor : outsideColor);
+  CellItem::draw(averageAngle, averageCenroidRadius);
 
-  CellItem::draw(averageAngle, averageCenroidRadius, inColor, outColor, vectorColor, averageArrow, averageVectorColor);
-
-  //TODO: draw vcils
+  foreach (const VCil &VCilItem, _vcils)
+    VCilItem.draw();
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
 {
-  CellItem::save(doc, parentNode, "cell");
+  QDomElement CellNode = doc.createElement("cell");
+  parentNode.appendChild(CellNode);
 
-  //TODO: save vcils
+  _insideForm.save(doc, CellNode, 0);
+  _outsideForm.save(doc, CellNode, 1);
+
+  foreach (const VCil &VCilItem, _vcils)
+    VCilItem.save(doc, CellNode, "vcil");
 }
 
 bool Cell::load(QDomElement &node)
@@ -33,4 +36,9 @@ bool Cell::load(QDomElement &node)
     //TODO: load vcils
   }
   return false;
+}
+
+void Cell::addVCil(const VCil &vcil)
+{
+  _vcils.append(vcil);
 }

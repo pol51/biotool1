@@ -1,10 +1,15 @@
 #ifndef __VCIL_H__
 #define __VCIL_H__
 
-class VCil
+#include "cellItem.h"
+
+class VCil : public CellItem
 {
   public:
-    VCil();
+    VCil() : CellItem() {}
+    VCil(const CellItem& cellItem) : CellItem(cellItem) {}
+    virtual ~VCil() { }
+
 };
 
 #endif

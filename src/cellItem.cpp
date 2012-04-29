@@ -6,39 +6,39 @@
 
 void CellItem::clear()
 {
-  insideForm.clear();
-  outsideForm.clear();
+  _insideForm.clear();
+  _outsideForm.clear();
 }
 
 bool CellItem::isEmpty() const
 {
-  return insideForm.isEmpty() && outsideForm.isEmpty();
+  return _insideForm.isEmpty() && _outsideForm.isEmpty();
 }
 
 bool CellItem::isFull() const
 {
-  return !(insideForm.isEmpty() || outsideForm.isEmpty());
+  return !(_insideForm.isEmpty() || _outsideForm.isEmpty());
 }
 
 bool CellItem::clearOneForm()
 {
-  if (!insideForm.isEmpty())
+  if (!_insideForm.isEmpty())
   {
-    insideForm.clear();
+    _insideForm.clear();
     return false;
   }
-  outsideForm.clear();
+  _outsideForm.clear();
   return true;
 }
 
 bool CellItem::addOneForm(const Polygon &form)
 {
-  if (outsideForm.isEmpty())
+  if (_outsideForm.isEmpty())
   {
-    outsideForm = form;
+    _outsideForm = form;
     return false;
   }
-  insideForm = form;
+  _insideForm = form;
   computeAreaRatio();
   computeVector();
   return true;
@@ -46,32 +46,32 @@ bool CellItem::addOneForm(const Polygon &form)
 
 void CellItem::computeAreaRatio()
 {
-  if (outsideForm.count() <= 1 ) return;
+  if (_outsideForm.count() <= 1 ) return;
 
-  areaRatio = insideForm.getArea() / outsideForm.getArea();
+  _areaRatio = _insideForm.getArea() / _outsideForm.getArea();
 }
 
 void CellItem::computeVector()
 {
-  if (outsideForm.count() <= 1 ) return;
+  if (_outsideForm.count() <= 1 ) return;
 
   // compute angle
-  QLineF line(outsideForm.getCentroid(), insideForm.getCentroid());
-  angle = line.angle();
+  QLineF line(_outsideForm.getCentroid(), _insideForm.getCentroid());
+  _angle = line.angle();
 
   // compute lengths
-  interval = line.length();
+  _interval = line.length();
   qreal centroidToOutsideLength(0.);
 
   line.setLength(10000);
   QPointF intersection;
   QLineF line2;
   QLineF lineToOutside;
-  lineToOutside.setP1(outsideForm.getCentroid());
-  outsideForm.push_back(outsideForm.first());
-  for (int i = outsideForm.count(); --i > 0; )
+  lineToOutside.setP1(_outsideForm.getCentroid());
+  _outsideForm.push_back(_outsideForm.first());
+  for (int i = _outsideForm.count(); --i > 0; )
   {
-    line2.setPoints(outsideForm[i], outsideForm[i-1]);
+    line2.setPoints(_outsideForm[i], _outsideForm[i-1]);
     if (line.intersect(line2, &intersection) == QLineF::BoundedIntersection)
     {
       lineToOutside.setP2(intersection);
@@ -79,36 +79,41 @@ void CellItem::computeVector()
         centroidToOutsideLength = lineToOutside.length();
     }
   }
-  outsideForm.pop_back();
+  _outsideForm.pop_back();
 
-  strength = interval / centroidToOutsideLength;
+  _strength = _interval / centroidToOutsideLength;
 }
 
-void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius, const QColor &inColor, const QColor &outColor, const QColor &vectorColor, const bool averageArrow, const QColor &averageVectorColor) const
+void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
+  const QColor &InColor(inColor());
+  const QColor &OutColor(outColor());
+  const QColor &VectorColor(vectorColor());
+  const QColor &AverageVectorColor(averageVectorColor());
+
   // draw outside form
-  glColor3f(outColor.redF(), outColor.greenF(), outColor.blueF());
-  outsideForm.draw();
+  glColor3f(OutColor.redF(), OutColor.greenF(), OutColor.blueF());
+  _outsideForm.draw();
 
   // draw inside form
-  glColor3f(inColor.redF(), inColor.greenF(), inColor.blueF());
-  insideForm.draw();
+  glColor3f(InColor.redF(), InColor.greenF(), InColor.blueF());
+  _insideForm.draw();
 
   // draw vector
-  if (isFull() && outsideForm.count() > 1 && interval > averageCenroidRadius)
+  if (isFull() && _outsideForm.count() > 1 && _interval > averageCenroidRadius)
   {
     glPushMatrix();
-    glColor3f(vectorColor.redF(), vectorColor.greenF(), vectorColor.blueF());
-    glTranslatef(outsideForm.getCentroid().x(), outsideForm.getCentroid().y(), 0.);
-    glRotatef(angle, 0., 0., -1.);
+    glColor3f(VectorColor.redF(), VectorColor.greenF(), VectorColor.blueF());
+    glTranslatef(_outsideForm.getCentroid().x(), _outsideForm.getCentroid().y(), 0.);
+    glRotatef(_angle, 0., 0., -1.);
     //glScalef(strength * 2.5, strength * 2.5, 1.);
-    glScalef(arrowScale, arrowScale, 1.);
+    glScalef(_arrowScale, _arrowScale, 1.);
     drawArrow();
 
-    if (averageArrow && averageAngle <= 360.)
+    if (averageArrow() && averageAngle <= 360.)
     {
-      glColor3f(averageVectorColor.redF(), averageVectorColor.greenF(), averageVectorColor.blueF());
-      glRotatef(averageAngle - angle, 0., 0., -1.);
+      glColor3f(AverageVectorColor.redF(), AverageVectorColor.greenF(), AverageVectorColor.blueF());
+      glRotatef(averageAngle - _angle, 0., 0., -1.);
       drawArrow();
     }
 
@@ -121,8 +126,8 @@ void CellItem::save(QDomDocument &doc, QDomElement &parentNode, const QString &n
   QDomElement CellNode = doc.createElement(name);
   parentNode.appendChild(CellNode);
 
-  insideForm.save(doc, CellNode, 0);
-  outsideForm.save(doc, CellNode, 1);
+  _insideForm.save(doc, CellNode, 0);
+  _outsideForm.save(doc, CellNode, 1);
 }
 
 bool CellItem::load(QDomElement &node)
@@ -135,8 +140,8 @@ bool CellItem::load(QDomElement &node)
     int Level = FormElement.attribute("level", "-1").toInt(&Ok, 10);
     if (Ok && Level >= 0)
     {
-      if (Level == 0) insideForm.load(FormElement);
-      if (Level == 1) outsideForm.load(FormElement);
+      if (Level == 0) _insideForm.load(FormElement);
+      if (Level == 1) _outsideForm.load(FormElement);
     }
 
     FormElement = FormElement.nextSiblingElement("polygon");
@@ -145,8 +150,8 @@ bool CellItem::load(QDomElement &node)
   // (re-)compute other data if loaded correctly
   if (isFull())
   {
-    insideForm.computeData();
-    outsideForm.computeData();
+    _insideForm.computeData();
+    _outsideForm.computeData();
     computeVector();
     computeAreaRatio();
     return true;
@@ -157,14 +162,14 @@ bool CellItem::load(QDomElement &node)
 
 void CellItem::drawArrow()
 {
-  qreal arrowHeadBase(arrowLength - arrowHeadLength);
+  qreal arrowHeadBase(_arrowLength - _arrowHeadLength);
 
   glBegin(GL_LINES);
-    glVertex3f(arrowLength, 0., 0.);
+    glVertex3f(_arrowLength, 0., 0.);
     glVertex3f(0., 0., 0.);
-    glVertex3f(arrowLength, 0., 0.);
-    glVertex3f(arrowHeadBase, arrowHeadHalfWidth, 0.);
-    glVertex3f(arrowLength, 0., 0.);
-    glVertex3f(arrowHeadBase, -arrowHeadHalfWidth, 0.);
+    glVertex3f(_arrowLength, 0., 0.);
+    glVertex3f(arrowHeadBase, _arrowHeadHalfWidth, 0.);
+    glVertex3f(_arrowLength, 0., 0.);
+    glVertex3f(arrowHeadBase, -_arrowHeadHalfWidth, 0.);
   glEnd();
 }

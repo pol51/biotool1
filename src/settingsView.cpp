@@ -13,7 +13,7 @@ SettingsView::SettingsView(QWidget *parent) :
   QGridLayout *mainLayout = new QGridLayout(this);
 
   averageArrow = new QCheckBox(tr("Flèche moyenne sur chaque cellule."), this);
-  averageArrow->setChecked(Cell::averageArrow);
+  averageArrow->setChecked(Cell::_averageArrow);
 
   /*minimalStrengthSlider = new QSlider(Qt::Horizontal, this);
   minimalStrengthSlider->setMinimum(0);
@@ -35,6 +35,6 @@ SettingsView::SettingsView(QWidget *parent) :
 
 void SettingsView::onAverageArrow(bool display)
 {
-  Cell::averageArrow = display;
+  Cell::_averageArrow = display;
   Settings::Save();
 }

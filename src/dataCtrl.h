@@ -111,7 +111,7 @@ class DataCtrl : public QAbstractItemModel
     bool saved;
     EMode cntMode;
     Polygon points;
-    Cell cell;
+    CellItem cell;
     QVector<Cell> cells;
     QVector<Polygon> centroidsRef;
     static QVector<CSVDataType> csvDataTypes;
