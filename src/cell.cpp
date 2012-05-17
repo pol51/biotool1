@@ -12,7 +12,7 @@ void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) co
   CellItem::draw(averageAngle, averageCenroidRadius);
 
   foreach (const VCil &VCilItem, _vcils)
-    VCilItem.draw();
+    VCilItem.draw(_vcilsAverageAngle);
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
@@ -40,12 +40,29 @@ bool Cell::load(QDomElement &node)
       VCilElement = VCilElement.nextSiblingElement("vcil");
     }
 
+    computeVCilAverageAngle();
+
     return true;
   }
   return false;
 }
 
+void Cell::computeVCilAverageAngle()
+{
+  qreal sinsum(0.f), cossum(0.f);
+
+  foreach (const VCil &VCilItem, _vcils)
+  {
+    const qreal angle = VCilItem.getAngle() * M_PI / 180.f;
+    sinsum += sin(angle);
+    cossum += cos(angle);
+  }
+
+  _vcilsAverageAngle = atan2(sinsum, cossum) * 180.f / M_PI;
+}
+
 void Cell::addVCil(const VCil &vcil)
 {
   _vcils.append(vcil);
+  computeVCilAverageAngle();
 }

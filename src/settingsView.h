@@ -16,12 +16,14 @@ class SettingsView : public QDialog
   protected slots:
     //void onMinimalStrengthSliderChanged(int value);
     void onAverageArrow(bool display);
+    void onAverageArrowVCil(bool display);
 
   signals:
     //void minimalStrength(qreal);
 
   protected:
     QCheckBox *averageArrow;
+    QCheckBox *averageArrowVCil;
     //QSlider *minimalStrengthSlider;
 };
 

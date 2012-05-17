@@ -53,7 +53,7 @@ void CellItem::computeAreaRatio()
 
 void CellItem::computeVector()
 {
-  if (_outsideForm.count() <= 1 ) return;
+  if (_outsideForm.count() < 1 ) return;
 
   // compute angle
   QLineF line(_outsideForm.getCentroid(), _insideForm.getCentroid());
@@ -100,7 +100,7 @@ void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius
   _insideForm.draw();
 
   // draw vector
-  if (isFull() && _outsideForm.count() > 1 && _interval > averageCenroidRadius)
+  if (isFull() && _interval > averageCenroidRadius)
   {
     glPushMatrix();
     glColor3f(VectorColor.redF(), VectorColor.greenF(), VectorColor.blueF());

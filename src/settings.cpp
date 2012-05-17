@@ -3,6 +3,7 @@
 #include "cell.h"
 #include "cellItem.h"
 #include "dataCtrl.h"
+#include "vCil.h"
 
 #include <QtCore/QSettings>
 
@@ -16,12 +17,13 @@ QColor Cell::_averageVectorColor      (QColor(0x7f, 0x7f, 0xff));
 bool   CellItem::_averageArrow        (false);
 QColor CellItem::_insideColor         (QColor(0xdf, 0x9f, 0x9f));
 QColor CellItem::_outsideColor        (QColor(0x9f, 0xdf, 0x9f));
-QColor CellItem::_vectorColor         (QColor(0x00, 0x00, 0x00));
-QColor CellItem::_averageVectorColor  (QColor(0x00, 0x00, 0x00));
+QColor CellItem::_vectorColor         (QColor(0xdf, 0xdf, 0xff));
+QColor CellItem::_averageVectorColor  (QColor(0x9f, 0x9f, 0xff));
 qreal  CellItem::_arrowLength         (.1);
 qreal  CellItem::_arrowHeadLength     (.025);
 qreal  CellItem::_arrowHeadHalfWidth  (.0075);
 qreal  CellItem::_arrowScale          (0.75);
+bool   VCil::_averageArrow            (false);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
 QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
@@ -39,6 +41,7 @@ void Settings::Load()
   CellItem::_arrowHeadLength     = settings.value("arrowHeadLength",     CellItem::_arrowHeadLength).value<qreal>();
   CellItem::_arrowHeadHalfWidth  = settings.value("arrowHeadHalfWidth",  CellItem::_arrowHeadHalfWidth).value<qreal>();
   CellItem::_arrowScale          = settings.value("arrowScale",          CellItem::_arrowScale).value<qreal>();
+  VCil::_averageArrow            = settings.value("averageArrowVCil",    VCil::_averageArrow).value<bool>();
 
   DataCtrl::centroidsRefColor = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
   DataCtrl::setSelectedDataTypesNames(settings.value("csvSelectedDataType", QStringList()).value<QStringList>());
@@ -57,6 +60,7 @@ void Settings::Save()
   settings.setValue("arrowHeadLength",      CellItem::_arrowHeadLength);
   settings.setValue("arrowHeadHalfWidth",   CellItem::_arrowHeadHalfWidth);
   settings.setValue("arrowScale",           CellItem::_arrowScale);
+  settings.setValue("averageArrowVCil",     VCil::_averageArrow);
 
   settings.setValue("centroidsRefColor",    DataCtrl::centroidsRefColor);
 

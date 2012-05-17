@@ -10,6 +10,8 @@ class VCil : public CellItem
     VCil(const CellItem& cellItem) : CellItem(cellItem) {}
     virtual ~VCil() { }
 
+    virtual bool averageArrow() const { return _averageArrow; }
+    static bool _averageArrow;
 };
 
 #endif

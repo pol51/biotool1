@@ -69,6 +69,7 @@ void DataCtrl::draw() const
       if (Cell::edited())
       {
         Cell::edited()->draw(averageAngle, averageCenroidRadius);
+        cell.draw();
         break;
       }
     case eModeView:
