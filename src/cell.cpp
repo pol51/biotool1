@@ -31,9 +31,16 @@ bool Cell::load(QDomElement &node)
 {
   if (CellItem::load(node))
   {
-    return true;
+    QDomElement VCilElement = node.firstChildElement("vcil");
+    while (!VCilElement.isNull())
+    {
+      VCil LoadedVCil;
+      if (LoadedVCil.load(VCilElement))
+        _vcils.push_back(LoadedVCil);
+      VCilElement = VCilElement.nextSiblingElement("vcil");
+    }
 
-    //TODO: load vcils
+    return true;
   }
   return false;
 }
