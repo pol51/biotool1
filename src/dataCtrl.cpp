@@ -354,9 +354,9 @@ void DataCtrl::load(const QString &filename)
 
   clear();
 
-  QDomElement DocElem = Doc.documentElement();
+  beginInsertRows(QModelIndex(), -1, -1);
 
-  QDomElement Element = DocElem.firstChildElement();
+  QDomElement Element = Doc.documentElement().firstChildElement();
   while (!Element.isNull())
   {
     if (Element.tagName() == "cells")
@@ -386,6 +386,10 @@ void DataCtrl::load(const QString &filename)
   }
 
   refresh();
+
+  endInsertRows();
+  endResetModel();
+
   saved = true;
 }
 
