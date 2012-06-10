@@ -35,10 +35,16 @@ DataCtrl::DataCtrl(QObject *parent):
     return QString::number(cell.getAreaRatio() * 100.);
   };
 
+  function<QString (const Cell&)> csvCircualrStandardDeviation = [](const Cell &cell) -> QString
+  {
+    return QString::number(cell.getVCilCircularStandardDeviation());
+  };
+
   // init csv data types
-  csvDataTypes.append(CSVDataType(tr("Strength"),         "st", csvStrength));        // strength
-  csvDataTypes.append(CSVDataType(tr("Angle"),            "an", csvAngle));           // angle
-  csvDataTypes.append(CSVDataType(tr("Area percentile"),  "ap", csvAreaPrecentile));  // area percentile
+  csvDataTypes.append(CSVDataType(tr("Strength"),                     "st",   csvStrength));                  // strength
+  csvDataTypes.append(CSVDataType(tr("Angle"),                        "an",   csvAngle));                     // angle
+  csvDataTypes.append(CSVDataType(tr("Area percentile"),              "ap",   csvAreaPrecentile));            // area percentile
+  csvDataTypes.append(CSVDataType(tr("Circualr Standard Deviation"),  "csd",  csvCircualrStandardDeviation)); // circualr standard deviation
 
   Settings::Load();
 
