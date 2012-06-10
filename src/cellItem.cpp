@@ -81,6 +81,7 @@ void CellItem::computeVector()
   }
   _outsideForm.pop_back();
 
+  // compute strength
   _strength = _interval / centroidToOutsideLength;
 }
 

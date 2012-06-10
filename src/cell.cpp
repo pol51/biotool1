@@ -41,6 +41,7 @@ bool Cell::load(QDomElement &node)
     }
 
     computeVCilAverageAngle();
+    computeVCilCircularStandardDeviation();
 
     return true;
   }
@@ -61,8 +62,23 @@ void Cell::computeVCilAverageAngle()
   _vcilsAverageAngle = atan2(sinsum, cossum) * 180.f / M_PI;
 }
 
+void Cell::computeVCilCircularStandardDeviation()
+{
+  qreal sinsum(0.f), cossum(0.f);
+
+  foreach (const VCil &VCilItem, _vcils)
+  {
+    const qreal angle = VCilItem.getAngle() * M_PI / 180.f;
+    sinsum += sin(angle);
+    cossum += cos(angle);
+  }
+
+  _vcilsCircularStandardDeviation = sqrt(-2 * log(sqrt(sinsum * sinsum +  cossum  * cossum) / _vcils.count())) * 180.f / M_PI;
+}
+
 void Cell::addVCil(const VCil &vcil)
 {
   _vcils.append(vcil);
   computeVCilAverageAngle();
+  computeVCilCircularStandardDeviation();
 }

@@ -7,15 +7,19 @@
 class Cell: public CellItem
 {
   public:
-    Cell() : CellItem(), _vcilsAverageAngle(.0f) {}
-    Cell(const CellItem& cellItem) : CellItem(cellItem), _vcilsAverageAngle(.0f) {}
+    Cell() : CellItem(), _vcilsAverageAngle(.0f), _vcilsCircularStandardDeviation(0.f) {}
+    Cell(const CellItem& cellItem) : CellItem(cellItem), _vcilsAverageAngle(.0f), _vcilsCircularStandardDeviation(0.f) {}
     virtual ~Cell() { if (this == _selected) _selected = NULL; if (this == _edited) _edited = NULL; }
 
     void draw(const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 
+    const qreal &getVCilAverageAngle() const { return _vcilsAverageAngle; }
+    const qreal &getVCilCircularStandardDeviation() const { return _vcilsCircularStandardDeviation; }
+
     void computeVCilAverageAngle();
+    void computeVCilCircularStandardDeviation();
 
     void setSelected() { _selected = this; }
     static Cell* selected() { return _selected; }
@@ -49,6 +53,7 @@ class Cell: public CellItem
     static QColor _averageVectorColor;
 
     qreal _vcilsAverageAngle;
+    qreal _vcilsCircularStandardDeviation;
     QVector<VCil> _vcils;
 };
 
