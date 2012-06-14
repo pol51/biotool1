@@ -44,7 +44,7 @@ DataCtrl::DataCtrl(QObject *parent):
   csvDataTypes.append(CSVDataType(tr("Strength"),                     "st",   csvStrength));                  // strength
   csvDataTypes.append(CSVDataType(tr("Angle"),                        "an",   csvAngle));                     // angle
   csvDataTypes.append(CSVDataType(tr("Area percentile"),              "ap",   csvAreaPrecentile));            // area percentile
-  csvDataTypes.append(CSVDataType(tr("Circualr Standard Deviation"),  "csd",  csvCircualrStandardDeviation)); // circualr standard deviation
+  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),  "csd",  csvCircualrStandardDeviation)); // circular standard deviation
 
   Settings::Load();
 
