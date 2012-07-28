@@ -82,3 +82,13 @@ void Cell::addVCil(const VCil &vcil)
   computeVCilAverageAngle();
   computeVCilCircularStandardDeviation();
 }
+
+void Cell::removeLastForm(CellItem &editedCell)
+{
+  if (!_vcils.isEmpty())
+  {
+    editedCell = _vcils.last();
+    _vcils.pop_back();
+    editedCell.clearOneForm();
+  }
+}

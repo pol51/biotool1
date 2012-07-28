@@ -28,6 +28,7 @@ class Cell: public CellItem
     static void stopEdition() { _edited = NULL; }
 
     void addVCil(const VCil &vcil);
+    void removeLastForm(CellItem &editedCell);
 
   protected:
     virtual const QColor &inColor()             const { return (_selected==this) ? _insideSelectedColor  : _insideColor; }

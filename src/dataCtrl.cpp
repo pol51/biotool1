@@ -220,15 +220,24 @@ void DataCtrl::removeLastForm()
     case eModeView:
       if (cell.isEmpty())
       {
-        if (!cells.isEmpty())
+        if (!Cell::edited())
         {
-          beginRemoveRows(QModelIndex(), cells.count()-1, cells.count()-1);
-          cell = cells.last();
-          cells.pop_back();
-          cell.clearOneForm();
+          if (!cells.isEmpty())
+          {
+            beginRemoveRows(QModelIndex(), cells.count()-1, cells.count()-1);
+            cell = cells.last();
+            cells.pop_back();
+            cell.clearOneForm();
+            refresh();
+            saved = false;
+            endRemoveRows();
+          }
+        }
+        else
+        {
+          Cell::edited()->removeLastForm(cell);
           refresh();
           saved = false;
-          endRemoveRows();
         }
         return;
       }

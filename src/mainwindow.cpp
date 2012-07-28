@@ -120,6 +120,7 @@ void MainWindow::doLoadImage()
 
 void MainWindow::doChangeMode(bool activated)
 {
+
   QAction *action = (QAction*)sender();
   if (activated)
   {
