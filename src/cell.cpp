@@ -12,7 +12,7 @@ void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) co
   CellItem::draw(averageAngle, averageCenroidRadius);
 
   foreach (const VCil &VCilItem, _vcils)
-    VCilItem.draw(_vcilsAverageAngle);
+    VCilItem.draw(_vcilsBeatingAngle);
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
@@ -40,7 +40,7 @@ bool Cell::load(QDomElement &node)
       VCilElement = VCilElement.nextSiblingElement("vcil");
     }
 
-    computeVCilAverageAngle();
+    computeVCilBeatingAngle();
     computeVCilCircularStandardDeviation();
 
     return true;
@@ -48,7 +48,7 @@ bool Cell::load(QDomElement &node)
   return false;
 }
 
-void Cell::computeVCilAverageAngle()
+void Cell::computeVCilBeatingAngle()
 {
   qreal sinsum(0.f), cossum(0.f);
 
@@ -59,7 +59,7 @@ void Cell::computeVCilAverageAngle()
     cossum += cos(angle);
   }
 
-  _vcilsAverageAngle = atan2(sinsum, cossum) * 180.f / M_PI;
+  _vcilsBeatingAngle = atan2(sinsum, cossum) * 180.f / M_PI;
 }
 
 void Cell::computeVCilCircularStandardDeviation()
@@ -79,7 +79,7 @@ void Cell::computeVCilCircularStandardDeviation()
 void Cell::addVCil(const VCil &vcil)
 {
   _vcils.append(vcil);
-  computeVCilAverageAngle();
+  computeVCilBeatingAngle();
   computeVCilCircularStandardDeviation();
 }
 
