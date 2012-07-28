@@ -12,7 +12,7 @@ QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
 DataCtrl::DataCtrl(QObject *parent):
   QAbstractItemModel(parent), saved(true), cntMode(eModeView),
-  averageAngle(0.), averageCenroidRadius(0.)
+  averageAngleVPatch(0.), averageAngleVBeating(0.), averageCenroidRadius(0.)
 {
   // csv data type callbacks
 
@@ -21,13 +21,21 @@ DataCtrl::DataCtrl(QObject *parent):
     return QString::number(cell.getStrength());
   };
 
-  function<QString (const Cell&)> csvAngle = [this](const Cell &cell) -> QString
+  function<QString (const Cell&)> csvAngleVPatch = [this](const Cell &cell) -> QString
   {
     qreal interval  = cell.getInterval();
-    qreal angle     = cell.getAngle() - averageAngle;
+    qreal angle     = cell.getAngle() - averageAngleVPatch;
     if (angle > 180.) angle -= 360.;
 
     return interval > averageCenroidRadius?QString::number(angle):"";
+  };
+
+  function<QString (const Cell&)> csvAngleVBeating = [this](const Cell &cell) -> QString
+  {
+    qreal angle = cell.getVCilBeatingAngle() - averageAngleVBeating;
+    if (angle > 180.) angle -= 360.;
+
+    return QString::number(angle);
   };
 
   function<QString (const Cell&)> csvAreaPrecentile = [](const Cell &cell) -> QString
@@ -40,10 +48,10 @@ DataCtrl::DataCtrl(QObject *parent):
     return QString::number(cell.getVCilCircularStandardDeviation());
   };
 
-  function<QString (const Cell&)> csvBeatingToAngle = [this](const Cell &cell) -> QString
+  function<QString (const Cell&)> csvVBeatingToAngle = [this](const Cell &cell) -> QString
   {
     qreal interval  = cell.getInterval();
-    qreal angle     = cell.getVCilBeatingAngle() - cell.getAngle();
+    qreal angle     = cell.getAngle() - cell.getVCilBeatingAngle();
     if (angle >  180.) angle -= 360.;
     if (angle < -180.) angle += 360.;
 
@@ -51,11 +59,12 @@ DataCtrl::DataCtrl(QObject *parent):
   };
 
   // init csv data types
-  csvDataTypes.append(CSVDataType(tr("Strength"),                     "st",   csvStrength));                  // strength
-  csvDataTypes.append(CSVDataType(tr("Angle"),                        "an",   csvAngle));                     // angle
-  csvDataTypes.append(CSVDataType(tr("Area percentile"),              "ap",   csvAreaPrecentile));            // area percentile
-  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),  "csd",  csvCircualrStandardDeviation)); // circular standard deviation
-  csvDataTypes.append(CSVDataType(tr("Beating / Angle"),              "b2a",  csvBeatingToAngle));            // beating / angle
+  csvDataTypes.append(CSVDataType(tr("Strength"),                       "st",   csvStrength));                  // strength
+  csvDataTypes.append(CSVDataType(tr("Area percentile"),                "ap",   csvAreaPrecentile));            // area percentile
+  csvDataTypes.append(CSVDataType(tr("Angle vPatch"),                   "an",   csvAngleVPatch));               // angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle vBeating"),                 "abt",  csvAngleVBeating));             // angle vBeating
+  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "b2a",  csvVBeatingToAngle));           // angle vBeating / angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "csd",  csvCircualrStandardDeviation)); // circular standard deviation
 
   Settings::Load();
 
@@ -85,13 +94,13 @@ void DataCtrl::draw() const
     case eModeEdit:
       if (Cell::edited())
       {
-        Cell::edited()->draw(averageAngle, averageCenroidRadius);
+        Cell::edited()->draw(averageAngleVPatch, averageCenroidRadius);
         cell.draw();
         break;
       }
     case eModeView:
       foreach (const Cell &CellItem, cells)
-        CellItem.draw(averageAngle, averageCenroidRadius);
+        CellItem.draw(averageAngleVPatch, averageCenroidRadius);
       cell.draw();
       break;
     case eModeDefineCentroid:
@@ -209,6 +218,7 @@ void DataCtrl::finalizeForm()
         else
         {
           Cell::edited()->addVCil(cell);
+          refresh();
           cell.clear();
         }
       }
@@ -334,6 +344,8 @@ void DataCtrl::save(const QString &filename)
 
 void DataCtrl::exportCsv(const QString &filename)
 {
+  refresh();
+
   QByteArray CSV;
 
   QStringList Values;
@@ -421,17 +433,19 @@ void DataCtrl::load(const QString &filename)
 
 void DataCtrl::refresh()
 {
-  averageAngle = 0.f;
+  averageAngleVPatch = 0.f;
+  averageAngleVBeating = 0.f;
   averageCenroidRadius = 0.f;
   const int cellsCount = cells.count();
   if (!cellsCount)
   {
-    emit angleChanged(0.f);
+    emit angleVPatchChanged(0);
+    emit angleVBeatingChanged(0);
     emit countChanged(0, 0);
     return;
   }
 
-  qreal sinsum(0.f), cossum(0.f);
+  qreal pSinSum(0.f), pCosSum(0.f), bSinSum(0.f), bCosSum(0.f);
 
   int ignored = 0;
 
@@ -444,16 +458,28 @@ void DataCtrl::refresh()
   }
 
   foreach(Cell _cell, cells)
+  {
+    // vPatch
     if (_cell.getInterval() > averageCenroidRadius)
     {
-      const qreal angle = _cell.getAngle() * M_PI / 180.f;
-      sinsum += sin(angle);
-      cossum += cos(angle);
+      const qreal pAngle = _cell.getAngle() * M_PI / 180.f;
+      pSinSum += sin(pAngle);
+      pCosSum += cos(pAngle);
     }
     else
       ++ignored;
 
-  averageAngle = atan2(sinsum, cossum) * 180.f / M_PI;
-  emit angleChanged(averageAngle);
+    // vBeating
+    const qreal bAngle = _cell.getVCilBeatingAngle() * M_PI / 180.f;
+    bSinSum += sin(bAngle);
+    bCosSum += cos(bAngle);
+  }
+
+
+  averageAngleVPatch    = atan2(pSinSum, pCosSum) * 180.f / M_PI;
+  averageAngleVBeating  = atan2(bSinSum, bCosSum) * 180.f / M_PI;
+
+  emit angleVPatchChanged(averageAngleVPatch);
+  emit angleVBeatingChanged(averageAngleVBeating);
   emit countChanged(ignored, cellsCount);
 }

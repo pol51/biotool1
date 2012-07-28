@@ -28,7 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
   connect(&ui->imageView->data(), SIGNAL(countChanged(int, int)), this, SLOT(doCellCountChanged(int, int)));
-  connect(&ui->imageView->data(), SIGNAL(angleChanged(int)), this, SLOT(doAngleChanged(int)));
+  connect(&ui->imageView->data(), SIGNAL(angleVPatchChanged(int)), this, SLOT(doAngleVPatchChanged(int)));
+  connect(&ui->imageView->data(), SIGNAL(angleVBeatingChanged(int)), this, SLOT(doAngleVBeatingChanged(int)));
   connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
   connect(ui->actExportOption, SIGNAL(triggered()), this, SLOT(doAdvancedExport()));
   connect(ui->actSettings, SIGNAL(triggered()), this, SLOT(doSettings()));
@@ -52,14 +53,21 @@ MainWindow::MainWindow(QWidget *parent) :
   cellsLabel->setMinimumSize(cellsLabel->sizeHint());
   doCellCountChanged(0, 0);
 
-  angleLabel = new QLabel(" [-000 deg] ");
-  angleLabel->setAlignment(Qt::AlignLeft);
-  angleLabel->setMinimumSize(angleLabel->sizeHint());
-  angleLabel->setVisible(false);
-  doAngleChanged(0);
+  angleVPatchLabel = new QLabel(" vPatch[-000 deg] ");
+  angleVPatchLabel->setAlignment(Qt::AlignLeft);
+  angleVPatchLabel->setMinimumSize(angleVPatchLabel->sizeHint());
+  angleVPatchLabel->setVisible(false);
+  doAngleVPatchChanged(0);
+
+  angleVBeatingLabel = new QLabel(" vBeating[-000 deg] ");
+  angleVBeatingLabel->setAlignment(Qt::AlignLeft);
+  angleVBeatingLabel->setMinimumSize(angleVBeatingLabel->sizeHint());
+  angleVBeatingLabel->setVisible(false);
+  doAngleVBeatingChanged(0);
 
   statusBar()->addWidget(cellsLabel);
-  statusBar()->addWidget(angleLabel);
+  statusBar()->addWidget(angleVPatchLabel);
+  statusBar()->addWidget(angleVBeatingLabel);
 }
 
 MainWindow::~MainWindow()
@@ -207,9 +215,14 @@ void MainWindow::doCellCountChanged(int ignored, int count)
                       arg(count - ignored).arg(count).arg(count?"s":""));
 }
 
-void MainWindow::doAngleChanged(int angle)
+void MainWindow::doAngleVPatchChanged(int angle)
 {
-  angleLabel->setText(QString(" [%1 deg] ").arg(angle));
+  angleVPatchLabel->setText(QString(" vPatch[%1 deg] ").arg(angle));
+}
+
+void MainWindow::doAngleVBeatingChanged(int angle)
+{
+  angleVBeatingLabel->setText(QString(" vBeating[%1 deg] ").arg(angle));
 }
 
 void MainWindow::doExport()

@@ -102,7 +102,8 @@ class DataCtrl : public QAbstractItemModel
 
   signals:
     void countChanged(int, int);
-    void angleChanged(int);
+    void angleVPatchChanged(int);
+    void angleVBeatingChanged(int);
     void rowsInserted(const QModelIndex &parent, int first, int last);
 
   protected:
@@ -117,7 +118,8 @@ class DataCtrl : public QAbstractItemModel
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
-    qreal averageAngle;
+    qreal averageAngleVPatch;
+    qreal averageAngleVBeating;
     qreal averageCenroidRadius;
 };
 

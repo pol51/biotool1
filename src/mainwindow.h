@@ -32,7 +32,8 @@ class MainWindow : public QMainWindow
     void doSaveAs();
     void doOpen();
     void doCellCountChanged(int ignored, int total);
-    void doAngleChanged(int angle);
+    void doAngleVPatchChanged(int angle);
+    void doAngleVBeatingChanged(int angle);
     void doExport();
     void doAdvancedExport();
     void doSettings();
@@ -44,8 +45,9 @@ class MainWindow : public QMainWindow
 
   private:
     Ui::MainWindow *ui;
-    QLabel *cellsLabel;
-    QLabel *angleLabel;
+    QLabel  *cellsLabel;
+    QLabel  *angleVPatchLabel;
+    QLabel  *angleVBeatingLabel;
     QString fileName;
     QString imageName;
     QAction *lastModeAction;
