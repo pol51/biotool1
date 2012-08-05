@@ -1,11 +1,14 @@
 #include "settingsView.h"
 
 #include <QtGui/QGridLayout>
-#include <QtGui/QSlider>
+#include <QtGui/QSpinBox>
+#include <QtGui/QLabel>
 #include <QtGui/QCheckBox>
+#include <QtGui/QSpacerItem>
 
 #include <cell.h>
 #include <settings.h>
+#include <dataCtrl.h>
 
 SettingsView::SettingsView(QWidget *parent) :
   QDialog(parent)
@@ -17,25 +20,22 @@ SettingsView::SettingsView(QWidget *parent) :
   averageArrowVCil = new QCheckBox(tr("Flèche moyenne sur chaque VCil."), this);
   averageArrowVCil->setChecked(VCil::_averageArrow);
 
-  /*minimalStrengthSlider = new QSlider(Qt::Horizontal, this);
-  minimalStrengthSlider->setMinimum(0);
-  minimalStrengthSlider->setMaximum(100);
+  maximalCSDTxt = new QSpinBox(this);
+  maximalCSDTxt->setMaximum(INT_MAX);
+  maximalCSDTxt->setValue(DataCtrl::maximalCSD);
 
-  mainLayout->addWidget(minimalStrengthSlider, 0, 0);*/
+  QLabel *MaxCSDLbl(new QLabel(tr("Seuil max de CSD:"), this));
 
-  mainLayout->addWidget(averageArrow,     0, 0);
-  mainLayout->addWidget(averageArrowVCil, 1, 0);
+  mainLayout->addWidget(MaxCSDLbl,        0, 0, 1, 1);
+  mainLayout->addWidget(maximalCSDTxt,    0, 1, 1, 1);
+  mainLayout->addWidget(averageArrow,     1, 0, 1, 2);
+  mainLayout->addWidget(averageArrowVCil, 2, 0, 1, 2);
+  mainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding), 3,0,1,2);
 
-  //connect(minimalStrengthSlider, SIGNAL(valueChanged(int)), this, SLOT(onMinimalStrengthSliderChanged(int)));
-
-  connect(averageArrow,     SIGNAL(toggled(bool)), SLOT(onAverageArrow(bool)));
-  connect(averageArrowVCil, SIGNAL(toggled(bool)), SLOT(onAverageArrowVCil(bool)));
+  connect(maximalCSDTxt,    SIGNAL(valueChanged(int)),  SIGNAL(maximalCSD(int)));
+  connect(averageArrow,     SIGNAL(toggled(bool)),      SLOT(onAverageArrow(bool)));
+  connect(averageArrowVCil, SIGNAL(toggled(bool)),      SLOT(onAverageArrowVCil(bool)));
 }
-
-/*void SettingsView::onMinimalStrengthSliderChanged(int value)
-{
-  emit minimalStrength(value / 100.);
-}*/
 
 void SettingsView::onAverageArrow(bool display)
 {

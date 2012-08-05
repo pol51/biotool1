@@ -3,8 +3,8 @@
 
 #include <QtGui/QDialog>
 
-class QSlider;
 class QCheckBox;
+class QSpinBox;
 
 class SettingsView : public QDialog
 {
@@ -14,17 +14,16 @@ class SettingsView : public QDialog
     SettingsView(QWidget *parent = NULL);
 
   protected slots:
-    //void onMinimalStrengthSliderChanged(int value);
     void onAverageArrow(bool display);
     void onAverageArrowVCil(bool display);
 
   signals:
-    //void minimalStrength(qreal);
+    void maximalCSD(int);
 
   protected:
     QCheckBox *averageArrow;
     QCheckBox *averageArrowVCil;
-    //QSlider *minimalStrengthSlider;
+    QSpinBox  *maximalCSDTxt;
 };
 
 #endif

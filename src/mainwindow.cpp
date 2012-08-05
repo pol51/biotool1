@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actSave, SIGNAL(triggered()), this, SLOT(doSave()));
   connect(ui->actSaveAs, SIGNAL(triggered()), this, SLOT(doSaveAs()));
   connect(ui->actOpen, SIGNAL(triggered()), this, SLOT(doOpen()));
-  connect(&ui->imageView->data(), SIGNAL(countChanged(int, int)), this, SLOT(doCellCountChanged(int, int)));
+  connect(&ui->imageView->data(), SIGNAL(countChanged(int, int, int)), this, SLOT(doCellCountChanged(int, int, int)));
   connect(&ui->imageView->data(), SIGNAL(angleVPatchChanged(int)), this, SLOT(doAngleVPatchChanged(int)));
   connect(&ui->imageView->data(), SIGNAL(angleVBeatingChanged(int)), this, SLOT(doAngleVBeatingChanged(int)));
   connect(ui->actExport, SIGNAL(triggered()), this, SLOT(doExport()));
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
   cellsLabel = new QLabel(" [000000 cells] ");
   cellsLabel->setAlignment(Qt::AlignLeft);
   cellsLabel->setMinimumSize(cellsLabel->sizeHint());
-  doCellCountChanged(0, 0);
+  doCellCountChanged(0, 0, 0);
 
   angleVPatchLabel = new QLabel(" vPatch[-000 deg] ");
   angleVPatchLabel->setAlignment(Qt::AlignLeft);
@@ -209,10 +209,10 @@ void MainWindow::doOpen()
   ui->imageView->grabKeyboard();
 }
 
-void MainWindow::doCellCountChanged(int ignored, int count)
+void MainWindow::doCellCountChanged(int intervalIgnored, int csdIgnored, int count)
 {
-  cellsLabel->setText(QString(" [%1/%2 cell%3] ").
-                      arg(count - ignored).arg(count).arg(count?"s":""));
+  cellsLabel->setText(QString(" [%1/%2 cell%3] [!csd: %4%]").
+                      arg(count - intervalIgnored).arg(count).arg(count?"s":"").arg(count?((count - (qreal)csdIgnored) / count * 100.):0));
 }
 
 void MainWindow::doAngleVPatchChanged(int angle)
@@ -232,7 +232,7 @@ void MainWindow::doExport()
   QFileDialog FileDialog(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
-  FileDialog.selectFile(getDefaultFilename().append(ui->imageView->data().getCsvSuffix()).append(".csv"));
+  FileDialog.selectFile(getDefaultFilename().append(ui->imageView->data().getCsvSuffix()).append(QString("-CsdMax%1").arg(DataCtrl::maxCSD())).append(".csv"));
   if (FileDialog.exec() == QDialog::Accepted)
   {
     const QString filename(FileDialog.selectedFiles().at(0));
@@ -257,7 +257,7 @@ void MainWindow::doAdvancedExport()
 void MainWindow::doSettings()
 {
   SettingsView Settings(this);
-  //connect(&Settings, SIGNAL(minimalStrength(qreal)), &ui->imageView->data(), SLOT(setMinimalStrength(qreal)));
+  connect(&Settings, SIGNAL(maximalCSD(const int&)), &ui->imageView->data(), SLOT(setMaximalCSD(const int&)));
   Settings.exec();
 }
 

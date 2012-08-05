@@ -27,23 +27,25 @@ bool   VCil::_averageArrow            (false);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
 QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
+int DataCtrl::maximalCSD(0);
 
 void Settings::Load()
 {
   QSettings settings;
 
-  Cell::_averageArrow            = settings.value("averageArrow",        Cell::_averageArrow).value<bool>();
-  Cell::_insideColor             = settings.value("insideColor",         Cell::_insideColor).value<QColor>();
-  Cell::_outsideColor            = settings.value("outsideColor",        Cell::_outsideColor).value<QColor>();
-  Cell::_vectorColor             = settings.value("vectorColor",         Cell::_vectorColor).value<QColor>();
-  Cell::_averageVectorColor      = settings.value("averageVectorColor",  Cell::_averageVectorColor).value<QColor>();
-  CellItem::_arrowLength         = settings.value("arrowLength",         CellItem::_arrowLength).value<qreal>();
-  CellItem::_arrowHeadLength     = settings.value("arrowHeadLength",     CellItem::_arrowHeadLength).value<qreal>();
-  CellItem::_arrowHeadHalfWidth  = settings.value("arrowHeadHalfWidth",  CellItem::_arrowHeadHalfWidth).value<qreal>();
-  CellItem::_arrowScale          = settings.value("arrowScale",          CellItem::_arrowScale).value<qreal>();
-  VCil::_averageArrow            = settings.value("averageArrowVCil",    VCil::_averageArrow).value<bool>();
+  Cell::_averageArrow             = settings.value("averageArrow",        Cell::_averageArrow).value<bool>();
+  Cell::_insideColor              = settings.value("insideColor",         Cell::_insideColor).value<QColor>();
+  Cell::_outsideColor             = settings.value("outsideColor",        Cell::_outsideColor).value<QColor>();
+  Cell::_vectorColor              = settings.value("vectorColor",         Cell::_vectorColor).value<QColor>();
+  Cell::_averageVectorColor       = settings.value("averageVectorColor",  Cell::_averageVectorColor).value<QColor>();
+  CellItem::_arrowLength          = settings.value("arrowLength",         CellItem::_arrowLength).value<qreal>();
+  CellItem::_arrowHeadLength      = settings.value("arrowHeadLength",     CellItem::_arrowHeadLength).value<qreal>();
+  CellItem::_arrowHeadHalfWidth   = settings.value("arrowHeadHalfWidth",  CellItem::_arrowHeadHalfWidth).value<qreal>();
+  CellItem::_arrowScale           = settings.value("arrowScale",          CellItem::_arrowScale).value<qreal>();
+  VCil::_averageArrow             = settings.value("averageArrowVCil",    VCil::_averageArrow).value<bool>();
 
-  DataCtrl::centroidsRefColor = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
+  DataCtrl::centroidsRefColor     = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
+  DataCtrl::maximalCSD            = settings.value("maximalCSD",          DataCtrl::maximalCSD).value<int>();
   DataCtrl::setSelectedDataTypesNames(settings.value("csvSelectedDataType", QStringList()).value<QStringList>());
 }
 
@@ -63,6 +65,7 @@ void Settings::Save()
   settings.setValue("averageArrowVCil",     VCil::_averageArrow);
 
   settings.setValue("centroidsRefColor",    DataCtrl::centroidsRefColor);
+  settings.setValue("maximalCSD",           DataCtrl::maximalCSD);
 
   QStringList SelectedDataNames;
   DataCtrl::getSelectedDataTypesNames(SelectedDataNames);

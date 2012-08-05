@@ -31,7 +31,7 @@ class MainWindow : public QMainWindow
     void doSave();
     void doSaveAs();
     void doOpen();
-    void doCellCountChanged(int ignored, int total);
+    void doCellCountChanged(int intervalIgnored, int csdIgnored, int total);
     void doAngleVPatchChanged(int angle);
     void doAngleVBeatingChanged(int angle);
     void doExport();

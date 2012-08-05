@@ -73,6 +73,8 @@ class DataCtrl : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
+    static const int maxCSD() { return maximalCSD; }
+
     static void getDataTypesNames(QStringList &names);
     static void getSelectedDataTypesNames(QStringList &names);
     static void setSelectedDataTypesNames(const QStringList &names);
@@ -84,6 +86,8 @@ class DataCtrl : public QAbstractItemModel
     void removeSelectedForm();
     void startEditSelectedForm();
     void stopEditSelectedForm();
+
+    void setMaximalCSD(const int& maxCSD);
 
     void setSelection(const QModelIndex &selected);
 
@@ -101,13 +105,14 @@ class DataCtrl : public QAbstractItemModel
     void refresh();
 
   signals:
-    void countChanged(int, int);
+    void countChanged(int, int, int);
     void angleVPatchChanged(int);
     void angleVBeatingChanged(int);
     void rowsInserted(const QModelIndex &parent, int first, int last);
 
   protected:
     friend class Settings;
+    friend class SettingsView;
 
     bool saved;
     EMode cntMode;
@@ -115,6 +120,7 @@ class DataCtrl : public QAbstractItemModel
     CellItem cell;
     QVector<Cell> cells;
     QVector<Polygon> centroidsRef;
+    static int maximalCSD;
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;

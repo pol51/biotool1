@@ -33,10 +33,11 @@ DataCtrl::DataCtrl(QObject *parent):
   function<QString (const Cell&)> csvAngleVBeating = [this](const Cell &cell) -> QString
   {
     qreal angle = cell.getVCilBeatingAngle() - averageAngleVBeating;
+    qreal csd   = cell.getVCilCircularStandardDeviation();
     if (angle >  180.) angle -= 360.;
     if (angle < -180.) angle += 360.;
 
-    return QString::number(angle);
+    return csd < maximalCSD?QString::number(angle):"";
   };
 
   function<QString (const Cell&)> csvAreaPrecentile = [](const Cell &cell) -> QString
@@ -53,10 +54,11 @@ DataCtrl::DataCtrl(QObject *parent):
   {
     qreal interval  = cell.getInterval();
     qreal angle     = cell.getAngle() - cell.getVCilBeatingAngle();
+    qreal csd       = cell.getVCilCircularStandardDeviation();
     if (angle >  180.) angle -= 360.;
     if (angle < -180.) angle += 360.;
 
-    return interval > averageCenroidRadius?QString::number(angle):"";
+    return (interval > averageCenroidRadius && csd < maximalCSD)?QString::number(angle):"";
   };
 
   // init csv data types
@@ -301,6 +303,13 @@ void DataCtrl::stopEditSelectedForm()
   Cell::stopEdition();
 }
 
+void DataCtrl::setMaximalCSD(const int &maxCSD)
+{
+  maximalCSD = maxCSD;
+  Settings::Save();
+  refresh();
+}
+
 void DataCtrl::setSelection(const QModelIndex &selected)
 {
   ((Cell*)selected.internalPointer())->setSelected();
@@ -437,18 +446,19 @@ void DataCtrl::refresh()
   averageAngleVPatch = 0.f;
   averageAngleVBeating = 0.f;
   averageCenroidRadius = 0.f;
-  const int cellsCount = cells.count();
-  if (!cellsCount)
+  const int CellsCount = cells.count();
+  if (!CellsCount)
   {
     emit angleVPatchChanged(0);
     emit angleVBeatingChanged(0);
-    emit countChanged(0, 0);
+    emit countChanged(0, 0, 0);
     return;
   }
 
   qreal pSinSum(0.f), pCosSum(0.f), bSinSum(0.f), bCosSum(0.f);
 
-  int ignored = 0;
+  int IntervalIgnored = 0;
+  int CSDIgnored      = 0;
 
   const int centroidsRefCount = centroidsRef.count();
   if (centroidsRefCount)
@@ -468,12 +478,17 @@ void DataCtrl::refresh()
       pCosSum += cos(pAngle);
     }
     else
-      ++ignored;
+      ++IntervalIgnored;
 
     // vBeating
-    const qreal bAngle = _cell.getVCilBeatingAngle() * M_PI / 180.f;
-    bSinSum += sin(bAngle);
-    bCosSum += cos(bAngle);
+    if (_cell.getInterval() > averageCenroidRadius && _cell.getVCilCircularStandardDeviation() < maximalCSD)
+    {
+      const qreal bAngle = _cell.getVCilBeatingAngle() * M_PI / 180.f;
+      bSinSum += sin(bAngle);
+      bCosSum += cos(bAngle);
+    }
+    else
+      ++CSDIgnored;
   }
 
 
@@ -482,5 +497,5 @@ void DataCtrl::refresh()
 
   emit angleVPatchChanged(averageAngleVPatch);
   emit angleVBeatingChanged(averageAngleVBeating);
-  emit countChanged(ignored, cellsCount);
+  emit countChanged(IntervalIgnored, CSDIgnored, CellsCount);
 }

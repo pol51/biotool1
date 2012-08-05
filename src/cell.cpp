@@ -4,6 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
+#include "dataCtrl.h"
+
 Cell* Cell::_selected = NULL;
 Cell* Cell::_edited = NULL;
 
@@ -11,8 +13,9 @@ void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) co
 {
   CellItem::draw(averageAngle, averageCenroidRadius);
 
-  foreach (const VCil &VCilItem, _vcils)
-    VCilItem.draw(_vcilsBeatingAngle);
+  if (_edited == this || _vcilsCircularStandardDeviation < DataCtrl::maxCSD())
+    foreach (const VCil &VCilItem, _vcils)
+      VCilItem.draw(_vcilsBeatingAngle);
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const
