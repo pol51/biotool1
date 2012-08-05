@@ -60,12 +60,12 @@ DataCtrl::DataCtrl(QObject *parent):
   };
 
   // init csv data types
-  csvDataTypes.append(CSVDataType(tr("Strength"),                       "st",   csvStrength));                  // strength
-  csvDataTypes.append(CSVDataType(tr("Area percentile"),                "ap",   csvAreaPrecentile));            // area percentile
-  csvDataTypes.append(CSVDataType(tr("Angle vPatch"),                   "an",   csvAngleVPatch));               // angle vPatch
-  csvDataTypes.append(CSVDataType(tr("Angle vBeating"),                 "abt",  csvAngleVBeating));             // angle vBeating
-  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "b2a",  csvVBeatingToAngle));           // angle vBeating / angle vPatch
-  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "csd",  csvCircualrStandardDeviation)); // circular standard deviation
+  csvDataTypes.append(CSVDataType(tr("Strength"),                       "Str",    csvStrength));                  // strength
+  csvDataTypes.append(CSVDataType(tr("Area percentile"),                "Area" ,  csvAreaPrecentile));            // area percentile
+  csvDataTypes.append(CSVDataType(tr("Angle vPatch"),                   "Apatch", csvAngleVPatch));               // angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle vBeating"),                 "Abeat",  csvAngleVBeating));             // angle vBeating
+  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "Ab2p",   csvVBeatingToAngle));           // angle vBeating / angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "Csd",    csvCircualrStandardDeviation)); // circular standard deviation
 
   Settings::Load();
 
