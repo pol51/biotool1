@@ -50,13 +50,14 @@ DataCtrl::DataCtrl(QObject *parent):
     return QString::number(cell.getVCilCircularStandardDeviation());
   };
 
-  function<QString (const Cell&)> csvVBeatingToAngle = [this](const Cell &cell) -> QString
+  function<QString (const Cell&)> csvVBeatingToVPatch = [this](const Cell &cell) -> QString
   {
     qreal interval  = cell.getInterval();
     qreal angle     = cell.getAngle() - cell.getVCilBeatingAngle();
     qreal csd       = cell.getVCilCircularStandardDeviation();
     if (angle >  180.) angle -= 360.;
     if (angle < -180.) angle += 360.;
+    angle = qAbs(angle);
 
     return (interval > averageCenroidRadius && csd < maximalCSD)?QString::number(angle):"";
   };
@@ -66,7 +67,7 @@ DataCtrl::DataCtrl(QObject *parent):
   csvDataTypes.append(CSVDataType(tr("Area percentile"),                "Area" ,  csvAreaPrecentile));            // area percentile
   csvDataTypes.append(CSVDataType(tr("Angle vPatch"),                   "Apatch", csvAngleVPatch));               // angle vPatch
   csvDataTypes.append(CSVDataType(tr("Angle vBeating"),                 "Abeat",  csvAngleVBeating));             // angle vBeating
-  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "Ab2p",   csvVBeatingToAngle));           // angle vBeating / angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "Ab2p",   csvVBeatingToVPatch));          // angle vBeating / angle vPatch
   csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "Csd",    csvCircualrStandardDeviation)); // circular standard deviation
 
   Settings::Load();
