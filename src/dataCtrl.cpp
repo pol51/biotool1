@@ -33,7 +33,8 @@ DataCtrl::DataCtrl(QObject *parent):
   function<QString (const Cell&)> csvAngleVBeating = [this](const Cell &cell) -> QString
   {
     qreal angle = cell.getVCilBeatingAngle() - averageAngleVBeating;
-    if (angle > 180.) angle -= 360.;
+    if (angle >  180.) angle -= 360.;
+    if (angle < -180.) angle += 360.;
 
     return QString::number(angle);
   };
