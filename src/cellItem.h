@@ -24,7 +24,7 @@ class CellItem
     bool addOneForm(const Polygon &form); // return true if full (all form sets)
     void computeAreaRatio();
     void computeVector();
-    virtual void draw(const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
+    virtual void draw(QGLShaderProgram *program, const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
     virtual void save(QDomDocument &doc, QDomElement &parentNode, const QString &name) const;
     virtual bool load(QDomElement &node);
 

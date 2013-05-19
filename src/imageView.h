@@ -2,12 +2,17 @@
 #define __IMAGEVIEW_H__
 
 #include <QtOpenGL/QGLWidget>
+#include <QtOpenGL/QGLFunctions>
 
-#include <QtCore/QTimer>
+#include <QtCore/QBasicTimer>
 
 #include "dataCtrl.h"
+#include "geometryEngine.h"
 
-class ImageView : public QGLWidget
+#define Z_MAX 30.0
+#define Z_MIN 0.0001
+
+class ImageView : public QGLWidget, protected QGLFunctions
 {
   Q_OBJECT
 
@@ -21,34 +26,41 @@ class ImageView : public QGLWidget
     const DataCtrl& data() const { return *dataCtrl; }
 
   public slots:
-    void doZoomIn()     { if (zoom > 1) --zoom; }
-    void doZoomOut()    { if (zoom < 11) ++zoom; }
-    void doResetView()  { zoom = 10; xDecal = yDecal = 0.; resizeGL(width(), height()); }
+    void doZoomOut()    { distance *= 1.1; if (distance > Z_MAX) distance = Z_MAX; updateRatio(); }
+    void doZoomIn()     { distance *= 0.9; if (distance < Z_MIN) distance = Z_MIN; updateRatio(); }
+    void doResetView()  { distance = 2.5; xDecal = yDecal = 0.; resizeGL(width(), height()); }
 
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void timerEvent(QTimerEvent */*event*/) { update(); }
 
   protected slots:
     void doChangeImage(const QImage &image);
     void doCloseImage();
 
   protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int w, int h);
+    void initializeGL();
+    void initShaders();
+    void paintGL();
+    void resizeGL(int w, int h);
+    void updateRatio();
 
   protected:
-    bool onMoveDecal;
-    int zoom;
-    DataCtrl *dataCtrl;
-    GLuint imageTexId;
-    GLfloat xDecal, yDecal;
-    GLfloat ratioWidthPerHeght;
-    QTimer refreshTimer;
-    QPoint lastMousePos;
+    bool onMoveDecal = false;
+    qreal distance = 2.5;
+    DataCtrl *dataCtrl = NULL;
+    GLuint imageTexId = 0;
+    qreal xDecal = 0.0, yDecal = 0.0;
+    qreal xRatio = 1.f, yRatio = 1.f;
+    QBasicTimer refreshTimer;
+    QVector2D lastMousePos;
+
+    QMatrix4x4 projection;
+    QGLShaderProgram program;
+    GeometryEngine geometries;
 };
 
 #endif

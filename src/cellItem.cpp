@@ -1,6 +1,7 @@
 #include "cellItem.h"
 
 #include <QtOpenGL/QGLContext>
+#include <QtOpenGL/QGLShaderProgram>
 
 #include <QtXml/QDomDocument>
 
@@ -85,7 +86,7 @@ void CellItem::computeVector()
   _strength = _interval / centroidToOutsideLength;
 }
 
-void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
+void CellItem::draw(QGLShaderProgram *program, const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
   const QColor &InColor(inColor());
   const QColor &OutColor(outColor());
@@ -93,18 +94,16 @@ void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius
   const QColor &AverageVectorColor(averageVectorColor());
 
   // draw outside form
-  glColor3f(OutColor.redF(), OutColor.greenF(), OutColor.blueF());
-  _outsideForm.draw();
+  _outsideForm.draw(program, OutColor);
 
   // draw inside form
-  glColor3f(InColor.redF(), InColor.greenF(), InColor.blueF());
-  _insideForm.draw();
+  _insideForm.draw(program, InColor);
 
   // draw vector
   if (isFull() && _interval > averageCenroidRadius)
   {
     glPushMatrix();
-    glColor3f(VectorColor.redF(), VectorColor.greenF(), VectorColor.blueF());
+    program->setUniformValue("color", QVector3D(VectorColor.redF(), VectorColor.greenF(), VectorColor.blueF()));
     glTranslatef(_outsideForm.getCentroid().x(), _outsideForm.getCentroid().y(), 0.);
     glRotatef(_angle, 0., 0., -1.);
     //glScalef(strength * 2.5, strength * 2.5, 1.);
@@ -113,7 +112,7 @@ void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius
 
     if (averageArrow() && averageAngle <= 360.)
     {
-      glColor3f(AverageVectorColor.redF(), AverageVectorColor.greenF(), AverageVectorColor.blueF());
+      program->setUniformValue("color", QVector3D(AverageVectorColor.redF(), AverageVectorColor.greenF(), AverageVectorColor.blueF()));
       glRotatef(averageAngle - _angle, 0., 0., -1.);
       drawArrow();
     }

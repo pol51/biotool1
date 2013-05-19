@@ -1,7 +1,7 @@
 #ifndef __SETTINGSVIEW_H__
 #define __SETTINGSVIEW_H__
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 class QCheckBox;
 class QSpinBox;

@@ -1,6 +1,7 @@
 #include "polygon.h"
 
 #include <QtOpenGL/QGLContext>
+#include <QtOpenGL/QGLShaderProgram>
 
 #include <QtXml/QDomDocument>
 
@@ -76,43 +77,29 @@ void Polygon::clear()
   type = eEdition;
 }
 
-void Polygon::draw() const
+void Polygon::draw(QGLShaderProgram *program, const QColor &color) const
 {
+  program->setUniformValue("color", QVector3D(color.redF(), color.greenF(), color.blueF()));
+
   const int Count = count();
 
   if (!Count) return;
 
-  switch (type)
+  if (Count > 1 && type == eFinalized)
   {
-    case eEdition:
-      glColor3f(.75f, .75f, .75f);
+    glBegin(GL_LINE_LOOP);
       for (int i = Count; --i >= 0; )
-      {
-        glBegin(GL_POINTS);
-          glVertex3f(at(i).x(), at(i).y(), 0.f);
-        glEnd();
-      }
-      break;
-    case eFinalized:
-      if (Count > 1)
-      {
-        glBegin(GL_LINE_LOOP);
-          for (int i = Count; --i >= 0; )
-            glVertex3f(at(i).x(), at(i).y(), 0.f);
-        glEnd();
-        glBegin(GL_POINTS);
-          glVertex3f(centroid.x(), centroid.y(), 0.f);
-        glEnd();
-      }
-      else
-      {
-        glBegin(GL_POINTS);
-          glVertex3f(at(0).x(), at(0).y(), 0.f);
-        glEnd();
-      }
-      break;
-    default:
-      break;
+        glVertex3f(at(i).x(), at(i).y(), 0.f);
+    glEnd();
+    glBegin(GL_POINTS);
+      glVertex3f(centroid.x(), centroid.y(), 0.f);
+    glEnd();
+  }
+  else
+  {
+    glBegin(GL_POINTS);
+      glVertex3f(at(0).x(), at(0).y(), 0.f);
+    glEnd();
   }
 }
 

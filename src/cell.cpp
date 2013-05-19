@@ -9,13 +9,13 @@
 Cell* Cell::_selected = NULL;
 Cell* Cell::_edited = NULL;
 
-void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
+void Cell::draw(QGLShaderProgram *program, const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
-  CellItem::draw(averageAngle, averageCenroidRadius);
+  CellItem::draw(program, averageAngle, averageCenroidRadius);
 
   if (_edited == this || _vcilsCircularStandardDeviation < DataCtrl::maxCSD())
     foreach (const VCil &VCilItem, _vcils)
-      VCilItem.draw(_vcilsBeatingAngle);
+      VCilItem.draw(program, _vcilsBeatingAngle);
 }
 
 void Cell::save(QDomDocument &doc, QDomElement &parentNode) const

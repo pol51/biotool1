@@ -1,7 +1,7 @@
 #ifndef __CVSEXPORTOPTIONS_H__
 #define __CVSEXPORTOPTIONS_H__
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui { class CsvExportOptions; }
 

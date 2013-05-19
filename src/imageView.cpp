@@ -4,11 +4,9 @@
 
 ImageView::ImageView(QWidget *parent) :
   QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
-  onMoveDecal(false), zoom(10), dataCtrl(new DataCtrl(this)),
-  imageTexId(0), xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
+  dataCtrl(new DataCtrl(this))
 {
-  connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
-  refreshTimer.start(20);
+  refreshTimer.start(20, this);
 }
 
 ImageView::~ImageView()
@@ -23,20 +21,11 @@ void ImageView::mousePressEvent(QMouseEvent *event)
   {
     const DataCtrl::EMode CurrentMode = dataCtrl->currentMode();
     onMoveDecal = (event->type() == QEvent::MouseButtonPress && CurrentMode == DataCtrl::eModeView);
-    lastMousePos = event->pos();
+    lastMousePos = QVector2D(event->pos());
 
     if ((1<<CurrentMode) & ((1<<DataCtrl::eModeEdit) | (1<<DataCtrl::eModeDefineCentroid)))
     {
-      const float factor = qMin(width(), height());
-      float x(zoom / 10.);
-      float y(x);
-      if (width() > height())
-        x *= ((float)width() / (float)height());
-      else
-        y *= ((float)height() / (float)width());
-      QPointF Point((event->x() / factor * (zoom<<1) - xDecal) /10. - x,
-                    (event->y() / factor * (zoom<<1) - yDecal) /10. - y);
-
+      QPointF Point((event->x() - (width()/2)) * xRatio - xDecal, (event->y() - (height()/2)) * yRatio - yDecal);
       dataCtrl->addPoint(Point);
     }
   }
@@ -56,13 +45,13 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event)
 
 void ImageView::mouseMoveEvent(QMouseEvent *event)
 {
-  float factor = qMin(width(), height());
   if (onMoveDecal && event->type())
   {
-    xDecal += (event->x() - lastMousePos.x()) / factor * (zoom<<1);
-    yDecal += (event->y() - lastMousePos.y()) / factor * (zoom<<1);
+    QVector2D Diff = QVector2D(event->localPos()) - lastMousePos;
+    xDecal += Diff.x() * xRatio;
+    yDecal += Diff.y() * yRatio;
   }
-  lastMousePos = event->pos();
+  lastMousePos = QVector2D(event->pos());
 
   if (!onMoveDecal && !(event->buttons() & Qt::LeftButton))
     QGLWidget::mouseMoveEvent(event);
@@ -70,12 +59,13 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
 
 void ImageView::wheelEvent(QWheelEvent *event)
 {
-  zoom += event->delta() / 120;
-  if (zoom > 11)  zoom = 11;
-  if (zoom < 1)   zoom = 1;
-  resizeGL(width(), height());
-
-  QGLWidget::wheelEvent(event);
+  if (event->orientation() == Qt::Vertical)
+  {
+    if (event->delta() > 0) doZoomOut();
+    else doZoomIn();
+  }
+  else
+    QGLWidget::wheelEvent(event);
 }
 
 void ImageView::keyPressEvent(QKeyEvent *event)
@@ -91,6 +81,12 @@ void ImageView::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
       dataCtrl->finalizeForm();
       break;
+    case Qt::Key_Plus:
+      doZoomIn();
+      break;
+    case Qt::Key_Minus:
+      doZoomOut();
+      break;
     default:
       break;
   }
@@ -101,72 +97,78 @@ void ImageView::keyPressEvent(QKeyEvent *event)
 void ImageView::doChangeImage(const QImage &image)
 {
   if (imageTexId) deleteTexture(imageTexId);
-  ratioWidthPerHeght = (image.width() / (float)image.height());
-
   imageTexId = bindTexture(image);
+  glBindTexture(GL_TEXTURE_2D, imageTexId);
+
+  geometries.init((image.width() / GLfloat(image.height())));
 }
 
 void ImageView::doCloseImage()
 {
   if (imageTexId) deleteTexture(imageTexId);
-  ratioWidthPerHeght = 1.;
-
   imageTexId = 0;
 }
 
 void ImageView::initializeGL()
 {
-  QGLWidget::initializeGL();
+  initializeGLFunctions();
+  qglClearColor(Qt::black);
+  initShaders();
 
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_CULL_FACE);
+
+  geometries.init(1.f);
+}
+
+void ImageView::initShaders()
+{
+  setlocale(LC_NUMERIC, "C");
+
+  if (!program.addShaderFromSourceFile(QGLShader::Vertex,   ":/vshader.glsl"))  close();
+  if (!program.addShaderFromSourceFile(QGLShader::Fragment, ":/fshader.glsl"))  close();
+
+  if (!program.link()) close();
+  if (!program.bind()) close();
+
+  setlocale(LC_ALL, "");
 }
 
 void ImageView::paintGL()
 {
-  QGLWidget::paintGL();
+  glClear(GL_COLOR_BUFFER_BIT);
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  QMatrix4x4 Translation;
+  Translation.translate(xDecal, yDecal, -distance);
 
-  glPushMatrix();
+  program.setUniformValue("mvp_matrix", projection * Translation);
+  program.setUniformValue("texture", 0);
+  program.setUniformValue("color", QVector3D(1., 1., 1.));
+  program.setUniformValue("useTexture", true);
 
-  glColor3f(1., 1., 1.);
-  glTranslatef(xDecal / 10., yDecal / 10., 0);
+  geometries.draw(&program);
 
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, imageTexId);
-
-  glBegin(GL_QUADS);
-    glTexCoord2f( 0, 1); glVertex3f(-ratioWidthPerHeght, -1., 0.);
-    glTexCoord2f( 0, 0); glVertex3f(-ratioWidthPerHeght,  1., 0.);
-    glTexCoord2f( 1, 0); glVertex3f( ratioWidthPerHeght,  1., 0.);
-    glTexCoord2f( 1, 1); glVertex3f( ratioWidthPerHeght, -1., 0.);
-  glEnd();
-
-  glDisable(GL_TEXTURE_2D);
-
-  dataCtrl->draw();
-
-  glPopMatrix();
+  program.setUniformValue("useTexture", false);
+  dataCtrl->draw(&program);
 }
 
-void ImageView::resizeGL(int width, int height)
+void ImageView::resizeGL(int w, int h)
 {
-  QGLWidget::resizeGL(width, height);
+  glViewport(0, 0, w, h);
 
-  glViewport(0, 0, width, height);
+  const qreal Aspect = qreal(w) / qreal(h ? h : 1);
+  const qreal ZNear = Z_MIN * 0.9, ZFar = Z_MAX * 1.1, Fov = 45;
 
-  float x(zoom / 10.);
-  float y(x);
+  projection.setToIdentity();
+  projection.perspective(Fov, Aspect, ZNear, ZFar);
+  projection.scale(1,-1, 1);
 
-  if (width > height)
-    x *= ((float)width / (float)height);
-  else
-    y *= ((float)height / (float)width);
+  updateRatio();
+}
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-x, +x, +y, -y, -100.0, 100.0);
-  glMatrixMode(GL_MODELVIEW);
+void ImageView::updateRatio()
+{
+  const qreal w(width()), h(height());
+  const qreal Aspect = w / (h ? h : 1);
+  xRatio = (distance / ((projection.column(0).x()) / 2.))/w;
+  yRatio = (distance / ((projection.column(0).x()) / 2.))/h / Aspect;
 }

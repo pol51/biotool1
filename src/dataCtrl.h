@@ -9,6 +9,8 @@
 
 using namespace std::tr1;
 
+class QGLShaderProgram;
+
 class DataCtrl : public QAbstractItemModel
 {
   Q_OBJECT
@@ -18,7 +20,7 @@ class DataCtrl : public QAbstractItemModel
     {
       eModeView,
       eModeEdit,
-      eModeDefineCentroid,
+      eModeDefineCentroid
     };
 
   public:
@@ -62,7 +64,7 @@ class DataCtrl : public QAbstractItemModel
 
     void addPoint(const QPointF &point);
 
-    void draw() const;
+    void draw(QGLShaderProgram *program) const;
 
     bool isSaved() const { return saved; }
 
@@ -73,7 +75,7 @@ class DataCtrl : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    static const int maxCSD() { return maximalCSD; }
+    static int maxCSD() { return maximalCSD; }
 
     static void getDataTypesNames(QStringList &names);
     static void getSelectedDataTypesNames(QStringList &names);

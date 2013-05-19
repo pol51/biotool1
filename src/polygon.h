@@ -6,6 +6,9 @@
 class QDomElement;
 class QDomDocument;
 
+class QColor;
+class QGLShaderProgram;
+
 class Polygon : public QPolygonF
 {
   public:
@@ -27,7 +30,7 @@ class Polygon : public QPolygonF
     const qreal   &getArea()      const { return area; }
     const qreal   &getRadius()    const { return radius; }
 
-    void draw() const;
+    void draw(QGLShaderProgram *program, const QColor &color) const;
 
     void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
     void load(QDomElement &node);

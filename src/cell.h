@@ -11,7 +11,7 @@ class Cell: public CellItem
     Cell(const CellItem& cellItem) : CellItem(cellItem), _vcilsBeatingAngle(.0f), _vcilsCircularStandardDeviation(0.f) {}
     virtual ~Cell() { if (this == _selected) _selected = NULL; if (this == _edited) _edited = NULL; }
 
-    void draw(const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
+    void draw(QGLShaderProgram *program, const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
     void save(QDomDocument &doc, QDomElement &parentNode) const;
     bool load(QDomElement &node);
 

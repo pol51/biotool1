@@ -1,4 +1,5 @@
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QStyleFactory>
 #include <QtCore/QTextCodec>
 
 #include "mainwindow.h"
@@ -10,9 +11,8 @@ int main(int argc, char *argv[])
   App.setOrganizationDomain("labedan.fr");
   App.setApplicationName("BioTool1");
 
-  QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-  QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+  App.setFont(QFont("DejaVu Sans", 10));
+  App.setStyle(QStyleFactory::create("Fusion"));
 
   MainWindow Win;
   Win.show();

@@ -88,7 +88,7 @@ void DataCtrl::addPoint(const QPointF &point)
   saved = false;
 }
 
-void DataCtrl::draw() const
+void DataCtrl::draw(QGLShaderProgram *program) const
 {
   glLineWidth(3.);
   glPointSize(5.);
@@ -98,22 +98,21 @@ void DataCtrl::draw() const
     case eModeEdit:
       if (Cell::edited())
       {
-        Cell::edited()->draw(averageAngleVPatch, averageCenroidRadius);
-        cell.draw();
+        Cell::edited()->draw(program, averageAngleVPatch, averageCenroidRadius);
+        cell.draw(program);
         break;
       }
     case eModeView:
       foreach (const Cell &CellItem, cells)
-        CellItem.draw(averageAngleVPatch, averageCenroidRadius);
-      cell.draw();
+        CellItem.draw(program, averageAngleVPatch, averageCenroidRadius);
+      cell.draw(program);
       break;
     case eModeDefineCentroid:
-      glColor3f(centroidsRefColor.redF(), centroidsRefColor.greenF(), centroidsRefColor.blueF());
       foreach (const Polygon &CellItem, centroidsRef)
-        CellItem.draw();
+        CellItem.draw(program, centroidsRefColor);
   }
 
-  points.draw();
+  points.draw(program, QColor(.75f, .75f, .75f));
 }
 
 QVariant DataCtrl::headerData(int section, Qt::Orientation orientation, int role) const

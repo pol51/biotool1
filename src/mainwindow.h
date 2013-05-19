@@ -1,7 +1,7 @@
 #ifndef __MAINWINDOW_H__
 #define __MAINWINDOW_H__
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 namespace Ui { class MainWindow; }
 
@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = NULL);
     ~MainWindow();
 
   protected:

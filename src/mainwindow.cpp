@@ -5,9 +5,9 @@
 #include "settingsView.h"
 #include "csvExportOptions.h"
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QLabel>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
