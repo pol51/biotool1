@@ -31,7 +31,7 @@
    </property>
    <widget class="QMenu" name="menuFichier">
     <property name="title">
-     <string>&amp;Fichier</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actNew"/>
     <addaction name="actOpen"/>
@@ -47,7 +47,7 @@
    </widget>
    <widget class="QMenu" name="menuEdition">
     <property name="title">
-     <string>&amp;Edition</string>
+     <string>&amp;Edit</string>
     </property>
     <addaction name="actResetView"/>
     <addaction name="separator"/>
@@ -59,7 +59,7 @@
    </widget>
    <widget class="QMenu" name="menu_Aide">
     <property name="title">
-     <string>&amp;Aide</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actAbout"/>
    </widget>
@@ -118,7 +118,7 @@
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
    </property>
    <property name="text">
-    <string>&amp;Charger Image</string>
+    <string>Load &amp;Image</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -130,7 +130,7 @@
      <normaloff>:/icons/exit</normaloff>:/icons/exit</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quitter</string>
+    <string>&amp;Quit</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -145,7 +145,7 @@
      <normaloff>:/icons/view</normaloff>:/icons/view</iconset>
    </property>
    <property name="text">
-    <string>Mode &amp;Vue</string>
+    <string>&amp;View mode</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -160,7 +160,7 @@
      <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
    </property>
    <property name="text">
-    <string>Mode &amp;Edition</string>
+    <string>&amp;Edition mode</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -172,7 +172,7 @@
      <normaloff>:/icons/close</normaloff>:/icons/close</iconset>
    </property>
    <property name="text">
-    <string>&amp;Fermer Image</string>
+    <string>&amp;Close Image</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -184,7 +184,7 @@
      <normaloff>:/icons/reset_view</normaloff>:/icons/reset_view</iconset>
    </property>
    <property name="text">
-    <string>Vue par &amp;défaut</string>
+    <string>&amp;Default View</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -196,7 +196,7 @@
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
    </property>
    <property name="text">
-    <string>&amp;Ouvrir</string>
+    <string>&amp;Load</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -211,7 +211,7 @@
      <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
    </property>
    <property name="text">
-    <string>&amp;Enregistrer</string>
+    <string>&amp;Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -226,7 +226,7 @@
      <normaloff>:/icons/new</normaloff>:/icons/new</iconset>
    </property>
    <property name="text">
-    <string>&amp;Nouveau</string>
+    <string>&amp;New</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -241,7 +241,7 @@
      <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
    </property>
    <property name="text">
-    <string>Enregistrer &amp;sous</string>
+    <string>Save &amp;As</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -256,7 +256,7 @@
      <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
    </property>
    <property name="text">
-    <string>E&amp;xporter</string>
+    <string>&amp;Export</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -271,7 +271,7 @@
      <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
    </property>
    <property name="text">
-    <string>Réglages</string>
+    <string>&amp;Settings</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -286,12 +286,12 @@
      <normaloff>:/icons/mesure</normaloff>:/icons/mesure</iconset>
    </property>
    <property name="text">
-    <string>Mode Definition &amp;Centroïde</string>
+    <string>Define &amp;Centroïd mode</string>
    </property>
   </action>
   <action name="actAbout">
    <property name="text">
-    <string>A &amp;Propos</string>
+    <string>&amp;About</string>
    </property>
   </action>
   <action name="actExportOption">
@@ -300,7 +300,7 @@
      <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
    </property>
    <property name="text">
-    <string>Exporter ...</string>
+    <string>Export (advanced)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+E</string>

@@ -15,16 +15,16 @@ SettingsView::SettingsView(QWidget *parent) :
 {
   QGridLayout *mainLayout = new QGridLayout(this);
 
-  averageArrow = new QCheckBox(tr("Flèche moyenne sur chaque cellule."), this);
+  averageArrow = new QCheckBox(tr("Dispaly the average arrow on every cell."), this);
   averageArrow->setChecked(Cell::_averageArrow);
-  averageArrowVCil = new QCheckBox(tr("Flèche moyenne sur chaque VCil."), this);
+  averageArrowVCil = new QCheckBox(tr("Dispaly the average arrow on every VCil."), this);
   averageArrowVCil->setChecked(VCil::_averageArrow);
 
   maximalCSDTxt = new QSpinBox(this);
   maximalCSDTxt->setMaximum(INT_MAX);
   maximalCSDTxt->setValue(DataCtrl::maximalCSD);
 
-  QLabel *MaxCSDLbl(new QLabel(tr("Seuil max de CSD:"), this));
+  QLabel *MaxCSDLbl(new QLabel(tr("CSD maximum threshold:"), this));
 
   mainLayout->addWidget(MaxCSDLbl,        0, 0, 1, 1);
   mainLayout->addWidget(maximalCSDTxt,    0, 1, 1, 1);

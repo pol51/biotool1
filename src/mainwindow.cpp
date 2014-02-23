@@ -93,8 +93,8 @@ bool MainWindow::askForUnsavedChanges(const QString &title)
   return (ui->imageView->data().isSaved() ||
           QMessageBox::question(this,
                                 title,
-                                tr("Le travail en cours comporte des modification non sauvegardées.\n"
-                                   "Etes-vous sûr de vouloir continuer?"),
+                                tr("The work-in-progress contains unsaved changes.\n"
+                                   "Are you sure you want to continue?"),
                                 QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes);
 }
 
@@ -104,18 +104,18 @@ void MainWindow::doLoadImage()
 
   imageName = QString();
 
-  QString filename(QFileDialog::getOpenFileName(this, tr("Choisir une image"), tr("."), tr("Images (*.png *.jpg *.jpeg *.tif *.tiff);;Tous (*)")));
+  QString filename(QFileDialog::getOpenFileName(this, tr("Select an image"), tr("."), tr("Images (*.png *.jpg *.jpeg *.tif *.tiff);;All (*)")));
   if (filename.isEmpty()) return;
   if (!QFileInfo(filename).isReadable())
   {
-    QMessageBox::warning(this, tr("Erreur"), tr("Impossible de lire le fichier."));
+    QMessageBox::warning(this, tr("Error"), tr("Impossible to read the file."));
     ui->imageView->grabKeyboard();
     return;
   }
   QImage Image(filename);
   if (Image.isNull())
   {
-    QMessageBox::warning(this, tr("Erreur"), tr("Format d'image incorrect."));
+    QMessageBox::warning(this, tr("Error"), tr("Unsupported image format."));
     ui->imageView->grabKeyboard();
     return;
   }
@@ -156,7 +156,7 @@ void MainWindow::doChangeMode(bool activated)
 
 void MainWindow::doNew()
 {
-  if (askForUnsavedChanges(tr("Nouveau document")))
+  if (askForUnsavedChanges(tr("New document")))
   {
     ui->imageView->data().clear();
     fileName.clear();
@@ -175,7 +175,7 @@ void MainWindow::doSaveAs()
 {
   ui->imageView->releaseKeyboard();
 
-  QFileDialog FileDialog(this, tr("Enregistrer sous"), tr("."), tr("Documents (*.xml);;Tous (*)"));
+  QFileDialog FileDialog(this, tr("Save as"), tr("."), tr("Documents (*.xml);;All (*)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
   FileDialog.selectFile(getDefaultFilename().append(".xml"));
@@ -196,9 +196,9 @@ void MainWindow::doOpen()
 {
   ui->imageView->releaseKeyboard();
 
-  if (askForUnsavedChanges(tr("Ouvrir un document")))
+  if (askForUnsavedChanges(tr("Load a document")))
   {
-    const QString filename(QFileDialog::getOpenFileName(this, tr("Ouvrir un document"), tr("."), tr("Documents (*.xml);;Tous (*)")));
+    const QString filename(QFileDialog::getOpenFileName(this, tr("Load a document"), tr("."), tr("Documents (*.xml);;All (*)")));
     if (!filename.isEmpty())
     {
       fileName = filename;
@@ -229,7 +229,7 @@ void MainWindow::doExport()
 {
   ui->imageView->releaseKeyboard();
 
-  QFileDialog FileDialog(this, tr("Exporter sous"), tr("."), tr("Fichiers csv (*.csv)"));
+  QFileDialog FileDialog(this, tr("Export as"), tr("."), tr("Csv files (*.csv)"));
   FileDialog.setAcceptMode(QFileDialog::AcceptSave);
   FileDialog.setFileMode(QFileDialog::AnyFile);
   FileDialog.selectFile(getDefaultFilename().append(ui->imageView->data().getCsvSuffix()).append(QString("-CsdMax%1").arg(DataCtrl::maxCSD())).append(".csv"));
@@ -267,7 +267,7 @@ void MainWindow::doAbout()
   #define _STR(var)   #var
   #define GIT_VERSION _XSTR(BT1_GIT_VERSION)
 
-  QMessageBox::information(this, tr("A Propos"), tr("Biotool1\nversion 1-%1").arg(GIT_VERSION));
+  QMessageBox::information(this, tr("About"), tr("Biotool1\nversion 1-%1\nhttps://github.com/pol51/biotool1").arg(GIT_VERSION));
 }
 
 void MainWindow::displayCellMenu(const QPoint &pos)
@@ -275,11 +275,11 @@ void MainWindow::displayCellMenu(const QPoint &pos)
   if (Cell::selected())
   {
     QMenu Menu(ui->objectsView);
-    Menu.addAction(tr("Supprimer"), &ui->imageView->data(), SLOT(removeSelectedForm()));
+    Menu.addAction(tr("Delete"), &ui->imageView->data(), SLOT(removeSelectedForm()));
     if (!Cell::edited() || Cell::edited() != Cell::selected())
-      Menu.addAction(tr("Commencer édition"),    &ui->imageView->data(), SLOT(startEditSelectedForm()));
+      Menu.addAction(tr("Start edition"), &ui->imageView->data(), SLOT(startEditSelectedForm()));
     else
-      Menu.addAction(tr("Arrêter édition"),    &ui->imageView->data(), SLOT(stopEditSelectedForm()));
+      Menu.addAction(tr("Stop edition"),  &ui->imageView->data(), SLOT(stopEditSelectedForm()));
     Menu.exec(ui->objectsView->mapToGlobal(pos));
   }
 }

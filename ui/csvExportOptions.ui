@@ -24,7 +24,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Valeurs Actives</string>
+          <string>Active Values</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -48,7 +48,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Valeurs Disponibles</string>
+          <string>Available Values</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
