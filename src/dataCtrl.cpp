@@ -212,7 +212,8 @@ void DataCtrl::finalizeForm()
       {
         if (!Cell::edited())
         {
-          beginInsertRows(QModelIndex(), cells.count()-1, cells.count()-1);
+          const int Count(cells.count());
+          beginInsertRows(QModelIndex(), Count?Count-1:0, Count?Count-1:0);
           cells.push_back(cell);
           cell.clear();
           refresh();
