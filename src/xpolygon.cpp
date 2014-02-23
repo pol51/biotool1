@@ -1,12 +1,10 @@
-#include "polygon.h"
+#include "xpolygon.h"
 
 #include <QtOpenGL/QGLContext>
 
 #include <QtXml/QDomDocument>
 
-#include <cmath>
-
-void Polygon::computeData()
+void XPolygon::computeData()
 {
   const int Count = count();
 
@@ -66,7 +64,7 @@ void Polygon::computeData()
   type = eFinalized;
 }
 
-void Polygon::clear()
+void XPolygon::clear()
 {
   QPolygonF::clear();
   centroid.setX(0.f);
@@ -76,7 +74,7 @@ void Polygon::clear()
   type = eEdition;
 }
 
-void Polygon::draw() const
+void XPolygon::draw() const
 {
   const int Count = count();
 
@@ -116,7 +114,7 @@ void Polygon::draw() const
   }
 }
 
-void Polygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const
+void XPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const
 {
   QDomElement PolyNode = doc.createElement("polygon");
   parentNode.appendChild(PolyNode);
@@ -130,7 +128,7 @@ void Polygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) 
   }
 }
 
-void Polygon::load(QDomElement &node)
+void XPolygon::load(QDomElement &node)
 {
   QDomElement PointElement = node.firstChildElement("point");
   while (!PointElement.isNull())

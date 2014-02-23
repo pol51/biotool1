@@ -5,9 +5,9 @@
 #include "settingsView.h"
 #include "csvExportOptions.h"
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QLabel>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -263,9 +263,6 @@ void MainWindow::doSettings()
 
 void MainWindow::doAbout()
 {
-  #ifndef BT1_GIT_VERSION
-  #  define BT1_GIT_VERSION ?
-  #endif
   #define _XSTR(var)  _STR(var)
   #define _STR(var)   #var
   #define GIT_VERSION _XSTR(BT1_GIT_VERSION)

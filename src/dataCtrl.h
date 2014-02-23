@@ -3,7 +3,11 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <tr1/functional>
+#ifdef _MSC_VER
+#  include <functional>
+#else
+#  include <tr1/functional>
+#endif
 
 #include "cell.h"
 
@@ -116,10 +120,10 @@ class DataCtrl : public QAbstractItemModel
 
     bool saved;
     EMode cntMode;
-    Polygon points;
+    XPolygon points;
     CellItem cell;
     QVector<Cell> cells;
-    QVector<Polygon> centroidsRef;
+    QVector<XPolygon> centroidsRef;
     static int maximalCSD;
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;

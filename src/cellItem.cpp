@@ -31,7 +31,7 @@ bool CellItem::clearOneForm()
   return true;
 }
 
-bool CellItem::addOneForm(const Polygon &form)
+bool CellItem::addOneForm(const XPolygon &form)
 {
   if (_outsideForm.isEmpty())
   {

@@ -3,7 +3,7 @@
 
 #include <QtGui/QColor>
 
-#include "polygon.h"
+#include "xpolygon.h"
 
 class QDomElement;
 class QDomDocument;
@@ -21,7 +21,7 @@ class CellItem
     bool isEmpty() const;
     bool isFull() const;
     bool clearOneForm(); // return true when empty (all forms removeds)
-    bool addOneForm(const Polygon &form); // return true if full (all form sets)
+    bool addOneForm(const XPolygon &form); // return true if full (all form sets)
     void computeAreaRatio();
     void computeVector();
     virtual void draw(const qreal &averageAngle = 400.f, const qreal &averageCenroidRadius = 0.f) const;
@@ -48,8 +48,8 @@ class CellItem
 
     static bool _averageArrow;
 
-    Polygon _insideForm;
-    Polygon _outsideForm;
+    XPolygon _insideForm;
+    XPolygon _outsideForm;
 
     static QColor _insideColor;
     static QColor _outsideColor;

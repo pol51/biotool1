@@ -1,9 +1,11 @@
 TARGET = biotool1
 TEMPLATE = app
 
-QT += opengl xml
+QT += opengl xml widgets
 
-GIT_VERSION = $$system(git rev-parse --short HEAD)
+CONFIG += c++11
+
+GIT_VERSION = $$system("git rev-parse --short HEAD")
 DEFINES += BT1_GIT_VERSION=$$GIT_VERSION
 
 QMAKE_CXXFLAGS += -std=gnu++0x
@@ -17,8 +19,8 @@ SOURCES += src/main.cpp \
     src/settingsView.cpp \
     src/csvExportOptions.cpp \
     src/vCil.cpp \
-    src/polygon.cpp \
-    src/cellItem.cpp
+    src/cellItem.cpp \
+    src/xpolygon.cpp
 HEADERS += src/mainwindow.h \
     src/imageView.h \
     src/dataCtrl.h \
@@ -27,8 +29,8 @@ HEADERS += src/mainwindow.h \
     src/settingsView.h \
     src/csvExportOptions.h \
     src/vCil.h \
-    src/polygon.h \
-    src/cellItem.h
+    src/cellItem.h \
+    src/xpolygon.h
 
 INCLUDEPATH += src
 

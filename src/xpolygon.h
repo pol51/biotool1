@@ -3,10 +3,12 @@
 
 #include <QtGui/QPolygonF>
 
+#define M_PI  3.14159265358979323846
+
 class QDomElement;
 class QDomDocument;
 
-class Polygon : public QPolygonF
+class XPolygon : public QPolygonF
 {
   public:
     enum EType
@@ -16,9 +18,8 @@ class Polygon : public QPolygonF
     };
 
   public:
-    Polygon() : QPolygonF(), area(0.f), radius(0.f), type(eEdition) {}
-    Polygon(const Polygon &other) : QPolygonF() { *this = other; }
-    virtual ~Polygon() {}
+    XPolygon() : QPolygonF(), area(0.f), radius(0.f), type(eEdition) {}
+    XPolygon(const XPolygon &other) : QPolygonF() { *this = other; }
 
     void computeData();
     virtual void clear();

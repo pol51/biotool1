@@ -1,10 +1,10 @@
 #include "settingsView.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QSpinBox>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QSpacerItem>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QSpinBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QSpacerItem>
 
 #include <cell.h>
 #include <settings.h>
