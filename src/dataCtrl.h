@@ -112,7 +112,6 @@ class DataCtrl : public QAbstractItemModel
     void countChanged(int, int, int);
     void angleVPatchChanged(int);
     void angleVBeatingChanged(int);
-    void rowsInserted(const QModelIndex &parent, int first, int last);
 
   protected:
     friend class Settings;
