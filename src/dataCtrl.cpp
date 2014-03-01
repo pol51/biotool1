@@ -65,9 +65,9 @@ DataCtrl::DataCtrl(QObject *parent):
   // init csv data types
   csvDataTypes.append(CSVDataType(tr("Strength"),                       "Str",    csvStrength));                  // strength
   csvDataTypes.append(CSVDataType(tr("Area percentile"),                "Area" ,  csvAreaPrecentile));            // area percentile
-  csvDataTypes.append(CSVDataType(tr("Angle vPatch"),                   "Apatch", csvAngleVPatch));               // angle vPatch
-  csvDataTypes.append(CSVDataType(tr("Angle vBeating"),                 "Abeat",  csvAngleVBeating));             // angle vBeating
-  csvDataTypes.append(CSVDataType(tr("Angle vBeating / Angle vPatch"),  "Ab2p",   csvVBeatingToVPatch));          // angle vBeating / angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchD (Displacement)"),   "Adispl", csvAngleVPatch));               // angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchO (Orientation)"),    "Aorien", csvAngleVBeating));             // angle vBeating
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchO ^ VPatchD"),        "Ao2d",   csvVBeatingToVPatch));          // angle vBeating / angle vPatch
   csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "Csd",    csvCircualrStandardDeviation)); // circular standard deviation
 
   Settings::Load();
