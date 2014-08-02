@@ -17,8 +17,8 @@ CsvExportOptions::CsvExportOptions(QWidget *parent) :
   DataCtrl::getSelectedDataTypesNames(DataTypes);
   ui->lstDTSelected->addItems(DataTypes);
 
-  connect(ui->lstDTAvailable, SIGNAL(doubleClicked(QModelIndex)), SLOT(addDataType(QModelIndex)));
-  connect(ui->lstDTSelected,  SIGNAL(doubleClicked(QModelIndex)), SLOT(delDataType(QModelIndex)));
+  connect(ui->lstDTAvailable, &QListWidget::doubleClicked, this, &CsvExportOptions::addDataType);
+  connect(ui->lstDTSelected,  &QListWidget::doubleClicked, this, &CsvExportOptions::delDataType);
 }
 
 void CsvExportOptions::accept()

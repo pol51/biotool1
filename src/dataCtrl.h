@@ -77,7 +77,7 @@ class DataCtrl : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    static const int maxCSD() { return maximalCSD; }
+    static int maxCSD() { return maximalCSD; }
 
     static void getDataTypesNames(QStringList &names);
     static void getSelectedDataTypesNames(QStringList &names);

@@ -32,9 +32,9 @@ SettingsView::SettingsView(QWidget *parent) :
   mainLayout->addWidget(averageArrowVCil, 2, 0, 1, 2);
   mainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding), 3,0,1,2);
 
-  connect(maximalCSDTxt,    SIGNAL(valueChanged(int)),  SIGNAL(maximalCSD(int)));
-  connect(averageArrow,     SIGNAL(toggled(bool)),      SLOT(onAverageArrow(bool)));
-  connect(averageArrowVCil, SIGNAL(toggled(bool)),      SLOT(onAverageArrowVCil(bool)));
+  connect(maximalCSDTxt,    static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),  this, &SettingsView::maximalCSD);
+  connect(averageArrow,     &QCheckBox::toggled, this, &SettingsView::onAverageArrow);
+  connect(averageArrowVCil, &QCheckBox::toggled, this, &SettingsView::onAverageArrowVCil);
 }
 
 void SettingsView::onAverageArrow(bool display)

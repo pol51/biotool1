@@ -21,6 +21,9 @@ class ImageView : public QGLWidget
     const DataCtrl& data() const { return *dataCtrl; }
 
   public slots:
+    void doChangeImage(const QImage &image);
+    void doCloseImage();
+
     void doZoomIn()     { if (zoom > 1) --zoom; }
     void doZoomOut()    { if (zoom < 11) ++zoom; }
     void doResetView()  { zoom = 10; xDecal = yDecal = 0.; resizeGL(width(), height()); }
@@ -30,10 +33,6 @@ class ImageView : public QGLWidget
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void wheelEvent(QWheelEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
-
-  protected slots:
-    void doChangeImage(const QImage &image);
-    void doCloseImage();
 
   protected:
     virtual void initializeGL();

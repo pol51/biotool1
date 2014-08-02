@@ -7,7 +7,7 @@ ImageView::ImageView(QWidget *parent) :
   onMoveDecal(false), zoom(10), dataCtrl(new DataCtrl(this)),
   imageTexId(0), xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
 {
-  connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
+  connect(&refreshTimer, &QTimer::timeout, this, &ImageView::updateGL);
   refreshTimer.start(20);
 }
 
