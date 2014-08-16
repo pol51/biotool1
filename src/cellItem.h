@@ -2,6 +2,7 @@
 #define __CELLITEM_H__
 
 #include <QtGui/QColor>
+#include <QtCore/QPropertyAnimation>
 
 #include "xpolygon.h"
 
@@ -13,6 +14,25 @@ class SettingsView;
 
 class CellItem
 {
+  class ColorInterpolator: public QPropertyAnimation
+  {
+    public:
+      ColorInterpolator() : QPropertyAnimation()
+      {
+        setEasingCurve(QEasingCurve::Linear);
+        setDuration(360.);
+        setKeyValueAt(.0,    QColor(Qt::green));
+        setKeyValueAt(1./6., QColor(Qt::yellow));
+        setKeyValueAt(2./6., QColor(Qt::red));
+        setKeyValueAt(.5,    QColor(Qt::magenta));
+        setKeyValueAt(4./6., QColor(Qt::blue));
+        setKeyValueAt(5./6., QColor(Qt::cyan));
+        setKeyValueAt(1.,    QColor(Qt::green));
+      }
+
+      const QColor getColorAt(const qreal &angle) { setCurrentTime(angle); return currentValue().value<QColor>(); }
+  };
+
   public:
     CellItem() : _angle(0.f), _strength(0.f), _interval(0.f), _areaRatio(0.f) {}
     virtual ~CellItem() { }
@@ -65,6 +85,8 @@ class CellItem
     qreal _strength;
     qreal _interval;
     qreal _areaRatio;
+
+    static ColorInterpolator _colorInterpolator;
 };
 
 #endif
