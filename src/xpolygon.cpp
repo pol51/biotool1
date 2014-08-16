@@ -4,6 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
+#include <GL/glu.h>
+
 void XPolygon::computeData()
 {
   const int Count = count();
@@ -112,6 +114,66 @@ void XPolygon::draw() const
     default:
       break;
   }
+}
+
+class TesselatorCB {
+  public:
+    static void resetVertexIndex() { _vertexIndex = 0; }
+    static void tessVertexCB(const GLvoid *data) { glVertex3dv((const GLdouble*)data); }
+    static void tessCombineCB(const GLdouble newVertex[3], const GLdouble **, const GLfloat *, GLdouble **outData)
+    {
+      memcpy(&_vertices[_vertexIndex], newVertex, sizeof(GLdouble) * 3);
+      *outData = _vertices[_vertexIndex++];
+    }
+
+  protected:
+    static GLdouble _vertices[256][3];
+    static int _vertexIndex;
+};
+GLdouble TesselatorCB::_vertices[256][3];
+int TesselatorCB::_vertexIndex = 0;
+
+void XPolygon::drawBackground() const
+{
+  const int Count(count());
+
+  TesselatorCB::resetVertexIndex();
+
+  GLuint Id = glGenLists(1);
+  GLUtesselator *Tess = gluNewTess();
+
+  GLdouble **Points;
+  Points = (GLdouble**)malloc(sizeof(GLdouble*) * Count);
+  for (int i = Count; --i >= 0; )
+  {
+    Points[i] = (GLdouble*)malloc(sizeof(GLdouble) * 3);
+    Points[i][0] = at(i).x();
+    Points[i][1] = at(i).y();
+    Points[i][2] = 0.f;
+  }
+
+  gluTessCallback(Tess, GLU_TESS_BEGIN,   (_GLUfuncptr)glBegin);
+  gluTessCallback(Tess, GLU_TESS_END,     (_GLUfuncptr)glEnd);
+  gluTessCallback(Tess, GLU_TESS_VERTEX,  (_GLUfuncptr)TesselatorCB::tessVertexCB);
+  gluTessCallback(Tess, GLU_TESS_COMBINE, (_GLUfuncptr)TesselatorCB::tessCombineCB);
+
+  gluTessProperty(Tess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+  glNewList(Id, GL_COMPILE);
+  gluTessBeginPolygon(Tess, 0);
+    gluTessBeginContour(Tess);
+      for (int i = Count; --i >= 0; )
+        gluTessVertex(Tess, Points[i], Points[i]);
+    gluTessEndContour(Tess);
+  gluTessEndPolygon(Tess);
+  glEndList();
+
+  gluDeleteTess(Tess);
+
+  glCallList(Id);
+
+  for (int i = Count; --i >= 0; )
+    free(Points[i]);
+  free(Points);
 }
 
 void XPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const

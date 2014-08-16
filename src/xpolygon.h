@@ -29,6 +29,7 @@ class XPolygon : public QPolygonF
     const qreal   &getRadius()    const { return radius; }
 
     void draw() const;
+    void drawBackground() const;
 
     void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
     void load(QDomElement &node);

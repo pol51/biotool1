@@ -92,6 +92,11 @@ void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius
   const QColor &VectorColor(vectorColor());
   const QColor &AverageVectorColor(averageVectorColor());
 
+  // draw background
+  QColor BGColor(Qt::red);
+  glColor3f(BGColor.redF(), BGColor.greenF(), BGColor.blueF());
+  _outsideForm.drawBackground();
+
   // draw outside form
   glColor3f(OutColor.redF(), OutColor.greenF(), OutColor.blueF());
   _outsideForm.draw();
