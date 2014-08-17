@@ -16,6 +16,7 @@ class SettingsView : public QDialog
   protected slots:
     void onAverageArrow(bool display);
     void onAverageArrowVCil(bool display);
+    void onCellBackground(bool display);
 
   signals:
     void maximalCSD(int);
@@ -23,6 +24,7 @@ class SettingsView : public QDialog
   protected:
     QCheckBox *averageArrow;
     QCheckBox *averageArrowVCil;
+    QCheckBox *cellBackground;
     QSpinBox  *maximalCSDTxt;
 };
 

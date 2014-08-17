@@ -8,6 +8,7 @@
 #include <QtCore/QSettings>
 
 bool   Cell::_averageArrow            (true);
+bool   Cell::_cellBackground          (false);
 QColor Cell::_insideColor             (QColor(0xff, 0x1f, 0x1f));
 QColor Cell::_outsideColor            (QColor(0x1f, 0xff, 0x1f));
 QColor Cell::_insideSelectedColor     (QColor(0x7f, 0x00, 0xff));
@@ -34,6 +35,7 @@ void Settings::Load()
   QSettings settings;
 
   Cell::_averageArrow             = settings.value("averageArrow",        Cell::_averageArrow).value<bool>();
+  Cell::_cellBackground           = settings.value("cellBackground",      Cell::_cellBackground).value<bool>();
   Cell::_insideColor              = settings.value("insideColor",         Cell::_insideColor).value<QColor>();
   Cell::_outsideColor             = settings.value("outsideColor",        Cell::_outsideColor).value<QColor>();
   Cell::_vectorColor              = settings.value("vectorColor",         Cell::_vectorColor).value<QColor>();
@@ -54,6 +56,7 @@ void Settings::Save()
   QSettings settings;
 
   settings.setValue("averageArrow",         Cell::_averageArrow);
+  settings.setValue("cellBackground",       Cell::_cellBackground);
   settings.setValue("insideColor",          Cell::_insideColor);
   settings.setValue("outsideColor",         Cell::_outsideColor);
   settings.setValue("vectorColor",          Cell::_vectorColor);

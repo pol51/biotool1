@@ -42,6 +42,7 @@ class Cell: public CellItem
     friend class SettingsView;
 
     static bool _averageArrow;
+    static bool _cellBackground;
 
     static Cell* _selected;
     static Cell* _edited;

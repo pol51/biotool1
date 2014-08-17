@@ -11,6 +11,16 @@ Cell* Cell::_edited = NULL;
 
 void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
+  // draw background
+  if (isFull() && _interval > averageCenroidRadius && _cellBackground)
+  {
+    qreal Angle2RefAngle(averageAngle - _angle);
+    while (Angle2RefAngle < 0.f) Angle2RefAngle += 360.f;
+    QColor BGColor(_colorInterpolator.getColorAt(Angle2RefAngle));
+    glColor3f(BGColor.redF(), BGColor.greenF(), BGColor.blueF());
+    _outsideForm.drawBackground();
+  }
+
   CellItem::draw(averageAngle, averageCenroidRadius);
 
   if (_edited == this || _vcilsCircularStandardDeviation < DataCtrl::maxCSD())
