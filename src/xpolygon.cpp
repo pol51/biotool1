@@ -152,10 +152,10 @@ void XPolygon::drawBackground() const
     Points[i][2] = 0.f;
   }
 
-  gluTessCallback(Tess, GLU_TESS_BEGIN,   (_GLUfuncptr)glBegin);
-  gluTessCallback(Tess, GLU_TESS_END,     (_GLUfuncptr)glEnd);
-  gluTessCallback(Tess, GLU_TESS_VERTEX,  (_GLUfuncptr)TesselatorCB::tessVertexCB);
-  gluTessCallback(Tess, GLU_TESS_COMBINE, (_GLUfuncptr)TesselatorCB::tessCombineCB);
+  gluTessCallback(Tess, GLU_TESS_BEGIN,   (void (*)())glBegin);
+  gluTessCallback(Tess, GLU_TESS_END,     (void (*)())glEnd);
+  gluTessCallback(Tess, GLU_TESS_VERTEX,  (void (*)())TesselatorCB::tessVertexCB);
+  gluTessCallback(Tess, GLU_TESS_COMBINE, (void (*)())TesselatorCB::tessCombineCB);
 
   gluTessProperty(Tess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
   glNewList(Id, GL_COMPILE);
