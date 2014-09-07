@@ -54,6 +54,8 @@ class Cell: public CellItem
     static QColor _vectorColor;
     static QColor _averageVectorColor;
 
+    static quint8 _bgAlpha;
+
     qreal _vcilsBeatingAngle;
     qreal _vcilsCircularStandardDeviation;
     QVector<VCil> _vcils;

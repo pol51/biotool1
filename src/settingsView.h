@@ -5,6 +5,7 @@
 
 class QCheckBox;
 class QSpinBox;
+class QSlider;
 
 class SettingsView : public QDialog
 {
@@ -17,6 +18,7 @@ class SettingsView : public QDialog
     void onAverageArrow(bool display);
     void onAverageArrowVCil(bool display);
     void onCellBackground(bool display);
+    void onBGAlpha(int value);
 
   signals:
     void maximalCSD(int);
@@ -25,6 +27,7 @@ class SettingsView : public QDialog
     QCheckBox *averageArrow;
     QCheckBox *averageArrowVCil;
     QCheckBox *cellBackground;
+    QSlider   *backgroundAlpha;
     QSpinBox  *maximalCSDTxt;
 };
 

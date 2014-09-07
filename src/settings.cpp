@@ -15,6 +15,7 @@ QColor Cell::_insideSelectedColor     (QColor(0x7f, 0x00, 0xff));
 QColor Cell::_outsideSelectedColor    (QColor(0x00, 0x7f, 0xff));
 QColor Cell::_vectorColor             (QColor(0x1f, 0x1f, 0xff));
 QColor Cell::_averageVectorColor      (QColor(0x7f, 0x7f, 0xff));
+quint8  Cell::_bgAlpha                (0x7f);
 bool   CellItem::_averageArrow        (false);
 QColor CellItem::_insideColor         (QColor(0xdf, 0x9f, 0x9f));
 QColor CellItem::_outsideColor        (QColor(0x9f, 0xdf, 0x9f));
@@ -40,6 +41,7 @@ void Settings::Load()
   Cell::_outsideColor             = settings.value("outsideColor",        Cell::_outsideColor).value<QColor>();
   Cell::_vectorColor              = settings.value("vectorColor",         Cell::_vectorColor).value<QColor>();
   Cell::_averageVectorColor       = settings.value("averageVectorColor",  Cell::_averageVectorColor).value<QColor>();
+  Cell::_bgAlpha                  = settings.value("bgAlpha",             Cell::_bgAlpha).value<quint8>();
   CellItem::_arrowLength          = settings.value("arrowLength",         CellItem::_arrowLength).value<qreal>();
   CellItem::_arrowHeadLength      = settings.value("arrowHeadLength",     CellItem::_arrowHeadLength).value<qreal>();
   CellItem::_arrowHeadHalfWidth   = settings.value("arrowHeadHalfWidth",  CellItem::_arrowHeadHalfWidth).value<qreal>();
@@ -61,6 +63,7 @@ void Settings::Save()
   settings.setValue("outsideColor",         Cell::_outsideColor);
   settings.setValue("vectorColor",          Cell::_vectorColor);
   settings.setValue("averageVectorColor",   Cell::_averageVectorColor);
+  settings.setValue("bgAlpha",              Cell::_bgAlpha);
   settings.setValue("arrowLength",          CellItem::_arrowLength);
   settings.setValue("arrowHeadLength",      CellItem::_arrowHeadLength);
   settings.setValue("arrowHeadHalfWidth",   CellItem::_arrowHeadHalfWidth);

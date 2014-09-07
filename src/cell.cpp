@@ -17,7 +17,8 @@ void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) co
     qreal Angle2RefAngle(averageAngle - _angle);
     while (Angle2RefAngle < 0.f) Angle2RefAngle += 360.f;
     QColor BGColor(_colorInterpolator.getColorAt(Angle2RefAngle));
-    glColor3f(BGColor.redF(), BGColor.greenF(), BGColor.blueF());
+    BGColor.setAlpha(_bgAlpha);
+    glColor4f(BGColor.redF(), BGColor.greenF(), BGColor.blueF(), BGColor.alphaF());
     _outsideForm.drawBackground();
   }
 

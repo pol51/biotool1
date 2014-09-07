@@ -120,7 +120,8 @@ void ImageView::initializeGL()
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glEnable(GL_TEXTURE_2D);
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void ImageView::paintGL()
@@ -137,6 +138,8 @@ void ImageView::paintGL()
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, imageTexId);
 
+  glEnable(GL_BLEND);
+
   glBegin(GL_QUADS);
     glTexCoord2f( 0, 1); glVertex3f(-ratioWidthPerHeght, -1., 0.);
     glTexCoord2f( 0, 0); glVertex3f(-ratioWidthPerHeght,  1., 0.);
@@ -147,6 +150,8 @@ void ImageView::paintGL()
   glDisable(GL_TEXTURE_2D);
 
   dataCtrl->draw();
+
+  glDisable(GL_BLEND);
 
   glPopMatrix();
 }
