@@ -3,15 +3,11 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#ifdef _MSC_VER
-#  include <functional>
-#else
-#  include <tr1/functional>
-#endif
+#include <functional>
 
 #include "cell.h"
 
-using namespace std::tr1;
+using namespace std;
 
 class DataCtrl : public QAbstractItemModel
 {

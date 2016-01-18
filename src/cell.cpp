@@ -4,6 +4,8 @@
 
 #include <QtXml/QDomDocument>
 
+#include <math.h>
+
 #include "dataCtrl.h"
 
 Cell* Cell::_selected = NULL;

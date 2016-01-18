@@ -1,15 +1,15 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="exit">exit.png</file>
-        <file alias="open">open.png</file>
-        <file alias="close">close.png</file>
         <file alias="edit">edit.png</file>
-        <file alias="view">view.png</file>
-        <file alias="reset_view">reset_view.png</file>
         <file alias="new">new.png</file>
+        <file alias="reset_view">reset_view.png</file>
         <file alias="save">save.png</file>
-        <file alias="export">export.png</file>
-        <file alias="settings">settings.png</file>
+        <file alias="view">view.png</file>
+        <file alias="open">open.png</file>
+        <file alias="exit">exit.png</file>
+        <file alias="close">close.png</file>
         <file alias="mesure">mesure.png</file>
+        <file alias="settings">settings.png</file>
+        <file alias="export">export.png</file>
     </qresource>
 </RCC>
