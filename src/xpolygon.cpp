@@ -4,7 +4,11 @@
 
 #include <QtXml/QDomDocument>
 
-#include <glu.h>
+#ifdef __APPLE__
+# include <glu.h>
+#else
+# include <GL/glu.h>
+#endif
 
 #include <math.h>
 
