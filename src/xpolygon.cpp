@@ -4,7 +4,9 @@
 
 #include <QtXml/QDomDocument>
 
-#include <GL/glu.h>
+#include <glu.h>
+
+#include <math.h>
 
 void XPolygon::computeData()
 {
