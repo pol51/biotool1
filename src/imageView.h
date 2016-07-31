@@ -16,9 +16,14 @@ class ImageView : public QGLWidget
     ~ImageView();
 
     void changeMode(DataCtrl::EMode mode) { dataCtrl->setCurrentMode(mode); onMoveDecal = false; }
+    void setImageRealWidth(const qreal &width);
+    void setImageRealHeight(const qreal &height);
 
     DataCtrl& data() { return *dataCtrl; }
     const DataCtrl& data() const { return *dataCtrl; }
+
+    const qreal &imageRealWidth()  const { return dataCtrl->imageRealWidth(); }
+    const qreal &imageRealHeight() const { return dataCtrl->imageRealHeigth(); }
 
   public slots:
     void doChangeImage(const QImage &image);
@@ -40,12 +45,12 @@ class ImageView : public QGLWidget
     virtual void resizeGL(int w, int h);
 
   protected:
-    bool onMoveDecal;
-    int zoom;
+    bool onMoveDecal = false;
+    int zoom = 10;
     DataCtrl *dataCtrl;
-    GLuint imageTexId;
-    GLfloat xDecal, yDecal;
-    GLfloat ratioWidthPerHeght;
+    GLuint imageTexId = 0;
+    GLfloat xDecal = 0.f, yDecal = 0.f;
+    GLfloat ratioWidthPerHeght = 1.f;
     QTimer refreshTimer;
     QPoint lastMousePos;
 };

@@ -98,6 +98,11 @@ class DataCtrl : public QAbstractItemModel
     void exportCsv(const QString &filename);
     QString getCsvSuffix() const;
 
+    void setImageRealHeigth(const qreal &heigth) { _imageRealHeigth = heigth; }
+    void setImageRealWidth(const qreal &width) { _imageRealWidth = width; }
+    const qreal &imageRealHeigth() const { return _imageRealHeigth; }
+    const qreal &imageRealWidth() const { return _imageRealWidth; }
+
     void setCurrentMode(const EMode mode) { cntMode = mode; }
     EMode currentMode() const { return cntMode; }
 
@@ -113,8 +118,8 @@ class DataCtrl : public QAbstractItemModel
     friend class Settings;
     friend class SettingsView;
 
-    bool saved;
-    EMode cntMode;
+    bool saved = true;
+    EMode cntMode = eModeView;
     XPolygon points;
     CellItem cell;
     QVector<Cell> cells;
@@ -123,9 +128,11 @@ class DataCtrl : public QAbstractItemModel
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
-    qreal averageAngleVPatch;
-    qreal averageAngleVBeating;
-    qreal averageCenroidRadius;
+    qreal averageAngleVPatch = 0.f;
+    qreal averageAngleVBeating = 0.f;
+    qreal averageCenroidRadius = 0.f;
+    qreal _imageRealHeigth = 1.f;
+    qreal _imageRealWidth = 1.f;
 };
 
 #endif

@@ -17,6 +17,7 @@ class Cell: public CellItem
 
     const qreal &getVCilBeatingAngle() const { return _vcilsBeatingAngle; }
     const qreal &getVCilCircularStandardDeviation() const { return _vcilsCircularStandardDeviation; }
+    const int getVCilCount() const { return _vcils.count(); }
 
     void computeVCilBeatingAngle();
     void computeVCilCircularStandardDeviation();

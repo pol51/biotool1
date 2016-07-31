@@ -8,6 +8,8 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtGui/QDoubleValidator>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -73,6 +75,39 @@ MainWindow::MainWindow(QWidget *parent) :
   statusBar()->addWidget(cellsLabel);
   statusBar()->addWidget(angleVPatchLabel);
   statusBar()->addWidget(angleVBeatingLabel);
+
+  QDoubleValidator *HeightValidator = new QDoubleValidator(ui->toolBar);
+  HeightValidator->setDecimals(3);
+  HeightValidator->setBottom(0.);
+  QDoubleValidator *WidthValidator = new QDoubleValidator(ui->toolBar);
+  WidthValidator->setDecimals(3);
+  WidthValidator->setBottom(0.);
+
+  ui->toolBar->addWidget(new QLabel("width:", ui->toolBar));
+  imageWidth = new QLineEdit(ui->toolBar);
+  imageWidth->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+  imageWidth->setValidator(WidthValidator);
+  ui->toolBar->addWidget(imageWidth);
+  ui->toolBar->addSeparator();
+
+  ui->toolBar->addWidget(new QLabel("height:", ui->toolBar));
+  imageHeight = new QLineEdit(ui->toolBar);
+  imageHeight->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+  imageHeight->setValidator(HeightValidator);
+  ui->toolBar->addWidget(imageHeight);
+
+  QLabel *Spacer = new QLabel("", ui->toolBar);
+  Spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+  ui->toolBar->addWidget(Spacer);
+
+  connect(imageHeight,  &QLineEdit::editingFinished,  this, &MainWindow::setImageHeight);
+  connect(imageWidth,   &QLineEdit::editingFinished,  this, &MainWindow::setImageWidth);
+  connect(imageHeight,  &QLineEdit::textChanged,      this, &MainWindow::setImageHeight);
+  connect(imageWidth,   &QLineEdit::textChanged,      this, &MainWindow::setImageWidth);
+
+  imageWidth->setText(QLocale().toString(1.f));
+  setImageWidth();
+  ui->imageView->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -129,6 +164,10 @@ void MainWindow::doLoadImage()
 
   emit onLoadWorkImage(Image);
   ui->imageView->grabKeyboard();
+
+  imageWidth->setText(QLocale().toString(1.f));
+  setImageWidth();
+  ui->imageView->setFocus();
 }
 
 void MainWindow::doChangeMode(bool activated)
@@ -165,6 +204,7 @@ void MainWindow::doNew()
   {
     ui->imageView->data().clear();
     fileName.clear();
+    imageHeight->setText(QLocale().toString(1.f));
   }
 }
 
@@ -208,6 +248,7 @@ void MainWindow::doOpen()
     {
       fileName = filename;
       ui->imageView->data().load(fileName);
+      imageHeight->setText(QLocale().toString(ui->imageView->imageRealHeight()));
     }
   }
 
@@ -294,4 +335,22 @@ QString MainWindow::getDefaultFilename()
   if (fileName.isEmpty())
     return imageName;
   return QFileInfo(fileName).baseName();
+}
+
+void MainWindow::setImageWidth()
+{
+  imageHeight->blockSignals(true);
+  const QLocale Locale;
+  ui->imageView->setImageRealWidth(Locale.toDouble(imageWidth->text()));
+  imageHeight->setText(Locale.toString(ui->imageView->imageRealHeight()));
+  imageHeight->blockSignals(false);
+}
+
+void MainWindow::setImageHeight()
+{
+  imageWidth->blockSignals(true);
+  const QLocale Locale;
+  ui->imageView->setImageRealHeight(Locale.toDouble(imageHeight->text()));
+  imageWidth->setText(Locale.toString(ui->imageView->imageRealWidth()));
+  imageWidth->blockSignals(false);
 }

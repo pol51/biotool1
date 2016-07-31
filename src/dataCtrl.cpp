@@ -11,8 +11,7 @@
 QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
 DataCtrl::DataCtrl(QObject *parent):
-  QAbstractItemModel(parent), saved(true), cntMode(eModeView),
-  averageAngleVPatch(0.), averageAngleVBeating(0.), averageCenroidRadius(0.)
+  QAbstractItemModel(parent)
 {
   // csv data type callbacks
 
@@ -62,13 +61,32 @@ DataCtrl::DataCtrl(QObject *parent):
     return (interval > averageCenroidRadius && csd < maximalCSD)?QString::number(angle):"";
   };
 
+  function<QString (const Cell&)> csvCellArea = [this](const Cell &cell) -> QString
+  {
+    return QString::number(cell.cellArea() / 4. * _imageRealWidth * _imageRealHeigth);
+  };
+
+  function<QString (const Cell&)> csvPatchArea = [this](const Cell &cell) -> QString
+  {
+    return QString::number(cell.patchArea() / 4. * _imageRealWidth * _imageRealHeigth);
+  };
+
+  function<QString (const Cell&)> csvVCilCount = [](const Cell &cell) -> QString
+  {
+    return QString::number(cell.getVCilCount());
+  };
+
+
   // init csv data types
-  csvDataTypes.append(CSVDataType(tr("Strength"),                       "Str",    csvStrength));                  // strength
-  csvDataTypes.append(CSVDataType(tr("Area percentile"),                "Area" ,  csvAreaPrecentile));            // area percentile
-  csvDataTypes.append(CSVDataType(tr("Angle VPatchD (Displacement)"),   "Adispl", csvAngleVPatch));               // angle vPatch
-  csvDataTypes.append(CSVDataType(tr("Angle VPatchO (Orientation)"),    "Aorien", csvAngleVBeating));             // angle vBeating
-  csvDataTypes.append(CSVDataType(tr("Angle VPatchO ^ VPatchD"),        "Ao2d",   csvVBeatingToVPatch));          // angle vBeating / angle vPatch
-  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),    "Csd",    csvCircualrStandardDeviation)); // circular standard deviation
+  csvDataTypes.append(CSVDataType(tr("Strength"),                     "Strength",         csvStrength));                  // strength
+  csvDataTypes.append(CSVDataType(tr("Area percentile (patch/cell)"), "AreaPerscentile",  csvAreaPrecentile));            // area percentile
+  csvDataTypes.append(CSVDataType(tr("Cell Area"),                    "CellArea" ,        csvCellArea));                  // cell area
+  csvDataTypes.append(CSVDataType(tr("Patch Area"),                   "PatchArea" ,       csvPatchArea));                 // patch area
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchD (Displacement)"), "Adispl",           csvAngleVPatch));               // angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchO (Orientation)"),  "Aorien",           csvAngleVBeating));             // angle vBeating
+  csvDataTypes.append(CSVDataType(tr("Angle VPatchO ^ VPatchD"),      "Ao2d",             csvVBeatingToVPatch));          // angle vBeating / angle vPatch
+  csvDataTypes.append(CSVDataType(tr("Circular Standard Deviation"),  "Csd",              csvCircualrStandardDeviation)); // circular standard deviation
+  csvDataTypes.append(CSVDataType(tr("VCil Count"),                   "VCilCount",        csvVCilCount));                 // VCil count
 
   Settings::Load();
 
@@ -334,6 +352,8 @@ void DataCtrl::save(const QString &filename)
   Doc.appendChild(Root);
 
   QDomElement Cells = Doc.createElement("cells");
+  Cells.setAttribute("imageRealWidth", _imageRealWidth);
+  Cells.setAttribute("imageRealHeigth", _imageRealHeigth);
   Root.appendChild(Cells);
   foreach(Cell _cell, cells) _cell.save(Doc, Cells);
 
@@ -411,6 +431,19 @@ void DataCtrl::load(const QString &filename)
   {
     if (Element.tagName() == "cells")
     {
+      {
+        bool ImageRealWidthOk;
+        qreal ImageRealWidth = Element.attribute("imageRealWidth").toDouble(&ImageRealWidthOk);
+        if (ImageRealWidthOk)
+          _imageRealWidth = ImageRealWidth;
+      }
+      {
+        bool ImageRealHeigthOk;
+        qreal ImageRealHeigth = Element.attribute("imageRealHeigth").toDouble(&ImageRealHeigthOk);
+        if (ImageRealHeigthOk)
+          _imageRealHeigth = ImageRealHeigth;
+      }
+
       QDomElement CellElement = Element.firstChildElement("cell");
       while (!CellElement.isNull())
       {

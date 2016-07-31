@@ -52,6 +52,8 @@ class CellItem
     const qreal &getStrength()  const { return _strength; }
     const qreal &getInterval()  const { return _interval; }
     const qreal &getAreaRatio() const { return _areaRatio; }
+    const qreal &cellArea()     const { return _outsideForm.getArea(); }
+    const qreal &patchArea()    const { return _insideForm.getArea(); }
 
     static void drawArrow();
 

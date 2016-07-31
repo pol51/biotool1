@@ -4,8 +4,7 @@
 
 ImageView::ImageView(QWidget *parent) :
   QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
-  onMoveDecal(false), zoom(10), dataCtrl(new DataCtrl(this)),
-  imageTexId(0), xDecal(0.), yDecal(0.), ratioWidthPerHeght(1.)
+  dataCtrl(new DataCtrl(this))
 {
   connect(&refreshTimer, &QTimer::timeout, this, &ImageView::updateGL);
   refreshTimer.start(20);
@@ -15,6 +14,18 @@ ImageView::~ImageView()
 {
   if (imageTexId) deleteTexture(imageTexId);
   delete dataCtrl;
+}
+
+void ImageView::setImageRealWidth(const qreal &width)
+{
+  dataCtrl->setImageRealWidth(width);
+  dataCtrl->setImageRealHeigth(width / ratioWidthPerHeght);
+}
+
+void ImageView::setImageRealHeight(const qreal &height)
+{
+  dataCtrl->setImageRealHeigth(height);
+  dataCtrl->setImageRealWidth(height * ratioWidthPerHeght);
 }
 
 void ImageView::mousePressEvent(QMouseEvent *event)
@@ -101,7 +112,7 @@ void ImageView::keyPressEvent(QKeyEvent *event)
 void ImageView::doChangeImage(const QImage &image)
 {
   if (imageTexId) deleteTexture(imageTexId);
-  ratioWidthPerHeght = (image.width() / (float)image.height());
+  ratioWidthPerHeght = (image.width() / (qreal)image.height());
 
   imageTexId = bindTexture(image);
 }

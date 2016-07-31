@@ -7,7 +7,7 @@ namespace Ui { class MainWindow; }
 
 class QLabel;
 
-class SettingsView;
+class QLineEdit;
 
 class MainWindow : public QMainWindow
 {
@@ -40,6 +40,9 @@ class MainWindow : public QMainWindow
     void doAbout();
     void displayCellMenu(const QPoint& pos);
 
+    void setImageWidth();
+    void setImageHeight();
+
   protected:
     QString getDefaultFilename();
 
@@ -48,9 +51,11 @@ class MainWindow : public QMainWindow
     QLabel  *cellsLabel;
     QLabel  *angleVPatchLabel;
     QLabel  *angleVBeatingLabel;
+    QLineEdit *imageWidth;
+    QLineEdit *imageHeight;
+    QAction *lastModeAction;
     QString fileName;
     QString imageName;
-    QAction *lastModeAction;
 };
 
 #endif
