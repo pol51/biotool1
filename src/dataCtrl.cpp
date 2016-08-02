@@ -8,6 +8,8 @@
 
 #include "settings.h"
 
+using namespace std;
+
 QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
 DataCtrl::DataCtrl(QObject *parent):

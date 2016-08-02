@@ -33,16 +33,16 @@ class ImageView : public QGLWidget
     void doZoomOut()    { if (zoom < 11) ++zoom; }
     void doResetView()  { zoom = 10; xDecal = yDecal = 0.; resizeGL(width(), height()); }
 
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
   protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int w, int h);
+    void initializeGL() override;
+    void paintGL() override;
+    void resizeGL(int w, int h) override;
 
   protected:
     bool onMoveDecal = false;

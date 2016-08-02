@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow
     ~MainWindow();
 
   protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent *e) override;
     bool askForUnsavedChanges(const QString &title);
 
   signals:

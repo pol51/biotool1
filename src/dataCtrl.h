@@ -7,8 +7,6 @@
 
 #include "cell.h"
 
-using namespace std;
-
 class DataCtrl : public QAbstractItemModel
 {
   Q_OBJECT
@@ -25,7 +23,7 @@ class DataCtrl : public QAbstractItemModel
     class CSVDataType
     {
       public:
-        CSVDataType(const QString &name, const QString &suffix, function<QString (const Cell&)> fun):
+        CSVDataType(const QString &name, const QString &suffix, std::function<QString (const Cell&)> fun):
           name(name),
           suffix(suffix),
           fun(fun) {}
@@ -53,12 +51,12 @@ class DataCtrl : public QAbstractItemModel
         QString suffix;
 
       protected:
-        function<QString (const Cell&)> fun;
+        std::function<QString (const Cell&)> fun;
     };
 
   public:
     DataCtrl(QObject *parent = NULL);
-    virtual ~DataCtrl() {}
+    ~DataCtrl() {}
 
     void addPoint(const QPointF &point);
 
@@ -66,12 +64,12 @@ class DataCtrl : public QAbstractItemModel
 
     bool isSaved() const { return saved; }
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &child) const;
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     static int maxCSD() { return maximalCSD; }
 
