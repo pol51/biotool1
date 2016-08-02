@@ -5,6 +5,8 @@
 
 #include <QtCore/QTimer>
 
+#include <QtWidgets/QPinchGesture>
+
 #include "dataCtrl.h"
 
 class ImageView : public QGLWidget
@@ -31,13 +33,18 @@ class ImageView : public QGLWidget
 
     void doZoomIn()     { if (zoom > 1) --zoom; }
     void doZoomOut()    { if (zoom < 11) ++zoom; }
-    void doResetView()  { zoom = 10; xDecal = yDecal = 0.; resizeGL(width(), height()); }
+    void doResetView()  { zoom = 1.; xDecal = yDecal = 0.; resizeGL(width(), height()); }
 
+    bool event(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+
+  private:
+    bool gestureEvent(QGestureEvent *event);
+    void pinchTriggered(QPinchGesture *gesture);
 
   protected:
     void initializeGL() override;
@@ -46,7 +53,7 @@ class ImageView : public QGLWidget
 
   protected:
     bool onMoveDecal = false;
-    int zoom = 10;
+    qreal zoom = 1.;
     DataCtrl *dataCtrl;
     GLuint imageTexId = 0;
     GLfloat xDecal = 0.f, yDecal = 0.f;

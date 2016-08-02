@@ -2,10 +2,13 @@
 
 #include <QtGui/QMouseEvent>
 
+#include <QtCore/QDebug>
+
 ImageView::ImageView(QWidget *parent) :
   QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
   dataCtrl(new DataCtrl(this))
 {
+  grabGesture(Qt::PinchGesture);
   connect(&refreshTimer, &QTimer::timeout, this, &ImageView::updateGL);
   refreshTimer.start(20);
 }
@@ -28,6 +31,34 @@ void ImageView::setImageRealHeight(const qreal &height)
   dataCtrl->setImageRealWidth(height * ratioWidthPerHeght);
 }
 
+bool ImageView::event(QEvent *event)
+{
+  if (event->type() == QEvent::Gesture)
+    return gestureEvent((QGestureEvent*)event);
+  return QGLWidget::event(event);
+}
+
+bool ImageView::gestureEvent(QGestureEvent *event)
+{
+    qDebug() << "gestureEvent():" << event;
+    if (QGesture *pinch = event->gesture(Qt::PinchGesture))
+        pinchTriggered(static_cast<QPinchGesture *>(pinch));
+    return true;
+}
+
+void ImageView::pinchTriggered(QPinchGesture *gesture)
+{
+  QPinchGesture::ChangeFlags changeFlags = gesture->changeFlags();
+  if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+      qDebug() << "pinchTriggered(): zoom by" << gesture->lastScaleFactor();
+      zoom = 1.f / gesture->lastScaleFactor();
+      resizeGL(width(), height());
+  }
+  if (gesture->state() == Qt::GestureFinished) {
+    qDebug() << "pinchTriggered(): done";
+  }
+}
+
 void ImageView::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton)
@@ -39,14 +70,14 @@ void ImageView::mousePressEvent(QMouseEvent *event)
     if ((1<<CurrentMode) & ((1<<DataCtrl::eModeEdit) | (1<<DataCtrl::eModeDefineCentroid)))
     {
       const float factor = qMin(width(), height());
-      float x(zoom / 10.);
+      float x(zoom);
       float y(x);
       if (width() > height())
         x *= ((float)width() / (float)height());
       else
         y *= ((float)height() / (float)width());
-      QPointF Point((event->x() / factor * (zoom<<1) - xDecal) /10. - x,
-                    (event->y() / factor * (zoom<<1) - yDecal) /10. - y);
+      QPointF Point((event->x() / factor * (zoom*2.f) - xDecal) - x,
+                    (event->y() / factor * (zoom*2.f) - yDecal) - y);
 
       dataCtrl->addPoint(Point);
     }
@@ -70,8 +101,8 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
   float factor = qMin(width(), height());
   if (onMoveDecal && event->type())
   {
-    xDecal += (event->x() - lastMousePos.x()) / factor * (zoom<<1);
-    yDecal += (event->y() - lastMousePos.y()) / factor * (zoom<<1);
+    xDecal += (event->x() - lastMousePos.x()) / factor * (zoom*2.f);
+    yDecal += (event->y() - lastMousePos.y()) / factor * (zoom*2.f);
   }
   lastMousePos = event->pos();
 
@@ -81,9 +112,7 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
 
 void ImageView::wheelEvent(QWheelEvent *event)
 {
-  zoom += event->delta() / 120;
-  if (zoom > 11)  zoom = 11;
-  if (zoom < 1)   zoom = 1;
+  zoom += event->delta() / 1200.;
   resizeGL(width(), height());
 
   QGLWidget::wheelEvent(event);
@@ -144,7 +173,7 @@ void ImageView::paintGL()
   glPushMatrix();
 
   glColor3f(1., 1., 1.);
-  glTranslatef(xDecal / 10., yDecal / 10., 0);
+  glTranslatef(xDecal, yDecal, 0);
 
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, imageTexId);
@@ -173,7 +202,7 @@ void ImageView::resizeGL(int width, int height)
 
   glViewport(0, 0, width, height);
 
-  float x(zoom / 10.);
+  float x(zoom);
   float y(x);
 
   if (width > height)
