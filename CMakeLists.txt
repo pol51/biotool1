@@ -50,6 +50,10 @@ target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenG
 if(WIN32)
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .exe)
 endif()
+if(APPLE)
+  set_source_files_properties(${OSX_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/res/Info.plist.in)
+endif()
 ################################################################################
 
 
