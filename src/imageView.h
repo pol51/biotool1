@@ -1,15 +1,16 @@
 #ifndef __IMAGEVIEW_H__
 #define __IMAGEVIEW_H__
 
-#include <QtOpenGL/QGLWidget>
+#include <QtWidgets/QOpenGLWidget>
+#include <QtWidgets/QPinchGesture>
+
+#include <QtGui/QOpenGLTexture>
 
 #include <QtCore/QTimer>
 
-#include <QtWidgets/QPinchGesture>
-
 #include "dataCtrl.h"
 
-class ImageView : public QGLWidget
+class ImageView : public QOpenGLWidget
 {
   Q_OBJECT
 
@@ -56,6 +57,7 @@ class ImageView : public QGLWidget
     qreal zoom = 1.;
     DataCtrl *dataCtrl;
     GLuint imageTexId = 0;
+    QOpenGLTexture *_image = nullptr;
     GLfloat xDecal = 0.f, yDecal = 0.f;
     GLfloat ratioWidthPerHeght = 1.f;
     QTimer refreshTimer;

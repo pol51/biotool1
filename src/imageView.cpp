@@ -1,19 +1,20 @@
 #include "imageView.h"
 
 #include <QtGui/QMouseEvent>
+#include <QOpenGLContext>
 
 ImageView::ImageView(QWidget *parent) :
-  QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
+  QOpenGLWidget(parent),
   dataCtrl(new DataCtrl(this))
 {
   grabGesture(Qt::PinchGesture);
-  connect(&refreshTimer, &QTimer::timeout, this, &ImageView::updateGL);
+  connect(&refreshTimer, SIGNAL(timeout()), this, SLOT(update()));
   refreshTimer.start(20);
 }
 
 ImageView::~ImageView()
 {
-  if (imageTexId) deleteTexture(imageTexId);
+  if (_image) delete _image;
   delete dataCtrl;
 }
 
@@ -33,7 +34,7 @@ bool ImageView::event(QEvent *event)
 {
   if (event->type() == QEvent::Gesture)
     return gestureEvent((QGestureEvent*)event);
-  return QGLWidget::event(event);
+  return QOpenGLWidget::event(event);
 }
 
 bool ImageView::gestureEvent(QGestureEvent *event)
@@ -79,7 +80,7 @@ void ImageView::mousePressEvent(QMouseEvent *event)
 
   setFocus();
 
-  QGLWidget::mousePressEvent(event);
+  QOpenGLWidget::mousePressEvent(event);
 }
 
 void ImageView::mouseReleaseEvent(QMouseEvent *event)
@@ -87,7 +88,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event)
   if (event->button() == Qt::LeftButton)
     onMoveDecal = false;
 
-  QGLWidget::mousePressEvent(event);
+  QOpenGLWidget::mousePressEvent(event);
 }
 
 void ImageView::mouseMoveEvent(QMouseEvent *event)
@@ -101,7 +102,7 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
   lastMousePos = event->pos();
 
   if (!onMoveDecal && !(event->buttons() & Qt::LeftButton))
-    QGLWidget::mouseMoveEvent(event);
+    QOpenGLWidget::mouseMoveEvent(event);
 }
 
 void ImageView::wheelEvent(QWheelEvent *event)
@@ -112,7 +113,7 @@ void ImageView::wheelEvent(QWheelEvent *event)
     resizeGL(width(), height());
   }
 
-  QGLWidget::wheelEvent(event);
+  QOpenGLWidget::wheelEvent(event);
 }
 
 void ImageView::keyPressEvent(QKeyEvent *event)
@@ -132,28 +133,26 @@ void ImageView::keyPressEvent(QKeyEvent *event)
       break;
   }
 
-  QGLWidget::keyPressEvent(event);
+  QOpenGLWidget::keyPressEvent(event);
 }
 
 void ImageView::doChangeImage(const QImage &image)
 {
-  if (imageTexId) deleteTexture(imageTexId);
+  if (_image) delete _image;
   ratioWidthPerHeght = (image.width() / (qreal)image.height());
 
-  imageTexId = bindTexture(image);
+  _image = new QOpenGLTexture(image);
 }
 
 void ImageView::doCloseImage()
 {
-  if (imageTexId) deleteTexture(imageTexId);
+  if (_image) delete _image;
   ratioWidthPerHeght = 1.;
-
-  imageTexId = 0;
 }
 
 void ImageView::initializeGL()
 {
-  QGLWidget::initializeGL();
+  QOpenGLWidget::initializeGL();
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -163,7 +162,24 @@ void ImageView::initializeGL()
 
 void ImageView::paintGL()
 {
-  QGLWidget::paintGL();
+  int w = width();
+  int h = height();
+  glViewport(0, 0, w, h);
+
+  float x(zoom);
+  float y(x);
+
+  if (w > h)
+    x *= ((float)w / (float)h);
+  else
+    y *= ((float)h / (float)w);
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-x, +x, +y, -y, -100.0, 100.0);
+  glMatrixMode(GL_MODELVIEW);
+
+  QOpenGLWidget::paintGL();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -172,16 +188,19 @@ void ImageView::paintGL()
   glColor3f(1., 1., 1.);
   glTranslatef(xDecal, yDecal, 0);
 
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, imageTexId);
+  if (_image)
+  {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, _image->textureId());
+  }
 
   glEnable(GL_BLEND);
 
   glBegin(GL_QUADS);
-    glTexCoord2f( 0, 1); glVertex3f(-ratioWidthPerHeght, -1., 0.);
-    glTexCoord2f( 0, 0); glVertex3f(-ratioWidthPerHeght,  1., 0.);
-    glTexCoord2f( 1, 0); glVertex3f( ratioWidthPerHeght,  1., 0.);
-    glTexCoord2f( 1, 1); glVertex3f( ratioWidthPerHeght, -1., 0.);
+    glTexCoord2f( 0, 1); glVertex3f(-ratioWidthPerHeght,  1., 0.);
+    glTexCoord2f( 0, 0); glVertex3f(-ratioWidthPerHeght, -1., 0.);
+    glTexCoord2f( 1, 0); glVertex3f( ratioWidthPerHeght, -1., 0.);
+    glTexCoord2f( 1, 1); glVertex3f( ratioWidthPerHeght,  1., 0.);
   glEnd();
 
   glDisable(GL_TEXTURE_2D);
@@ -193,19 +212,19 @@ void ImageView::paintGL()
   glPopMatrix();
 }
 
-void ImageView::resizeGL(int width, int height)
+void ImageView::resizeGL(int w, int h)
 {
-  QGLWidget::resizeGL(width, height);
+  QOpenGLWidget::resizeGL(w, h);
 
-  glViewport(0, 0, width, height);
+  glViewport(0, 0, w, h);
 
   float x(zoom);
   float y(x);
 
-  if (width > height)
-    x *= ((float)width / (float)height);
+  if (w > h)
+    x *= ((float)w / (float)h);
   else
-    y *= ((float)height / (float)width);
+    y *= ((float)h / (float)w);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
