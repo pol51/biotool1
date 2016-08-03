@@ -2,8 +2,6 @@
 
 #include <QtGui/QMouseEvent>
 
-#include <QtCore/QDebug>
-
 ImageView::ImageView(QWidget *parent) :
   QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer), parent),
   dataCtrl(new DataCtrl(this))
@@ -40,7 +38,6 @@ bool ImageView::event(QEvent *event)
 
 bool ImageView::gestureEvent(QGestureEvent *event)
 {
-    qDebug() << "gestureEvent():" << event;
     if (QGesture *pinch = event->gesture(Qt::PinchGesture))
         pinchTriggered(static_cast<QPinchGesture *>(pinch));
     return true;
@@ -49,13 +46,10 @@ bool ImageView::gestureEvent(QGestureEvent *event)
 void ImageView::pinchTriggered(QPinchGesture *gesture)
 {
   QPinchGesture::ChangeFlags changeFlags = gesture->changeFlags();
-  if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-      qDebug() << "pinchTriggered(): zoom by" << gesture->lastScaleFactor();
+  if (changeFlags & QPinchGesture::ScaleFactorChanged)
+  {
       zoom = 1.f / gesture->lastScaleFactor();
       resizeGL(width(), height());
-  }
-  if (gesture->state() == Qt::GestureFinished) {
-    qDebug() << "pinchTriggered(): done";
   }
 }
 
@@ -112,8 +106,11 @@ void ImageView::mouseMoveEvent(QMouseEvent *event)
 
 void ImageView::wheelEvent(QWheelEvent *event)
 {
-  zoom += event->delta() / 1200.;
-  resizeGL(width(), height());
+  if (event->source() == Qt::MouseEventNotSynthesized)
+  {
+    zoom += event->delta() / 1200.;
+    resizeGL(width(), height());
+  }
 
   QGLWidget::wheelEvent(event);
 }
