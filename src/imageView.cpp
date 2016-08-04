@@ -147,6 +147,7 @@ void ImageView::doChangeImage(const QImage &image)
 void ImageView::doCloseImage()
 {
   if (_image) delete _image;
+  _image = nullptr;
   ratioWidthPerHeght = 1.;
 }
 
