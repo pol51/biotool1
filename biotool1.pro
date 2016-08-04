@@ -10,7 +10,6 @@ DEFINES += BT1_GIT_VERSION=$$GIT_VERSION
 
 QMAKE_CXXFLAGS += -std=gnu++0x
 
-LIBS += -lGLU
 
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
