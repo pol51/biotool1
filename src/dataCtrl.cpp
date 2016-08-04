@@ -3,6 +3,7 @@
 #include <QtOpenGL/QGLContext>
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
+#include <QtCore/QLocale>
 
 #include <cmath>
 
@@ -349,6 +350,9 @@ void DataCtrl::clear()
 
 void DataCtrl::save(const QString &filename)
 {
+  QLocale Locale(QLocale::system());
+  QLocale::setDefault(QLocale::c());
+
   QDomDocument Doc("document");
   QDomElement Root = Doc.createElement("document");
   Doc.appendChild(Root);
@@ -372,6 +376,8 @@ void DataCtrl::save(const QString &filename)
     File.write(Doc.toString(2).toUtf8());
     File.close();
   }
+
+  QLocale::setDefault(Locale);
 
   saved = true;
 }

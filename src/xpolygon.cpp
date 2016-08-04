@@ -187,7 +187,7 @@ void XPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int level)
   QDomElement PolyNode = doc.createElement("polygon");
   parentNode.appendChild(PolyNode);
   PolyNode.setAttribute("level", level);
-  foreach(QPointF Point, *this)
+  for (auto Point: *this)
   {
     QDomElement PointNode = doc.createElement("point");
     PolyNode.appendChild(PointNode);
