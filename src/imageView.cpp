@@ -219,6 +219,9 @@ void ImageView::resizeGL(int w, int h)
 
   glViewport(0, 0, w, h);
 
+  if (zoom < .05f)
+      zoom = .05f;
+
   float x(zoom);
   float y(x);
 
