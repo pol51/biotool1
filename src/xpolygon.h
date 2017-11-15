@@ -1,5 +1,4 @@
-#ifndef __POLYGON_H__
-#define __POLYGON_H__
+#pragma once
 
 #include <QtGui/QPolygonF>
 
@@ -18,7 +17,7 @@ class XPolygon : public QPolygonF
     };
 
   public:
-    XPolygon() : QPolygonF(), area(0.f), radius(0.f), type(eEdition) {}
+    XPolygon() : QPolygonF() {}
     XPolygon(const XPolygon &other) : QPolygonF() { *this = other; }
 
     void computeData();
@@ -36,9 +35,7 @@ class XPolygon : public QPolygonF
 
   protected:
     QPointF centroid;
-    qreal area;
-    qreal radius;
-    EType type;
+    qreal area = 0.;
+    qreal radius = 0.;
+    EType type = eEdition;
 };
-
-#endif

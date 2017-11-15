@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
+
 project(biotool1)
+
+set(CMAKE_CXX_STANDARD 11)
 
 if(APPLE)
   if(DEFINED ENV{QTDIR})
