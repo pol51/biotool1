@@ -388,6 +388,9 @@ void DataCtrl::exportCsv(const QString &filename)
 
   QByteArray CSV;
 
+  if (csvForExcel)
+    CSV.append("sep=;\n");
+
   QStringList Values;
   foreach(Cell _cell, cells)
   {

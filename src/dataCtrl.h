@@ -77,6 +77,9 @@ class DataCtrl : public QAbstractItemModel
     static void getSelectedDataTypesNames(QStringList &names);
     static void setSelectedDataTypesNames(const QStringList &names);
 
+    static bool getCsvForExcel() { return csvForExcel; }
+    static void setCsvForExcel(bool enabled) { csvForExcel = enabled; }
+
   public slots:
     void removeLastPoint();
     void finalizeForm();
@@ -126,6 +129,7 @@ class DataCtrl : public QAbstractItemModel
     static QVector<CSVDataType> csvDataTypes;
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
+    static bool csvForExcel;
     qreal averageAngleVPatch = 0.f;
     qreal averageAngleVBeating = 0.f;
     qreal averageCenroidRadius = 0.f;

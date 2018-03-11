@@ -29,6 +29,7 @@ bool   VCil::_averageArrow            (false);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
 QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
+bool DataCtrl::csvForExcel = true;
 int DataCtrl::maximalCSD(0);
 
 void Settings::Load()
@@ -52,6 +53,7 @@ void Settings::Load()
 
     DataCtrl::centroidsRefColor     = settings.value("centroidsRefColor",   DataCtrl::centroidsRefColor).value<QColor>();
     DataCtrl::maximalCSD            = settings.value("maximalCSD",          DataCtrl::maximalCSD).value<int>();
+    DataCtrl::csvForExcel           = settings.value("csvForExcel",         DataCtrl::csvForExcel).value<bool>();
     DataCtrl::setSelectedDataTypesNames(settings.value("csvSelectedDataType", QStringList()).value<QStringList>());
   }
 }
@@ -75,6 +77,7 @@ void Settings::Save()
 
   settings.setValue("centroidsRefColor",    DataCtrl::centroidsRefColor);
   settings.setValue("maximalCSD",           DataCtrl::maximalCSD);
+  settings.setValue("csvForExcel",          DataCtrl::csvForExcel);
 
   QStringList SelectedDataNames;
   DataCtrl::getSelectedDataTypesNames(SelectedDataNames);

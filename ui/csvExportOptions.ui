@@ -67,6 +67,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="addExcelMetadata">
+      <property name="text">
+       <string>Add Excel metadatas</string>
+      </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

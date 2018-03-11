@@ -17,6 +17,8 @@ CsvExportOptions::CsvExportOptions(QWidget *parent) :
   DataCtrl::getSelectedDataTypesNames(DataTypes);
   ui->lstDTSelected->addItems(DataTypes);
 
+  ui->addExcelMetadata->setChecked(DataCtrl::getCsvForExcel());
+
   connect(ui->lstDTAvailable, &QListWidget::doubleClicked, this, &CsvExportOptions::addDataType);
   connect(ui->lstDTSelected,  &QListWidget::doubleClicked, this, &CsvExportOptions::delDataType);
 }
@@ -28,6 +30,7 @@ void CsvExportOptions::accept()
   for (int i = 0; i < Count; ++i)
     DataTypes.append(ui->lstDTSelected->item(i)->text());
   DataCtrl::setSelectedDataTypesNames(DataTypes);
+  DataCtrl::setCsvForExcel(ui->addExcelMetadata->isChecked());
   Settings::Save();
   QDialog::accept();
 }
