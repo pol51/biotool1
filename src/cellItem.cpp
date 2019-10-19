@@ -95,28 +95,41 @@ void CellItem::draw(const qreal &averageAngle, const qreal &averageCenroidRadius
   const QColor &AverageVectorColor(averageVectorColor());
 
   // draw outside form
-  glColor3f(OutColor.redF(), OutColor.greenF(), OutColor.blueF());
+  glColor3f(static_cast<GLfloat>(OutColor.redF()),
+            static_cast<GLfloat>(OutColor.greenF()),
+            static_cast<GLfloat>(OutColor.blueF()));
   _outsideForm.draw();
 
   // draw inside form
-  glColor3f(InColor.redF(), InColor.greenF(), InColor.blueF());
+  glColor3f(static_cast<GLfloat>(InColor.redF()),
+            static_cast<GLfloat>(InColor.greenF()),
+            static_cast<GLfloat>(InColor.blueF()));
   _insideForm.draw();
 
   // draw vector
   if (isFull() && _interval > averageCenroidRadius)
   {
     glPushMatrix();
-    glColor3f(VectorColor.redF(), VectorColor.greenF(), VectorColor.blueF());
-    glTranslatef(_outsideForm.getCentroid().x(), _outsideForm.getCentroid().y(), 0.);
-    glRotatef(_angle, 0., 0., -1.);
-    //glScalef(strength * 2.5, strength * 2.5, 1.);
-    glScalef(_arrowScale, _arrowScale, 1.);
-    drawArrow();
+
+    glTranslatef(static_cast<GLfloat>(_outsideForm.getCentroid().x()),
+                 static_cast<GLfloat>(_outsideForm.getCentroid().y()), 0.f);
+    glRotatef(static_cast<GLfloat>(_angle), 0.f, 0.f, -1.f);
+    glScalef(static_cast<GLfloat>(_arrowScale), static_cast<GLfloat>(_arrowScale), 1.f);
+
+    if (showArrow())
+    {
+      glColor3f(static_cast<GLfloat>(VectorColor.redF()),
+                static_cast<GLfloat>(VectorColor.greenF()),
+                static_cast<GLfloat>(VectorColor.blueF()));
+      drawArrow();
+    }
 
     if (averageArrow() && averageAngle <= 360.)
     {
-      glColor3f(AverageVectorColor.redF(), AverageVectorColor.greenF(), AverageVectorColor.blueF());
-      glRotatef(averageAngle - _angle, 0., 0., -1.);
+      glColor3f(static_cast<GLfloat>(AverageVectorColor.redF()),
+                static_cast<GLfloat>(AverageVectorColor.greenF()),
+                static_cast<GLfloat>(AverageVectorColor.blueF()));
+      glRotatef(static_cast<GLfloat>(averageAngle - _angle), 0.f, 0.f, -1.f);
       drawArrow();
     }
 
@@ -168,11 +181,11 @@ void CellItem::drawArrow()
   qreal arrowHeadBase(_arrowLength - _arrowHeadLength);
 
   glBegin(GL_LINES);
-    glVertex3f(_arrowLength, 0., 0.);
-    glVertex3f(0., 0., 0.);
-    glVertex3f(_arrowLength, 0., 0.);
-    glVertex3f(arrowHeadBase, _arrowHeadHalfWidth, 0.);
-    glVertex3f(_arrowLength, 0., 0.);
-    glVertex3f(arrowHeadBase, -_arrowHeadHalfWidth, 0.);
+    glVertex3f(static_cast<GLfloat>(_arrowLength), 0.f, 0.f);
+    glVertex3f(0.f, 0.f, 0.f);
+    glVertex3f(static_cast<GLfloat>(_arrowLength), 0.f, 0.f);
+    glVertex3f(static_cast<GLfloat>(arrowHeadBase), static_cast<GLfloat>(_arrowHeadHalfWidth), 0.f);
+    glVertex3f(static_cast<GLfloat>(_arrowLength), 0.f, 0.f);
+    glVertex3f(static_cast<GLfloat>(arrowHeadBase), static_cast<GLfloat>(-_arrowHeadHalfWidth), 0.f);
   glEnd();
 }

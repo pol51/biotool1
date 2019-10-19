@@ -1,17 +1,20 @@
-#ifndef __VCIL_H__
-#define __VCIL_H__
+#pragma once
 
 #include "cellItem.h"
+
+class Settings;
+class SettingsView;
 
 class VCil : public CellItem
 {
   public:
     VCil() : CellItem() {}
     VCil(const CellItem& cellItem) : CellItem(cellItem) {}
-    virtual ~VCil() { }
 
-    virtual bool averageArrow() const { return _averageArrow; }
-    static bool _averageArrow;
+    bool averageArrow() const override { return _showAverageArrow; }
+
+  protected:
+    friend class Settings;
+    friend class SettingsView;
+    static bool _showAverageArrow;
 };
-
-#endif

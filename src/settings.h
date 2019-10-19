@@ -1,5 +1,4 @@
-#ifndef __SETTINGS_H__
-#define __SETTINGS_H__
+#pragma once
 
 #include <QtGui/QColor>
 
@@ -9,5 +8,3 @@ class Settings
     static void Load();
     static void Save();
 };
-
-#endif

@@ -8,19 +8,22 @@
 
 #include "dataCtrl.h"
 
-Cell* Cell::_selected = NULL;
-Cell* Cell::_edited = NULL;
+Cell* Cell::_selected = nullptr;
+Cell* Cell::_edited = nullptr;
 
 void Cell::draw(const qreal &averageAngle, const qreal &averageCenroidRadius) const
 {
   // draw background
-  if (isFull() && _interval > averageCenroidRadius && _cellBackground)
+  if (isFull() && _interval > averageCenroidRadius && _showCellBackground)
   {
     qreal Angle2RefAngle(averageAngle - _angle);
-    while (Angle2RefAngle < 0.f) Angle2RefAngle += 360.f;
+    while (Angle2RefAngle < 0.) Angle2RefAngle += 360.;
     QColor BGColor(_colorInterpolator.getColorAt(Angle2RefAngle));
     BGColor.setAlpha(_bgAlpha);
-    glColor4f(BGColor.redF(), BGColor.greenF(), BGColor.blueF(), BGColor.alphaF());
+    glColor4f(static_cast<GLfloat>(BGColor.redF()),
+              static_cast<GLfloat>(BGColor.greenF()),
+              static_cast<GLfloat>(BGColor.blueF()),
+              static_cast<GLfloat>(BGColor.alphaF()));
     _outsideForm.drawBackground();
   }
 
@@ -66,30 +69,30 @@ bool Cell::load(QDomElement &node)
 
 void Cell::computeVCilBeatingAngle()
 {
-  qreal sinsum(0.f), cossum(0.f);
+  qreal sinsum(0.), cossum(0.);
 
   foreach (const VCil &VCilItem, _vcils)
   {
-    const qreal angle = VCilItem.getAngle() * M_PI / 180.f;
+    const qreal angle = VCilItem.getAngle() * M_PI / 180.;
     sinsum += sin(angle);
     cossum += cos(angle);
   }
 
-  _vcilsBeatingAngle = atan2(sinsum, cossum) * 180.f / M_PI;
+  _vcilsBeatingAngle = atan2(sinsum, cossum) * 180. / M_PI;
 }
 
 void Cell::computeVCilCircularStandardDeviation()
 {
-  qreal sinsum(0.f), cossum(0.f);
+  qreal sinsum(0.), cossum(0.);
 
   foreach (const VCil &VCilItem, _vcils)
   {
-    const qreal angle = VCilItem.getAngle() * M_PI / 180.f;
+    const qreal angle = VCilItem.getAngle() * M_PI / 180.;
     sinsum += sin(angle);
     cossum += cos(angle);
   }
 
-  _vcilsCircularStandardDeviation = sqrt(-2 * log(sqrt(sinsum * sinsum +  cossum  * cossum) / _vcils.count())) * 180.f / M_PI;
+  _vcilsCircularStandardDeviation = sqrt(-2 * log(sqrt(sinsum * sinsum +  cossum  * cossum) / _vcils.count())) * 180. / M_PI;
 }
 
 void Cell::addVCil(const VCil &vcil)

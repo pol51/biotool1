@@ -1,5 +1,4 @@
-#ifndef __CVSEXPORTOPTIONS_H__
-#define __CVSEXPORTOPTIONS_H__
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -12,7 +11,7 @@ class CsvExportOptions : public QDialog
   Q_OBJECT
 
   public:
-    CsvExportOptions(QWidget *parent = NULL);
+    CsvExportOptions(QWidget *parent = nullptr);
 
   public slots:
     void accept();
@@ -24,5 +23,3 @@ class CsvExportOptions : public QDialog
   protected:
     Ui::CsvExportOptions *ui;
 };
-
-#endif

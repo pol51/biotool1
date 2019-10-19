@@ -123,6 +123,7 @@ void DataCtrl::draw() const
         cell.draw();
         break;
       }
+      [[fallthrough]];
     case eModeView:
       foreach (const Cell &CellItem, cells)
         CellItem.draw(averageAngleVPatch, averageCenroidRadius);
@@ -335,7 +336,7 @@ void DataCtrl::setMaximalCSD(const int &maxCSD)
 
 void DataCtrl::setSelection(const QModelIndex &selected)
 {
-  ((Cell*)selected.internalPointer())->setSelected();
+  static_cast<Cell*>(selected.internalPointer())->setSelected();
 }
 
 void DataCtrl::clear()
@@ -489,9 +490,9 @@ void DataCtrl::load(const QString &filename)
 
 void DataCtrl::refresh()
 {
-  averageAngleVPatch = 0.f;
-  averageAngleVBeating = 0.f;
-  averageCenroidRadius = 0.f;
+  averageAngleVPatch = 0.;
+  averageAngleVBeating = 0.;
+  averageCenroidRadius = 0.;
   const int CellsCount = cells.count();
   if (!CellsCount)
   {
@@ -501,7 +502,7 @@ void DataCtrl::refresh()
     return;
   }
 
-  qreal pSinSum(0.f), pCosSum(0.f), bSinSum(0.f), bCosSum(0.f);
+  qreal pSinSum(0.), pCosSum(0.), bSinSum(0.), bCosSum(0.);
 
   int IntervalIgnored = 0;
   int CSDIgnored      = 0;
@@ -519,7 +520,7 @@ void DataCtrl::refresh()
     // vPatch
     if (_cell.getInterval() > averageCenroidRadius)
     {
-      const qreal pAngle = _cell.getAngle() * M_PI / 180.f;
+      const qreal pAngle = _cell.getAngle() * M_PI / 180.;
       pSinSum += sin(pAngle);
       pCosSum += cos(pAngle);
     }
@@ -529,7 +530,7 @@ void DataCtrl::refresh()
     // vBeating
     if (_cell.getInterval() > averageCenroidRadius && _cell.getVCilCircularStandardDeviation() < maximalCSD)
     {
-      const qreal bAngle = _cell.getVCilBeatingAngle() * M_PI / 180.f;
+      const qreal bAngle = _cell.getVCilBeatingAngle() * M_PI / 180.;
       bSinSum += sin(bAngle);
       bCosSum += cos(bAngle);
     }
@@ -538,10 +539,10 @@ void DataCtrl::refresh()
   }
 
 
-  averageAngleVPatch    = atan2(pSinSum, pCosSum) * 180.f / M_PI;
-  averageAngleVBeating  = atan2(bSinSum, bCosSum) * 180.f / M_PI;
+  averageAngleVPatch    = atan2(pSinSum, pCosSum) * 180. / M_PI;
+  averageAngleVBeating  = atan2(bSinSum, bCosSum) * 180. / M_PI;
 
-  emit angleVPatchChanged(averageAngleVPatch);
-  emit angleVBeatingChanged(averageAngleVBeating);
+  emit angleVPatchChanged(qRound(averageAngleVPatch));
+  emit angleVBeatingChanged(qRound(averageAngleVBeating));
   emit countChanged(IntervalIgnored, CSDIgnored, CellsCount);
 }

@@ -1,5 +1,4 @@
-#ifndef __MAINWINDOW_H__
-#define __MAINWINDOW_H__
+#pragma once
 
 #include <QtWidgets/QMainWindow>
 
@@ -14,8 +13,8 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
   protected:
     void changeEvent(QEvent *e) override;
@@ -57,5 +56,3 @@ class MainWindow : public QMainWindow
     QString fileName;
     QString imageName;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __DATACTRL_H__
-#define __DATACTRL_H__
+#pragma once
 
 #include <QtCore/QAbstractItemModel>
 
@@ -55,8 +54,8 @@ class DataCtrl : public QAbstractItemModel
     };
 
   public:
-    DataCtrl(QObject *parent = NULL);
-    ~DataCtrl() {}
+    DataCtrl(QObject *parent = nullptr);
+    virtual ~DataCtrl() override {}
 
     void addPoint(const QPointF &point);
 
@@ -130,11 +129,9 @@ class DataCtrl : public QAbstractItemModel
     static QVector<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
     static bool csvForExcel;
-    qreal averageAngleVPatch = 0.f;
-    qreal averageAngleVBeating = 0.f;
-    qreal averageCenroidRadius = 0.f;
-    qreal _imageRealHeigth = 1.f;
-    qreal _imageRealWidth = 1.f;
+    qreal averageAngleVPatch = 0.;
+    qreal averageAngleVBeating = 0.;
+    qreal averageCenroidRadius = 0.;
+    qreal _imageRealHeigth = 1.;
+    qreal _imageRealWidth = 1.;
 };
-
-#endif

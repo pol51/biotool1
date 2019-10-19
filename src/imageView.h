@@ -1,5 +1,4 @@
-#ifndef __IMAGEVIEW_H__
-#define __IMAGEVIEW_H__
+#pragma once
 
 #include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPinchGesture>
@@ -15,8 +14,8 @@ class ImageView : public QOpenGLWidget
   Q_OBJECT
 
   public:
-    ImageView(QWidget *parent = NULL);
-    ~ImageView();
+    ImageView(QWidget *parent = nullptr);
+    ~ImageView() override;
 
     void changeMode(DataCtrl::EMode mode) { dataCtrl->setCurrentMode(mode); onMoveDecal = false; }
     void setImageRealWidth(const qreal &width);
@@ -63,5 +62,3 @@ class ImageView : public QOpenGLWidget
     QTimer refreshTimer;
     QPoint lastMousePos;
 };
-
-#endif

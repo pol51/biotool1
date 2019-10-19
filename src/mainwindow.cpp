@@ -172,8 +172,7 @@ void MainWindow::doLoadImage()
 
 void MainWindow::doChangeMode(bool activated)
 {
-
-  QAction *action = (QAction*)sender();
+  QAction *action = static_cast<QAction*>(sender());
   if (activated)
   {
     if (lastModeAction)
@@ -258,7 +257,7 @@ void MainWindow::doOpen()
 void MainWindow::doCellCountChanged(int intervalIgnored, int csdIgnored, int count)
 {
   cellsLabel->setText(QString(" [%1/%2 cell%3] [!csd: %4%]").
-                      arg(count - intervalIgnored).arg(count).arg(count?"s":"").arg(count?((count - (qreal)csdIgnored) / count * 100.):0));
+                      arg(count - intervalIgnored).arg(count).arg(count?"s":"").arg(count?((count - static_cast<qreal>(csdIgnored)) / count * 100.):0));
 }
 
 void MainWindow::doAngleVPatchChanged(int angle)

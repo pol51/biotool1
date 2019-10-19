@@ -17,8 +17,7 @@ class XPolygon : public QPolygonF
     };
 
   public:
-    XPolygon() : QPolygonF() {}
-    XPolygon(const XPolygon &other) : QPolygonF() { *this = other; }
+    virtual ~XPolygon() {}
 
     void computeData();
     virtual void clear();
@@ -27,11 +26,11 @@ class XPolygon : public QPolygonF
     const qreal   &getArea()      const { return area; }
     const qreal   &getRadius()    const { return radius; }
 
-    void draw() const;
-    void drawBackground() const;
+    virtual void draw() const;
+    virtual void drawBackground() const;
 
-    void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
-    void load(QDomElement &node);
+    virtual void save(QDomDocument &doc, QDomElement &parentNode, const int level) const;
+    virtual void load(QDomElement &node);
 
   protected:
     QPointF centroid;
