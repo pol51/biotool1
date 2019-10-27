@@ -64,8 +64,7 @@ endif()
 # Install
 ################################################################################
 if(APPLE)
-  set(BIN_INSTALL_DIR ".")
-  install(TARGETS ${PROJECT_NAME} DESTINATION ${BIN_INSTALL_DIR})
+  install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Runtime)
 endif()
 ################################################################################
 
@@ -104,9 +103,18 @@ if(APPLE)
 
   set(QT_DIR          ${QT_QTCORE_LIBRARY}/../..)
   set(FRAMEWORKS_DST  @executable_path/../Frameworks)
-
-  include (cmake/DeployQt5.cmake)
-  install_qt5_executable(${PROJECT_NAME}.app qcocoa)
+  
+  get_target_property(uic_location Qt5::uic IMPORTED_LOCATION)
+  get_filename_component( _dir ${uic_location} DIRECTORY)
+  set(deployqt "${_dir}/macdeployqt")
+  if(NOT EXISTS ${deployqt})
+    message(FATAL_ERROR "Failed to locate deployqt executable: [${deployqt}]")
+  endif()
+  
+  install(CODE "set(deployqt \"${deployqt}\")" COMPONENT Runtime)
+  install(CODE [===[
+    execute_process(COMMAND "${deployqt}" "${CMAKE_INSTALL_PREFIX}/biotool1.app" -executable="${CMAKE_INSTALL_PREFIX}/biotool1.app/Contents/MacOS/biotool1")
+  ]===] COMPONENT Runtime)
 
   include(CPack)
 endif()
