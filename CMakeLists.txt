@@ -4,7 +4,7 @@ project(biotool1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(APPLE)
+if(APPLE OR WIN32)
   if(DEFINED ENV{QTDIR})
     set(CMAKE_PREFIX_PATH $ENV{QTDIR} ${CMAKE_PREFIX_PATH})
   else()
