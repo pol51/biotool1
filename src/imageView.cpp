@@ -2,6 +2,7 @@
 
 #include <QMouseEvent>
 #include <QOpenGLContext>
+#include <QGuiApplication>
 
 ImageView::ImageView(QWidget *parent) :
   QOpenGLWidget(parent),
@@ -163,8 +164,8 @@ void ImageView::initializeGL()
 
 void ImageView::paintGL()
 {
-  int w = width();
-  int h = height();
+  int w = width() * ((QGuiApplication*)QGuiApplication::instance())->devicePixelRatio();
+  int h = height() * ((QGuiApplication*)QGuiApplication::instance())->devicePixelRatio();
   glViewport(0, 0, w, h);
 
   float x(zoom);
