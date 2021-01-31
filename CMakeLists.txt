@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(biotool1)
 
@@ -8,7 +8,7 @@ if(APPLE OR WIN32)
   if(DEFINED ENV{QTDIR})
     set(CMAKE_PREFIX_PATH $ENV{QTDIR} ${CMAKE_PREFIX_PATH})
   else()
-    message(FATAL_ERROR "ERROR: Environment variable QTDIR is not set. Please locate your Qt folder MY_QT5_DIR.")
+    message(FATAL_ERROR "ERROR: Environment variable QTDIR is not set. Please locate your Qt folder.")
   endif()
 endif()
 
@@ -16,18 +16,16 @@ endif()
 # Build
 ################################################################################
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5OpenGL REQUIRED)
-find_package(Qt5Xml REQUIRED)
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui Widgets OpenGL Xml REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets OpenGL Xml REQUIRED)
 find_package(OpenGL REQUIRED)
 
-file(GLOB_RECURSE SRCS src/*.cpp src/*.h)
+file(GLOB_RECURSE SRCS src/*.cpp src/*.h src/*.ui)
 include_directories(src)
-
-qt5_wrap_ui(UIS_HDRS ui/mainwindow.ui ui/csvExportOptions.ui)
 
 file(GLOB_RECURSE IMAGES ${CMAKE_CURRENT_SOURCE_DIR}/res/*.png)
 set(IMAGES_QRC res/icons.qrc)
@@ -39,17 +37,24 @@ foreach(image_file ${IMAGES})
 endforeach()
 file(APPEND ${IMAGES_QRC} "    </qresource>\n</RCC>")
 
-qt5_add_resources(RCC ${IMAGES_QRC})
-
 if(APPLE)
   set(EXECUTABLE_TYPE MACOSX_BUNDLE)
 elseif(WIN32)
   set(EXECUTABLE_TYPE WIN32)
 endif()
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11")
-add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${UIS_HDRS} ${IMAGES} ${RCC} ${IMAGES_QRC})
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL Qt5::Xml ${OPENGL_LIBRARIES})
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
+else()
+  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
+endif()
+target_link_libraries(${PROJECT_NAME}
+  Qt${QT_VERSION_MAJOR}::Core
+  Qt${QT_VERSION_MAJOR}::Gui
+  Qt${QT_VERSION_MAJOR}::Widgets
+  Qt${QT_VERSION_MAJOR}::OpenGL
+  Qt${QT_VERSION_MAJOR}::Xml
+  ${OPENGL_LIBRARIES})
 if(WIN32)
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .exe)
 endif()
@@ -104,7 +109,7 @@ if(APPLE)
   set(QT_DIR          ${QT_QTCORE_LIBRARY}/../..)
   set(FRAMEWORKS_DST  @executable_path/../Frameworks)
   
-  get_target_property(uic_location Qt5::uic IMPORTED_LOCATION)
+  get_target_property(uic_location Qt${QT_VERSION_MAJOR}::uic IMPORTED_LOCATION)
   get_filename_component( _dir ${uic_location} DIRECTORY)
   set(deployqt "${_dir}/macdeployqt")
   if(NOT EXISTS ${deployqt})
