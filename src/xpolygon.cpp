@@ -1,14 +1,10 @@
 #include "xpolygon.h"
 
-#include <QtOpenGL/QGLContext>
+#include <QOpenGLContext>
+#include <QLineF>
+#include <QDomDocument>
 
-#include <QtXml/QDomDocument>
-
-#ifdef __APPLE__
-# include <glu.h>
-#else
-# include <GL/glu.h>
-#endif
+#include <OpenGL/glu.h>
 
 #include <math.h>
 
@@ -40,7 +36,7 @@ void XPolygon::computeData()
         qreal y0 = 0.f; // Current vertex Y
         qreal x1 = 0.f; // Next vertex X
         qreal y1 = 0.f; // Next vertex Y
-        qreal a =  0.f;  // Partial signed area
+        qreal a =  0.f; // Partial signed area
 
         push_back(at(0));
 

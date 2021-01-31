@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QtWidgets/QOpenGLWidget>
-#include <QtWidgets/QPinchGesture>
+#include <QOpenGLWidget>
+#include <QPinchGesture>
 
-#include <QtGui/QOpenGLTexture>
+#include <QOpenGLTexture>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 #include "dataCtrl.h"
 

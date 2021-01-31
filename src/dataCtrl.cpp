@@ -1,9 +1,9 @@
 #include "dataCtrl.h"
 
-#include <QtOpenGL/QGLContext>
-#include <QtXml/QDomDocument>
-#include <QtCore/QFile>
-#include <QtCore/QLocale>
+#include <QOpenGLContext>
+#include <QDomDocument>
+#include <QFile>
+#include <QLocale>
 
 #include <cmath>
 
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-QVector<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
+QList<DataCtrl::CSVDataType> DataCtrl::csvDataTypes;
 
 DataCtrl::DataCtrl(QObject *parent):
   QAbstractItemModel(parent)
@@ -398,7 +398,7 @@ void DataCtrl::exportCsv(const QString &filename)
     Values.clear();
     foreach(const CSVDataType *_csvDataType, csvSelection)
       Values.append(_csvDataType->value(_cell));
-    CSV.append(QString("%1\n").arg(Values.join(";")));
+    CSV.append(qPrintable(QString("%1\n").arg(Values.join(";"))));
   }
 
   QString FileName(filename);

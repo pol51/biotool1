@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 
 #include <functional>
 
@@ -31,9 +31,6 @@ class DataCtrl : public QAbstractItemModel
           suffix(other.suffix),
           fun(other.fun) {}
 
-      protected:
-        friend class QVector<CSVDataType>;
-        CSVDataType() {}
         const CSVDataType &operator=(const CSVDataType &other)
         {
           name=other.name;
@@ -41,6 +38,9 @@ class DataCtrl : public QAbstractItemModel
           fun=other.fun;
           return *this;
         }
+
+      protected:
+        CSVDataType() {}
 
       public:
         inline QString value(const Cell &cell) const { return fun(cell); }
@@ -122,11 +122,11 @@ class DataCtrl : public QAbstractItemModel
     EMode cntMode = eModeView;
     XPolygon points;
     CellItem cell;
-    QVector<Cell> cells;
-    QVector<XPolygon> centroidsRef;
+    QList<Cell> cells;
+    QList<XPolygon> centroidsRef;
     static int maximalCSD;
-    static QVector<CSVDataType> csvDataTypes;
-    static QVector<const CSVDataType*> csvSelection;
+    static QList<CSVDataType> csvDataTypes;
+    static QList<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
     static bool csvForExcel;
     qreal averageAngleVPatch = 0.;

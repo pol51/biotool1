@@ -1,6 +1,6 @@
 #include "imageView.h"
 
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 #include <QOpenGLContext>
 
 ImageView::ImageView(QWidget *parent) :
@@ -109,7 +109,7 @@ void ImageView::wheelEvent(QWheelEvent *event)
 {
   if (event->source() == Qt::MouseEventNotSynthesized)
   {
-    zoom += event->delta() / 1200.;
+    zoom += event->pixelDelta().manhattanLength() / 1200.;
     resizeGL(width(), height());
   }
 

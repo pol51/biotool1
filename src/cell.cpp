@@ -1,6 +1,6 @@
 #include "cell.h"
 
-#include <QtOpenGL/QGLContext>
+#include <QOpenGLContext>
 
 #include <QtXml/QDomDocument>
 
