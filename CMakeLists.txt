@@ -69,6 +69,7 @@ endif()
 # Install
 ################################################################################
 if(APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
   install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Runtime)
 endif()
 ################################################################################
