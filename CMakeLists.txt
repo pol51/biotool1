@@ -79,7 +79,7 @@ endif()
 # Packaging
 ################################################################################
 if(APPLE)
-  set(PACKAGE_VERSION "1.0.0.0")
+  set(PACKAGE_VERSION "1.1.0.0")
 
   set(CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME})
   set(CPACK_PACKAGE_EXECUTABLES ${PROJECT_NAME} ${PROJECT_NAME})
