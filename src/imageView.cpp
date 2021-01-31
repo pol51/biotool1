@@ -110,7 +110,7 @@ void ImageView::wheelEvent(QWheelEvent *event)
 {
   if (event->source() == Qt::MouseEventNotSynthesized)
   {
-    zoom += event->pixelDelta().manhattanLength() / 1200.;
+    zoom += event->angleDelta().y() / 1200.;
     resizeGL(width(), height());
   }
 
