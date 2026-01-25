@@ -82,7 +82,7 @@ if(WIN32)
 
   get_target_property(qmake_exe Qt6::qmake IMPORTED_LOCATION)
   get_filename_component(qt_bin_dir "${qmake_exe}" DIRECTORY)
-  set(windeployqt "${qt_bin_dir}/windeployqt")
+  set(windeployqt "${qt_bin_dir}/windeployqt.exe")
   if(NOT EXISTS ${windeployqt})
     message(FATAL_ERROR "Failed to locate windeployqt executable: [${windeployqt}]")
   endif()
