@@ -77,6 +77,18 @@ endif()
 if(APPLE)
   install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Runtime)
 endif()
+if(WIN32)
+  install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . COMPONENT Runtime)
+
+  get_target_property(qmake_exe Qt6::qmake IMPORTED_LOCATION)
+  get_filename_component(qt_bin_dir "${qmake_exe}" DIRECTORY)
+  set(windeployqt "${qt_bin_dir}/windeployqt")
+  if(NOT EXISTS ${windeployqt})
+    message(FATAL_ERROR "Failed to locate windeployqt executable: [${windeployqt}]")
+  endif()
+
+  install(CODE "execute_process(COMMAND \"${windeployqt}\" \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.exe\" --dir \"${CMAKE_INSTALL_PREFIX}\" --no-translations --no-opengl-sw)")
+endif()
 ################################################################################
 
 
@@ -126,6 +138,25 @@ if(APPLE)
   install(CODE [===[
     execute_process(COMMAND "${deployqt}" "${CMAKE_INSTALL_PREFIX}/biotool1.app" -executable="${CMAKE_INSTALL_PREFIX}/biotool1.app/Contents/MacOS/biotool1")
   ]===] COMPONENT Runtime)
+
+  include(CPack)
+endif()
+if(WIN32)
+  set(PACKAGE_VERSION "1.0.0.0")
+
+  set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+  set(CPACK_PACKAGE_VENDOR ${APPVENDOR})
+  set(CPACK_PACKAGE_VERSION ${PACKAGE_VERSION})
+  set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})
+  set(CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION_MINOR})
+  set(CPACK_PACKAGE_VERSION_PATCH ${PACKAGE_VERSION_PATCH})
+  set(CPACK_PACKAGE_VERSION_TWEAK ${PACKAGE_VERSION_TWEAK})
+  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PACKAGE_VERSION}")
+
+  set(CPACK_GENERATOR "NSIS")
+  set(CPACK_NSIS_DISPLAY_NAME ${PROJECT_NAME})
+  set(CPACK_NSIS_PACKAGE_NAME ${PROJECT_NAME})
+  set(CPACK_NSIS_MUI_FINISHPAGE_RUN ${PROJECT_NAME}.exe)
 
   include(CPack)
 endif()
