@@ -60,5 +60,5 @@ class Cell: public CellItem
 
     qreal _vcilsBeatingAngle = 0.;
     qreal _vcilsCircularStandardDeviation = 0.;
-    QVector<VCil> _vcils;
+    QList<VCil> _vcils;
 };

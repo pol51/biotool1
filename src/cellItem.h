@@ -2,6 +2,8 @@
 
 #include <QtGui/QColor>
 #include <QtCore/QPropertyAnimation>
+#include <QtCore/QLineF>
+#include <QtCore/QPointF>
 
 #include "xpolygon.h"
 

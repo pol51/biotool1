@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QtWidgets/QOpenGLWidget>
+#include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QtWidgets/QPinchGesture>
 
-#include <QtGui/QOpenGLTexture>
+#include <QtOpenGL/QOpenGLTexture>
 
 #include <QtCore/QTimer>
 

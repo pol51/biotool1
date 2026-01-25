@@ -1,8 +1,12 @@
 #include "cell.h"
 
-#include <QtOpenGL/QGLContext>
-
 #include <QtXml/QDomDocument>
+
+#ifdef __APPLE__
+# include <OpenGL/gl.h>
+#else
+# include <GL/gl.h>
+#endif
 
 #include <math.h>
 

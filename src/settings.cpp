@@ -30,7 +30,7 @@ qreal  CellItem::_arrowScale          (1.);
 bool   VCil::_showAverageArrow        (false);
 
 QColor DataCtrl::centroidsRefColor  (QColor(0x7f, 0x7f, 0xff));
-QVector<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
+QList<const DataCtrl::CSVDataType*> DataCtrl::csvSelection;
 bool DataCtrl::csvForExcel = true;
 int DataCtrl::maximalCSD(0);
 

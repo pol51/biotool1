@@ -31,8 +31,8 @@ class DataCtrl : public QAbstractItemModel
           suffix(other.suffix),
           fun(other.fun) {}
 
-      protected:
-        friend class QVector<CSVDataType>;
+      public:
+        friend class QList<CSVDataType>;
         CSVDataType() {}
         const CSVDataType &operator=(const CSVDataType &other)
         {
@@ -70,6 +70,7 @@ class DataCtrl : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    static int maximalCSD;
     static int maxCSD() { return maximalCSD; }
 
     static void getDataTypesNames(QStringList &names);
@@ -122,11 +123,10 @@ class DataCtrl : public QAbstractItemModel
     EMode cntMode = eModeView;
     XPolygon points;
     CellItem cell;
-    QVector<Cell> cells;
-    QVector<XPolygon> centroidsRef;
-    static int maximalCSD;
-    static QVector<CSVDataType> csvDataTypes;
-    static QVector<const CSVDataType*> csvSelection;
+    QList<Cell> cells;
+    QList<XPolygon> centroidsRef;
+    static QList<CSVDataType> csvDataTypes;
+    static QList<const CSVDataType*> csvSelection;
     static QColor centroidsRefColor;
     static bool csvForExcel;
     qreal averageAngleVPatch = 0.;

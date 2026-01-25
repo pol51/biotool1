@@ -1,8 +1,12 @@
 #include "cellItem.h"
 
-#include <QtOpenGL/QGLContext>
-
 #include <QtXml/QDomDocument>
+
+#ifdef __APPLE__
+# include <OpenGL/gl.h>
+#else
+# include <GL/gl.h>
+#endif
 
 CellItem::ColorInterpolator CellItem::_colorInterpolator;
 
@@ -74,7 +78,7 @@ void CellItem::computeVector()
   for (int i = _outsideForm.count(); --i > 0; )
   {
     line2.setPoints(_outsideForm[i], _outsideForm[i-1]);
-    if (line.intersect(line2, &intersection) == QLineF::BoundedIntersection)
+    if (line.intersects(line2, &intersection) == QLineF::BoundedIntersection)
     {
       lineToOutside.setP2(intersection);
       if (lineToOutside.length() > centroidToOutsideLength)

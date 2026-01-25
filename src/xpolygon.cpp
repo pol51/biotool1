@@ -1,16 +1,17 @@
 #include "xpolygon.h"
-
-#include <QtOpenGL/QGLContext>
+#include <mapbox/earcut.hpp>
 
 #include <QtXml/QDomDocument>
 
 #ifdef __APPLE__
-# include <glu.h>
+# include <OpenGL/gl.h>
 #else
-# include <GL/glu.h>
+# include <GL/gl.h>
 #endif
 
-#include <math.h>
+#include <cmath>
+#include <array>
+#include <vector>
 
 void XPolygon::computeData()
 {
@@ -122,64 +123,45 @@ void XPolygon::draw() const
   }
 }
 
-class TesselatorCB {
-  public:
-    static void resetVertexIndex() { _vertexIndex = 0; }
-    static void tessVertexCB(const GLvoid *data) { glVertex3dv((const GLdouble*)data); }
-    static void tessCombineCB(const GLdouble newVertex[3], const GLdouble **, const GLfloat *, GLdouble **outData)
-    {
-      memcpy(&_vertices[_vertexIndex], newVertex, sizeof(GLdouble) * 3);
-      *outData = _vertices[_vertexIndex++];
-    }
 
-  protected:
-    static GLdouble _vertices[256][3];
-    static int _vertexIndex;
-};
-GLdouble TesselatorCB::_vertices[256][3];
-int TesselatorCB::_vertexIndex = 0;
 
 void XPolygon::drawBackground() const
 {
   const int Count(count());
 
-  TesselatorCB::resetVertexIndex();
-
-  GLuint Id = glGenLists(1);
-  GLUtesselator *Tess = gluNewTess();
-
-  GLdouble **Points;
-  Points = (GLdouble**)malloc(sizeof(GLdouble*) * Count);
-  for (int i = Count; --i >= 0; )
+  if (Count < 3) return;
+  
+  // Convert QPolygonF to earcut format
+  using Point = std::array<double, 2>;
+  std::vector<std::vector<Point>> polygon;
+  
+  std::vector<Point> points;
+  points.reserve(Count);
+  for (int i = 0; i < Count; ++i)
   {
-    Points[i] = (GLdouble*)malloc(sizeof(GLdouble) * 3);
-    Points[i][0] = at(i).x();
-    Points[i][1] = at(i).y();
-    Points[i][2] = 0.f;
+    points.push_back({at(i).x(), at(i).y()});
   }
-
-  gluTessCallback(Tess, GLU_TESS_BEGIN,   (void (*)())glBegin);
-  gluTessCallback(Tess, GLU_TESS_END,     (void (*)())glEnd);
-  gluTessCallback(Tess, GLU_TESS_VERTEX,  (void (*)())TesselatorCB::tessVertexCB);
-  gluTessCallback(Tess, GLU_TESS_COMBINE, (void (*)())TesselatorCB::tessCombineCB);
-
-  gluTessProperty(Tess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
-  glNewList(Id, GL_COMPILE);
-  gluTessBeginPolygon(Tess, 0);
-    gluTessBeginContour(Tess);
-      for (int i = Count; --i >= 0; )
-        gluTessVertex(Tess, Points[i], Points[i]);
-    gluTessEndContour(Tess);
-  gluTessEndPolygon(Tess);
-  glEndList();
-
-  gluDeleteTess(Tess);
-
-  glCallList(Id);
-
-  for (int i = Count; --i >= 0; )
-    free(Points[i]);
-  free(Points);
+  polygon.push_back(points);
+  
+  // Triangulate using earcut
+  auto indices = mapbox::earcut<uint32_t>(polygon);
+  
+  if (indices.empty()) return;
+  
+  // Render triangles with OpenGL
+  glBegin(GL_TRIANGLES);
+  for (size_t i = 0; i < indices.size(); i += 3) {
+    if (i + 2 < indices.size()) {
+      const Point& p0 = points[indices[i]];
+      const Point& p1 = points[indices[i + 1]];
+      const Point& p2 = points[indices[i + 2]];
+      
+      glVertex3d(p0[0], p0[1], 0.0);
+      glVertex3d(p1[0], p1[1], 0.0);
+      glVertex3d(p2[0], p2[1], 0.0);
+    }
+  }
+  glEnd();
 }
 
 void XPolygon::save(QDomDocument &doc, QDomElement &parentNode, const int level) const

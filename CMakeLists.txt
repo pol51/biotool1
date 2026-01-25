@@ -20,8 +20,24 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui Widgets OpenGL Xml REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets OpenGL Xml REQUIRED)
+set(CPM_DOWNLOAD_VERSION 0.38.2)
+set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM.cmake")
+if(NOT (EXISTS ${CPM_DOWNLOAD_LOCATION}))
+  file(DOWNLOAD "https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake" ${CPM_DOWNLOAD_LOCATION})
+endif()
+include(${CPM_DOWNLOAD_LOCATION})
+
+CPMAddPackage(
+  NAME earcut
+  GITHUB_REPOSITORY mapbox/earcut.hpp
+  VERSION 2.2.4
+  DOWNLOAD_ONLY YES
+)
+
+add_library(earcut INTERFACE)
+target_include_directories(earcut INTERFACE ${earcut_SOURCE_DIR}/include)
+
+find_package(Qt6 COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets Xml REQUIRED)
 find_package(OpenGL REQUIRED)
 
 file(GLOB_RECURSE SRCS src/*.cpp src/*.h src/*.ui)
@@ -43,18 +59,8 @@ elseif(WIN32)
   set(EXECUTABLE_TYPE WIN32)
 endif()
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
-else()
-  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
-endif()
-target_link_libraries(${PROJECT_NAME}
-  Qt${QT_VERSION_MAJOR}::Core
-  Qt${QT_VERSION_MAJOR}::Gui
-  Qt${QT_VERSION_MAJOR}::Widgets
-  Qt${QT_VERSION_MAJOR}::OpenGL
-  Qt${QT_VERSION_MAJOR}::Xml
-  ${OPENGL_LIBRARIES})
+qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Xml OpenGL::GL earcut)
 if(WIN32)
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .exe)
 endif()
@@ -106,10 +112,10 @@ if(APPLE)
   set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${BIN_INSTALL_DIR}")
   include(InstallRequiredSystemLibraries)
 
-  set(QT_DIR          ${QT_QTCORE_LIBRARY}/../..)
+  set(QT_DIR          ${Qt6_QTCORE_LIBRARY}/../..)
   set(FRAMEWORKS_DST  @executable_path/../Frameworks)
   
-  get_target_property(uic_location Qt${QT_VERSION_MAJOR}::uic IMPORTED_LOCATION)
+  get_target_property(uic_location Qt6::uic IMPORTED_LOCATION)
   get_filename_component( _dir ${uic_location} DIRECTORY)
   set(deployqt "${_dir}/macdeployqt")
   if(NOT EXISTS ${deployqt})
@@ -124,4 +130,3 @@ if(APPLE)
   include(CPack)
 endif()
 ###############################################################################
-

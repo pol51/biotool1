@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QtCore/QPointF>
+#include <QtCore/QLineF>
 #include <QtGui/QPolygonF>
 
 #define M_PI  3.14159265358979323846
