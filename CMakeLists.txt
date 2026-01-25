@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.10.0)
 
 project(biotool1)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 if(APPLE OR WIN32)
   if(DEFINED ENV{QTDIR})
@@ -59,10 +62,10 @@ elseif(WIN32)
   set(EXECUTABLE_TYPE WIN32)
 endif()
 
-qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} ${IMAGES} ${IMAGES_QRC})
+qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${SRCS} ${IMAGES} ${IMAGES_QRC})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Xml OpenGL::GL earcut)
 if(WIN32)
-  set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .exe)
+  set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
 if(APPLE)
   set_source_files_properties(${OSX_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -76,6 +79,34 @@ endif()
 ################################################################################
 if(APPLE)
   install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Runtime)
+endif()
+if(WIN32)
+  install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . COMPONENT Runtime)
+
+  foreach(lib Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Xml)
+    get_target_property(lib_location ${lib} LOCATION)
+    if(lib_location)
+      get_filename_component(lib_name "${lib_location}" NAME_WE)
+      get_filename_component(lib_dir "${lib_location}" DIRECTORY)
+      set(dll_name "${lib_name}.dll")
+      set(dll_path "${lib_dir}/${dll_name}")
+      if(EXISTS "${dll_path}")
+        install(FILES "${dll_path}" DESTINATION . COMPONENT Runtime)
+      endif()
+    endif()
+  endforeach()
+
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
+  include(InstallRequiredSystemLibraries)
+
+  get_target_property(qt_qmake_import Qt6::qmake IMPORTED_LOCATION)
+  get_filename_component(qt_prefix "${qt_qmake_import}" DIRECTORY)
+  get_filename_component(qt_prefix "${qt_prefix}" DIRECTORY)
+  
+  set(platforms_dir "${qt_prefix}/plugins/platforms")
+  if(EXISTS "${platforms_dir}")
+    install(FILES "${platforms_dir}/qwindows.dll" DESTINATION platforms COMPONENT Runtime)
+  endif()
 endif()
 ################################################################################
 
@@ -126,6 +157,32 @@ if(APPLE)
   install(CODE [===[
     execute_process(COMMAND "${deployqt}" "${CMAKE_INSTALL_PREFIX}/biotool1.app" -executable="${CMAKE_INSTALL_PREFIX}/biotool1.app/Contents/MacOS/biotool1")
   ]===] COMPONENT Runtime)
+
+  include(CPack)
+endif()
+if(WIN32)
+  set(PACKAGE_VERSION "1.0.0.0")
+
+  set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+  set(CPACK_PACKAGE_VENDOR ${APPVENDOR})
+  set(CPACK_PACKAGE_VERSION ${PACKAGE_VERSION})
+  set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})
+  set(CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION_MINOR})
+  set(CPACK_PACKAGE_VERSION_PATCH ${PACKAGE_VERSION_PATCH})
+  set(CPACK_PACKAGE_VERSION_TWEAK ${PACKAGE_VERSION_TWEAK})
+  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PACKAGE_VERSION}")
+
+set(CPACK_GENERATOR "NSIS")
+  set(CPACK_NSIS_DISPLAY_NAME ${PROJECT_NAME})
+  set(CPACK_NSIS_PACKAGE_NAME ${PROJECT_NAME})
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+  set(CPACK_MONOLITHIC_INSTALL TRUE)
+  set(CPACK_PACKAGE_EXECUTABLES ${PROJECT_NAME} ${PROJECT_NAME})
+  set(CPACK_NSIS_MENU_LINKS
+    "${PROJECT_NAME}.exe" "${PROJECT_NAME}"
+  )
+  set(CPACK_NSIS_MUI_FINISHPAGE_RUN "")
 
   include(CPack)
 endif()
