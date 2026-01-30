@@ -90,7 +90,25 @@ if(WIN32)
     message(FATAL_ERROR "Failed to locate windeployqt executable: [${windeployqt}]")
   endif()
 
-  install(CODE "execute_process(COMMAND \"${windeployqt}\" \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.exe\" --dir \"${CMAKE_INSTALL_PREFIX}\" --no-translations --no-opengl-sw)")
+  install(CODE [===[
+    if(DEFINED ENV{DESTDIR})
+      set(_destdir "$ENV{DESTDIR}")
+    else()
+      set(_destdir "")
+    endif()
+    set(_install_root "${_destdir}${CMAKE_INSTALL_PREFIX}")
+    set(_installed_exe "${_install_root}/${PROJECT_NAME}.exe")
+    if(NOT EXISTS "${_installed_exe}")
+      message(FATAL_ERROR "Failed to locate installed executable: [${_installed_exe}]")
+    endif()
+    execute_process(
+      COMMAND "${windeployqt}" "${_installed_exe}" --dir "${_install_root}" --no-translations --no-opengl-sw
+      RESULT_VARIABLE _windeployqt_result
+    )
+    if(NOT _windeployqt_result EQUAL 0)
+      message(FATAL_ERROR "windeployqt failed with exit code: ${_windeployqt_result}")
+    endif()
+  ]===])
 endif()
 ################################################################################
 
