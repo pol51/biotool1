@@ -4,7 +4,15 @@
 #include <QtCore/QLineF>
 #include <QtGui/QPolygonF>
 
-#define M_PI  3.14159265358979323846
+#ifdef WIN32
+# define WIN32_LEAN_AND_MEAN
+# define NOMINMAX
+# include <windows.h>
+#endif
+
+#ifndef M_PI
+# define M_PI  3.14159265358979323846
+#endif
 
 class QDomElement;
 class QDomDocument;
