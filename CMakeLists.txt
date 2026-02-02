@@ -107,6 +107,12 @@ if(WIN32)
   if(EXISTS "${platforms_dir}")
     install(FILES "${platforms_dir}/qwindows.dll" DESTINATION platforms COMPONENT Runtime)
   endif()
+
+  set(imageformats_dir "${qt_prefix}/plugins/imageformats")
+  if(EXISTS "${imageformats_dir}")
+    install(FILES "${imageformats_dir}/qtiff.dll" DESTINATION imageformats COMPONENT Runtime)
+    install(FILES "${imageformats_dir}/qjpeg.dll" DESTINATION imageformats COMPONENT Runtime)
+  endif()
 endif()
 ################################################################################
 
